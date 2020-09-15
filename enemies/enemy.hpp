@@ -8,9 +8,8 @@ class Renderer;
 class Enemy : public RendererObject {
 public:
     Enemy(int x, int y, int width, int height, long int hp_, Uint16 color);
-    ~Enemy();
+    virtual ~Enemy();
     virtual void render(Renderer* renderer) override;
-    virtual void render(Renderer* renderer, const SDL_Rect& region) override;
 
 private:
     Uint16 color_;

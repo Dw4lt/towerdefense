@@ -8,10 +8,10 @@ Enemy::Enemy(int x, int y, int width, int height, long int hp, Uint16 color)
 {
 }
 
-void Enemy::render(Renderer* renderer){
-    renderer->fill_color(RendererObject::boundingBox(), color_);
+Enemy::~Enemy(){
+    
 }
 
-void Enemy::render(Renderer* renderer, const SDL_Rect& rect){
+void Enemy::render(Renderer* renderer){
     renderer->fill_color(RendererObject::boundingBox(), color_);
 }

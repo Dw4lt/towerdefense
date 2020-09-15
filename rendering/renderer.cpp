@@ -1,4 +1,5 @@
 #include"renderer.hpp"
+#include<stdio.h>
 
 Renderer* Renderer::singleton_(nullptr);
 
@@ -18,8 +19,11 @@ Renderer::Renderer(int width, int height, int bit_per_color)
 }
 
 void Renderer::addToSchene(RendererObject* object, int layer){
-    if (!(render_objects_.find(layer) == render_objects_.end())){
+    if (render_objects_.count(layer) == 0){
         render_objects_[layer] = std::vector<RendererObject*>();
+    }
+    for (RendererObject* child : object->children_){
+        addToSchene(child, layer + 1); // Children always on top of parents. This may need changing in the future
     }
     render_objects_[layer].push_back(object);
 }
@@ -38,8 +42,9 @@ void Renderer::fill_color(SDL_Rect rect, Uint16 color)
 
 void Renderer::render(){
     for (std::pair<int, std::vector<RendererObject*>> vect : render_objects_){
-        for (RendererObject* obj : vect.second){
+        for (auto obj : vect.second){
             obj->render(this);
+            printf("R");
         }
     }
 }
