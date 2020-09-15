@@ -1,5 +1,5 @@
 #include "renderer_object.hpp"
-#include"../rendering_engine/renderer.hpp"
+#include"renderer.hpp"
 
 RendererObject::RendererObject(int x, int y, int width, int height)
     : width_(width)

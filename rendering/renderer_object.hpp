@@ -6,13 +6,11 @@ class Renderer;
 
 class RendererObject {
 public:
-    RendererObject(Renderer* renderer, int x, int y, int width, int height);
+    RendererObject(int x, int y, int width, int height);
     ~RendererObject();
     SDL_Rect boundingBox();
-    virtual void render() = 0;
-    virtual void render(const SDL_Rect& region) = 0;
-    
-    static const Renderer* renderer;
+    virtual void render(Renderer* renderer) = 0;
+    virtual void render(Renderer* renderer, const SDL_Rect& region) = 0;
 
 private:
     Uint16 width_;
