@@ -20,6 +20,7 @@ public:
     virtual ~Tile() = default;
 
     void updateType(TileType newType);
+    const TileType& getType(){return type;};
     virtual void render(Renderer* renderer) override;
 private:
     int index_x_;
