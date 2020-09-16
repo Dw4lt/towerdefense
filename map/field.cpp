@@ -8,29 +8,27 @@ Field::Field(int x, int y, int width, int height, int tiles_x, int tiles_y)
     , tile_grid_((Tile***) malloc(tiles_x * sizeof(Tile**)))
 {
 
-   for (int M=0; M<tiles_x; ++M) {
-     int at, pre=0, i;
-     for (pre = i = 0; i < M; ++i) {
-       at = (width+width*i)/M;
-       pre = at;
-     }
-   }
-
-
-    int x_increment = ((double)width) / (tiles_x);
-    int y_increment = ((double)height) / (tiles_y);
-    double real_x = 0;
+    // Generate Tile Objects
+    double x_increment = ((double)width) / (tiles_x);
+    double y_increment = ((double)height) / (tiles_y);
+    double x_start = 0;
+    double x_stop = x_increment;
     for (int k = 0; k < tiles_x_; k++){
-        double real_y = 0;
         tile_grid_[k] = (Tile**) calloc(tiles_y_, sizeof(Tile**));
+        double y_start = 0;
+        double y_stop = y_increment;
         for (int i = 0; i < tiles_y_; i++){
-            auto child = new Tile(x + real_x, y + real_y, x_increment, y_increment, k, i);
+            auto child = new Tile(x_start, y_start, std::round(x_stop-x_start), std::round(y_stop-y_start), k, i);
             children_.push_back(child);
             tile_grid_[k][i] = child;
-            real_y += y_increment;
+            y_start = y_stop;
+            y_stop += y_increment;
         }
-        real_x += x_increment;
+        x_start = x_stop;
+        x_stop += x_increment;
     }
+    // End of Tile Generation
+
 }
 
 Field::~Field(){

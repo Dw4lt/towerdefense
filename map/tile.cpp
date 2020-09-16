@@ -10,7 +10,6 @@ Tile::Tile(int x, int y, int width, int height, int index_x, int index_y)
     , color_(0x0)
     , type(TileType::GRASS)
 {
-    printf("A%i,%i,%i,%i;\n", x, y, width,height);
     updateType(GRASS);
 }
 

@@ -44,7 +44,6 @@ void Renderer::render(){
     for (std::pair<int, std::vector<RendererObject*>> vect : render_objects_){
         for (auto obj : vect.second){
             obj->render(this);
-            printf("R");
         }
     }
 }
