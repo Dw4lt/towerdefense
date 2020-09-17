@@ -14,6 +14,10 @@ public:
     
     void generatePath();
     Tile* get(int x, int y);
+    Tile* get(Point tile_coords);
+    int getMaxX() const;
+    int getMaxY() const;
+    const Point& getStart() const;
 
 private:
     int tiles_x_;

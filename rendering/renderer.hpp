@@ -3,6 +3,7 @@
 #include<SDL/SDL.h>
 #include<vector>
 #include<map>
+#include"../primitives/essentials.hpp"
 #include"renderer_object.hpp"
 
 class Renderer {
@@ -14,7 +15,7 @@ public:
     void display();
     void render();
     void set_pixel(int x, int y, Uint16 color);
-    void fill_color(SDL_Rect rect, Uint16 color);
+    void fill_color(Rect rect, Uint16 color);
     void schedule(RendererObject* object);
 
     const int screen_width_;

@@ -4,25 +4,37 @@
 #include"rendering/renderer.hpp"
 #include"enemies/enemy.hpp"
 #include"map/field.hpp"
+#include<string>
+#include<iostream>
+#include <ctime>
 
 
 
 
 int main ()
 {
-    printf("Start.");
+    srand(time(NULL));
+    printf("############## Start ##############\n");
 
     Renderer* renderer = Renderer::Init(320, 240, 16);
     
-    Enemy* enemy = new Enemy(15, 30, 15, 15, 100, 0xf00f);
-    renderer->addToSchene(enemy, 2);
-    Field* field = new Field(0,0,320,240,12,10);
+    Field* field = new Field(0,0,320,210,12,10);
+    Enemy* enemy = new Enemy(field->get(field->getStart())->getCenter(), 15, 15, Point{field->getStart()}, 100, 30.0, 0xf00f);
     renderer->addToSchene(field,0);
+    renderer->addToSchene(enemy, 2);
+    enemy->pathfind(field);
 
-
-    renderer->render();
-    renderer->display();
-    //SDL_SetError("pixels: %i\npitch:%i",screen->pixels, screen->pitch);
+    for (int i = 0; i < 120; i++){
+        enemy->pathfind(field);
+        Uint32 start = SDL_GetTicks();
+        renderer->render();
+        renderer->display();
+        Uint32 stop = SDL_GetTicks();
+        Uint32 tick_duration = stop - start;
+        if (tick_duration < 160){
+            SDL_Delay(16-tick_duration);
+        }
+    }
     //SDL_UpdateRect(screen,0,0,50,50);
     //if (SDL_Flip(screen) != 0){
     //    SDL_SetError("WOOPS");

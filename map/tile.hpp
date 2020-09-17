@@ -13,6 +13,14 @@ typedef enum {
     FINISH
 } TileType;
 
+typedef enum{
+    UP,
+    RIGHT,
+    DOWN,
+    LEFT,
+    NONE
+} Direction;
+
 
 class Tile : public RendererObject {
 public:
@@ -20,13 +28,16 @@ public:
     virtual ~Tile() = default;
 
     void updateType(TileType newType);
+    void updateNextNeighbour(Direction direction);
     const TileType& getType(){return type;};
+    const Direction& getNeighbour(){return next_neighbour_;};
     virtual void render(Renderer* renderer) override;
 private:
     int index_x_;
     int index_y_;
     Uint16 color_;
     TileType type;
+    Direction next_neighbour_;
 };
 
 #endif

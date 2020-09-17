@@ -9,6 +9,7 @@ Tile::Tile(int x, int y, int width, int height, int index_x, int index_y)
     , index_y_(index_y)
     , color_(0x0)
     , type(TileType::GRASS)
+    , next_neighbour_(Direction::NONE)
 {
     updateType(GRASS);
 }
@@ -41,4 +42,8 @@ void Tile::updateType(TileType newType){
     }
     //888 to 565
     color_ = RGB_888_TO_565(effective_color);
+}
+
+void Tile::updateNextNeighbour(Direction direction){
+    next_neighbour_ = direction;
 }

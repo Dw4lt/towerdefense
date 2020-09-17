@@ -38,6 +38,7 @@ void Field::generatePath(){
     int x = 0;
     int y = rand() % tiles_y_;
     tile_grid_[x][y]->updateType(TileType::START);
+    start_tile_ = Point{x,y};
 
     //Path + finish
     bool found = false;
@@ -49,6 +50,7 @@ void Field::generatePath(){
             {
             case 0:
                 if (y - 2 >= 0 && tile_grid_[x][y-2]->getType() == TileType::GRASS){
+                    tile_grid_[x][y]->updateNextNeighbour(Direction::UP);
                     tile_grid_[x][y-1]->updateType(TileType::PATH);
                     tile_grid_[x][y-2]->updateType(TileType::PATH);
                     y -= 2;
@@ -58,6 +60,7 @@ void Field::generatePath(){
                 break;
             case 1:
                 if (y + 2 < tiles_y_ && tile_grid_[x][y+2]->getType() == TileType::GRASS){
+                    tile_grid_[x][y]->updateNextNeighbour(Direction::DOWN);
                     tile_grid_[x][y+1]->updateType(TileType::PATH);
                     tile_grid_[x][y+2]->updateType(TileType::PATH);
                     y += 2;
@@ -71,12 +74,12 @@ void Field::generatePath(){
                 }
                 else if (x + 1 < tiles_x_) {
                     tile_grid_[x+1][y]->updateType(TileType::FINISH);
-                    start_tile_ = Point(x+1,y);
+                    tile_grid_[x+1][y]->updateNextNeighbour(Direction::RIGHT);
                 }
                 else {
                     tile_grid_[x][y]->updateType(TileType::FINISH);
-                    start_tile_ = Point(x,y);
                 }
+                tile_grid_[x][y]->updateNextNeighbour(Direction::RIGHT);
                 x+= 2;
                 found = true;
             default:
@@ -101,9 +104,25 @@ void Field::render(Renderer* renderer){
 }
 
 Tile* Field::get(int x, int y){
-    if (x > 0 && y < tiles_x_ && y > 0 && y < tiles_y_){
+    if (x >= 0 && y < tiles_x_ && y >= 0 && y < tiles_y_){
         return tile_grid_[x][y];
     }else{
         return nullptr;
     }
+}
+
+Tile* Field::get(Point tile_coords){
+    return get(tile_coords.x_, tile_coords.y_);
+}
+
+int Field::getMaxX() const {
+    return tiles_x_ - 1;
+}
+
+int Field::getMaxY() const {
+    return tiles_y_ - 1;
+}
+
+const Point& Field::getStart() const {
+    return start_tile_;
 }

@@ -35,9 +35,10 @@ void Renderer::set_pixel(int x, int y, Uint16 color)
     }
 }
 
-void Renderer::fill_color(SDL_Rect rect, Uint16 color)
+void Renderer::fill_color(Rect rect, Uint16 color)
 {
-    SDL_FillRect(screen_, &rect, color);
+    SDL_Rect rect2{rect.toSDLRect()};
+    SDL_FillRect(screen_, &rect2, color);
 }
 
 void Renderer::render(){
