@@ -16,7 +16,7 @@ public:
     virtual void render(Renderer* renderer, const Rect& region);
     
     std::vector<RendererObject*> children_;
-    Point getCenter();
+    Point getCenter() const;
 
 
 protected:

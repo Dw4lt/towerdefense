@@ -28,7 +28,7 @@ void RendererObject::render(Renderer* renderer, const Rect& region){
     render(renderer);
 }
 
-Point RendererObject::getCenter(){
+Point RendererObject::getCenter() const{
     return Point((int) std::round(x_ + width_/2.0),
                  (int) std::round(y_ + height_/2.0));
 }
