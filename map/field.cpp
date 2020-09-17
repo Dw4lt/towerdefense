@@ -104,7 +104,7 @@ void Field::render(Renderer* renderer){
 }
 
 Tile* Field::get(int x, int y){
-    if (x >= 0 && y < tiles_x_ && y >= 0 && y < tiles_y_){
+    if (x >= 0 && x < tiles_x_ && y >= 0 && y < tiles_y_){
         return tile_grid_[x][y];
     }else{
         return nullptr;
