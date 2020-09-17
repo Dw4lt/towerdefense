@@ -28,7 +28,8 @@ int main ()
     //    SDL_SetError("WOOPS");
     //}
     // Wait for 5 sec
-    SDL_Delay( 5000 );
+    //SDL_Delay( 5000 );
+    delete renderer;
     printf("Stop.");
     return EXIT_SUCCESS;
 }
