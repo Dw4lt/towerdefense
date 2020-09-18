@@ -51,6 +51,7 @@ void Field::generatePath(){
             case 0:
                 if (y - 2 >= 0 && tile_grid_[x][y-2]->getType() == TileType::GRASS){
                     tile_grid_[x][y]->updateNextNeighbour(Direction::UP);
+                    tile_grid_[x][y-1]->updateNextNeighbour(Direction::UP);
                     tile_grid_[x][y-1]->updateType(TileType::PATH);
                     tile_grid_[x][y-2]->updateType(TileType::PATH);
                     y -= 2;
@@ -61,6 +62,7 @@ void Field::generatePath(){
             case 1:
                 if (y + 2 < tiles_y_ && tile_grid_[x][y+2]->getType() == TileType::GRASS){
                     tile_grid_[x][y]->updateNextNeighbour(Direction::DOWN);
+                    tile_grid_[x][y+1]->updateNextNeighbour(Direction::DOWN);
                     tile_grid_[x][y+1]->updateType(TileType::PATH);
                     tile_grid_[x][y+2]->updateType(TileType::PATH);
                     y += 2;
@@ -68,8 +70,10 @@ void Field::generatePath(){
                 }
                 break;
             case 2:
+                tile_grid_[x][y]->updateNextNeighbour(Direction::RIGHT);
                 if (x + 2 < tiles_x_){
                     tile_grid_[x+1][y]->updateType(TileType::PATH);
+                    tile_grid_[x+1][y]->updateNextNeighbour(Direction::RIGHT);
                     tile_grid_[x+2][y]->updateType(TileType::PATH);
                 }
                 else if (x + 1 < tiles_x_) {
@@ -79,7 +83,6 @@ void Field::generatePath(){
                 else {
                     tile_grid_[x][y]->updateType(TileType::FINISH);
                 }
-                tile_grid_[x][y]->updateNextNeighbour(Direction::RIGHT);
                 x+= 2;
                 found = true;
             default:
@@ -125,4 +128,34 @@ int Field::getMaxY() const {
 
 const Point& Field::getStart() const {
     return start_tile_;
+}
+
+Point Field::findNextCornerNode(Point coord){
+    auto tile = get(coord);
+    if (tile){
+        Direction dir = tile->getDirectionToNeighbour();
+        do{
+            switch (dir)
+            {
+            case Direction::RIGHT:
+                coord.x_++;
+                break;
+            case Direction::UP:
+                coord.y_--;
+                break;
+            case Direction::DOWN:
+                coord.y_++;
+                break;
+            case Direction::LEFT:
+                coord.x_--;
+                break;
+            case Direction::NONE:
+                break;
+            default:
+                break;
+            }
+            tile = get(coord);
+        } while (tile && tile->getDirectionToNeighbour() == dir);
+    }
+    return coord;
 }

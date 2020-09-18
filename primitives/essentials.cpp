@@ -7,7 +7,6 @@ Point::Point(int x, int y)
 
 }
 
-
 Rect::Rect(Point origin, int width, int height)
     : origin_(origin)
     , width_(width)

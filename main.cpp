@@ -18,8 +18,8 @@ int main ()
 
     Renderer* renderer = Renderer::Init(320, 240, 16);
     
-    Field* field = new Field(0,0,320,210,12,10);
-    Enemy* enemy = new Enemy(field->get(field->getStart())->getCenter(), 15, 15, Point{field->getStart()}, 100, 30.0, 0xf00f);
+    Field* field = new Field(0,0,320,210,20,15);
+    Enemy* enemy = new Enemy(field->get(field->getStart())->getCenter(), 6, 6, Point{field->getStart()}, 100, 4.2, 0xf00f);
     renderer->addToSchene(field,0);
     renderer->addToSchene(enemy, 2);
     enemy->pathfind(field);

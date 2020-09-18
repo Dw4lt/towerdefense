@@ -30,7 +30,7 @@ public:
     void updateType(TileType newType);
     void updateNextNeighbour(Direction direction);
     const TileType& getType(){return type;};
-    const Direction& getNeighbour(){return next_neighbour_;};
+    const Direction& getDirectionToNeighbour(){return next_neighbour_;};
     virtual void render(Renderer* renderer) override;
 private:
     int index_x_;

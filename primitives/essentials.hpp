@@ -1,11 +1,12 @@
 #ifndef ESSENTIALS
 #define ESSENTIALS
 #include<SDL/SDL.h>
+#include <iostream>
 
 class Point
 {
 public:
-    Point(int x, int y);
+    Point(int x = 0, int y = 0);
     int x_;
     int y_;
 };
@@ -24,6 +25,7 @@ public:
     int height_;
     bool contains(const Point& point);
 };
+#define ErrorStream(x)  std::cout << "## Exception in " << __func__ << "() ##\n" << x << "\n####################\n"
 
 
 #endif

@@ -15,7 +15,10 @@ public:
     virtual Rect boundingBox() const override;
 
 private:
-    Point current_field_;
+    void setNextTarget(Field* field);
+
+    Point current_tile_;
+    Point current_target_tile_;
     double real_x_;
     double real_y_;
     Uint16 color_;
