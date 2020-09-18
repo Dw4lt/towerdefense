@@ -42,49 +42,45 @@ void Field::generatePath(){
 
     //Path + finish
     bool found = false;
+    int max_step = 4;
+    int distance = 0;
     while (x < tiles_x_){
+        SDL_Delay(3);
         found = false;
+        printf("x:%i y:%i\n",x, y);
         while (!found){
             int direction = rand() % 3;
             switch (direction)
             {
-            case 0:
-                if (y - 2 >= 0 && tile_grid_[x][y-2]->getType() == TileType::GRASS){
+            case 0: // UP
+                distance = rand() % std::min(y, max_step);
+                for (int i = 0; i < distance && tile_grid_[x][y-1]->getType() == TileType::GRASS; i++){
                     tile_grid_[x][y]->updateNextNeighbour(Direction::UP);
-                    tile_grid_[x][y-1]->updateNextNeighbour(Direction::UP);
-                    tile_grid_[x][y-1]->updateType(TileType::PATH);
-                    tile_grid_[x][y-2]->updateType(TileType::PATH);
-                    y -= 2;
+                    tile_grid_[x][--y]->updateType(TileType::PATH);
                     found = true;
-
                 }
                 break;
-            case 1:
-                if (y + 2 < tiles_y_ && tile_grid_[x][y+2]->getType() == TileType::GRASS){
+            case 1: // DOWN
+                distance = rand() % std::min(tiles_y_ - y, max_step);
+                for (int i = 0; i < distance && tile_grid_[x][y+1]->getType() == TileType::GRASS; i++){
                     tile_grid_[x][y]->updateNextNeighbour(Direction::DOWN);
-                    tile_grid_[x][y+1]->updateNextNeighbour(Direction::DOWN);
-                    tile_grid_[x][y+1]->updateType(TileType::PATH);
-                    tile_grid_[x][y+2]->updateType(TileType::PATH);
-                    y += 2;
+                    tile_grid_[x][++y]->updateType(TileType::PATH);
                     found = true;
                 }
                 break;
-            case 2:
-                tile_grid_[x][y]->updateNextNeighbour(Direction::RIGHT);
-                if (x + 2 < tiles_x_){
-                    tile_grid_[x+1][y]->updateType(TileType::PATH);
-                    tile_grid_[x+1][y]->updateNextNeighbour(Direction::RIGHT);
-                    tile_grid_[x+2][y]->updateType(TileType::PATH);
+            case 2: // RIGHT
+                distance = rand() % std::min(tiles_x_ - x, max_step);
+                for (int i = 0; i < distance && tile_grid_[x+1][y]->getType() == TileType::GRASS; i++){
+                    tile_grid_[x][y]->updateNextNeighbour(Direction::RIGHT);
+                    tile_grid_[++x][y]->updateType(TileType::PATH);
+                    found = true;
                 }
-                else if (x + 1 < tiles_x_) {
-                    tile_grid_[x+1][y]->updateType(TileType::FINISH);
-                    tile_grid_[x+1][y]->updateNextNeighbour(Direction::RIGHT);
-                }
-                else {
+                if (x + 1 == tiles_x_){
                     tile_grid_[x][y]->updateType(TileType::FINISH);
+                    tile_grid_[x][y]->updateNextNeighbour(Direction::RIGHT);
+                    x+= 100;
+                    found = true;
                 }
-                x+= 2;
-                found = true;
             default:
                 break;
             }
