@@ -36,7 +36,7 @@ Field::Field(int x, int y, int width, int height, int tiles_x, int tiles_y)
 void Field::generatePath(){
     //Start Point
     int x = 0;
-    int y = rand() % tiles_y_;
+    int y = (rand() % (tiles_y_ / 3)) + tiles_y_ / 3;
     tile_grid_[x][y]->updateType(TileType::START);
     start_tile_ = Point{x,y};
 
