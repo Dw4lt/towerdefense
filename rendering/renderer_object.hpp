@@ -12,6 +12,8 @@ public:
     RendererObject(Point pos, int width, int height);
     virtual ~RendererObject();
     virtual Rect boundingBox() const;
+    Uint16 getWidth() const;
+    Uint16 getHeight() const;
     virtual void render(Renderer* renderer) = 0;
     virtual void render(Renderer* renderer, const Rect& region);
     
