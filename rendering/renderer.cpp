@@ -41,6 +41,20 @@ void Renderer::fill_color(Rect rect, Uint16 color)
     SDL_FillRect(screen_, &rect2, color);
 }
 
+void Renderer::draw_rect(Rect rect, Uint16 color, unsigned int thickness, Uint8 alpha)
+{
+    int x = rect.origin_.x_, y = rect.origin_.y_;
+    int width = rect.width_, height = rect.height_;
+    SDL_Rect rect0{Rect(rect.origin_, thickness, rect.height_ - thickness).toSDLRect()}; // left margin
+    SDL_Rect rect1{Rect(Point(x + thickness, y), width - thickness, thickness).toSDLRect()}; // Top  Margin
+    SDL_Rect rect2{Rect(Point(x + width - thickness, y + thickness), thickness,  height - thickness).toSDLRect()}; // Right  Margin
+    SDL_Rect rect3{Rect(Point(x, y + height - thickness), width - thickness,  thickness).toSDLRect()}; // Bottom  Margin
+    SDL_FillRect(screen_, &rect0, color);
+    SDL_FillRect(screen_, &rect1, color);
+    SDL_FillRect(screen_, &rect2, color);
+    SDL_FillRect(screen_, &rect3, color);
+}
+
 void Renderer::render(){
     for (std::pair<int, std::vector<RendererObject*>> vect : render_objects_){
         for (auto obj : vect.second){
