@@ -4,9 +4,11 @@
 #include"rendering/renderer.hpp"
 #include"enemies/enemy.hpp"
 #include"map/field.hpp"
+#include"map/cursor.hpp"
 #include<string>
 #include<iostream>
 #include <ctime>
+#include <os.h>
 
 
 
@@ -20,12 +22,17 @@ int main ()
     
     Field* field = new Field(0,0,320,210,40,30);
     Enemy* enemy = new Enemy(field->get(field->getStart())->getCenter(), 4, 4, Point{field->getStart()}, 100, 4.2, 0xf00f);
+    Cursor* field_cursor = new Cursor(field);
     renderer->addToSchene(field,0);
     renderer->addToSchene(enemy, 2);
+    renderer->addToSchene(field_cursor, 10);
 
-    for (int i = 0; i < 240; i++){
-        enemy->pathfind(field);
+    while (!isKeyPressed(KEY_NSPIRE_ESC)){
         Uint32 start = SDL_GetTicks();
+
+        // Game Loop
+        field_cursor->poll(); // Only if on the main field, separate cursor for shop
+        enemy->pathfind(field);
         renderer->render();
         renderer->display();
         Uint32 stop = SDL_GetTicks();
