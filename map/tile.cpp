@@ -28,13 +28,6 @@ void Tile::updateNextNeighbour(Direction direction){
     next_neighbour_ = direction;
 }
 
-void Tile::updateDistanceToWater(unsigned int distance){
-    distance_to_water_ = distance;
-    if (distance > 5){
-        updateTerrain(TileTerrain::TREE);
-    }
-}
-
 void Tile::updateTerrain(TileTerrain terrain){
     terrain_ = terrain;
     updateColor();

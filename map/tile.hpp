@@ -32,10 +32,9 @@ public:
 
     void updateType(TileType newType);
     void updateNextNeighbour(Direction direction);
-    void updateDistanceToWater(unsigned int distance);
     void updateTerrain(TileTerrain terrain);
-    const TileType& getType(){return type_;};
-    const Direction& getDirectionToNeighbour(){return next_neighbour_;};
+    const TileType& getType() const {return type_;};
+    const Direction& getDirectionToNeighbour()const {return next_neighbour_;};
     virtual void render(Renderer* renderer) override;
 private:
     void updateColor();
