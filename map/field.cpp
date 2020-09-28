@@ -31,6 +31,7 @@ Field::Field(int x, int y, int width, int height, int tiles_x, int tiles_y)
     // End of Tile Generation
 
     generatePath();
+    populateTrees();
 }
 
 void Field::generatePath(){
@@ -105,7 +106,7 @@ void Field::render(Renderer* renderer){
 
 }
 
-Tile* Field::get(int x, int y){
+Tile* Field::get(int x, int y) const{
     if (x >= 0 && x < tiles_x_ && y >= 0 && y < tiles_y_){
         return tile_grid_[x][y];
     }else{
@@ -113,7 +114,7 @@ Tile* Field::get(int x, int y){
     }
 }
 
-Tile* Field::get(Point tile_coords){
+Tile* Field::get(Point tile_coords) const{
     return get(tile_coords.x_, tile_coords.y_);
 }
 
@@ -157,4 +158,21 @@ Point Field::findNextCornerNode(Point coord){
         } while (tile && tile->getDirectionToNeighbour() == dir);
     }
     return coord;
+}
+
+void Field::populateTrees() {
+    const int radius = 5;
+    for (int x = 0; x < tiles_x_; x++){
+        for (int y = 0; y < tiles_y_; y++){
+            if (tile_grid_[x][y]->getType() == TileType::PATH){
+                for (int dx = -radius; dx < radius; dx++){
+                    for (int dy = -radius; dy < radius; dy++){
+                        if (!(dx == 0 && dy == 0) && x+dx >= 0 && x + dx < tiles_x_ && y+dy >= 0 && y + dy < tiles_y_ && std::abs(dx*dy) < radius * 1.707){
+                            tile_grid_[x+dx][y+dy]->updateTerrain(TileTerrain::PLAIN);
+                        }
+                    }
+                }
+            }
+        }   
+    }
 }

@@ -13,12 +13,14 @@ public:
     virtual void render(Renderer* renderer) override;
     
     void generatePath();
-    Tile* get(int x, int y);
-    Tile* get(Point tile_coords);
+    Tile* get(int x, int y) const;
+    Tile* get(Point tile_coords) const;
     int getMaxX() const;
     int getMaxY() const;
     const Point& getStart() const;
     Point findNextCornerNode(Point coord);
+
+    void populateTrees();
 
 private:
     int tiles_x_;
