@@ -6,8 +6,17 @@
 #include"../primitives/essentials.hpp"
 #include"renderer_object.hpp"
 
+
 class Renderer {
 public:
+    typedef enum{
+        FIELD_LAYER = 0,
+        ENEMIES_LAYER = 10,
+        STRUCTURES_LAYER = 15,
+        EFFECTS_LAYER = 20,
+        CURSOR_LAYER = 50
+    } LAYER;
+
     static Renderer* Init(int width, int height, int bit_per_color);
     ~Renderer();
 

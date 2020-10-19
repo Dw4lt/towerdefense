@@ -13,10 +13,10 @@ GameManager::GameManager()
     , field_(new Field(0,0,320,210,40,30))
     , field_cursor_(new Cursor(field_))
 {
-    renderer_->addToSchene(field_,0);
-    renderer_->addToSchene(field_cursor_, 10);
+    renderer_->addToSchene(field_, Renderer::LAYER::FIELD_LAYER);
+    renderer_->addToSchene(field_cursor_, Renderer::LAYER::CURSOR_LAYER);
     enemy_list_.push_back(new Enemy(field_->get(field_->getStart())->getCenter(), 4, 4, Point{field_->getStart()}, 100, 4.2, 0xf00f));
-    renderer_->addToSchene(enemy_list_.back(), 2);
+    renderer_->addToSchene(enemy_list_.back(), Renderer::LAYER::ENEMIES_LAYER);
 }
 
 GameManager::~GameManager() {
