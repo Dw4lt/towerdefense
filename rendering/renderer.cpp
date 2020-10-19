@@ -28,20 +28,20 @@ void Renderer::addToSchene(RendererObject* object, int layer){
     render_objects_[layer].push_back(object);
 }
 
-void Renderer::set_pixel(int x, int y, Uint16 color)
+void Renderer::setPixel(int x, int y, Uint16 color)
 {
     if(x >= 0 && y >= 0 && x < screen_width_ && y < screen_height_){
         *((Uint16*) screen_->pixels + y * screen_->pitch + x * screen_bit_color_) = color;
     }
 }
 
-void Renderer::fill_color(Rect rect, Uint16 color)
+void Renderer::fillColor(Rect rect, Uint16 color)
 {
     SDL_Rect rect2{rect.toSDLRect()};
     SDL_FillRect(screen_, &rect2, color);
 }
 
-void Renderer::draw_rect(Rect rect, Uint16 color, unsigned int thickness, Uint8 alpha)
+void Renderer::drawRect(Rect rect, Uint16 color, unsigned int thickness, Uint8 alpha)
 {
     int x = rect.origin_.x_, y = rect.origin_.y_;
     int width = rect.width_, height = rect.height_;
