@@ -1,5 +1,5 @@
-#ifndef TILE
-#define TILE
+#ifndef TILE_H
+#define TILE_H
 #include <SDL/SDL.h>
 #include "../rendering/renderer_object.hpp"
 
@@ -7,7 +7,8 @@ class Renderer;
 
 typedef enum {
     LAND,
-    PATH
+    PATH,
+    STRUCTURE
 } TileType;
 
 typedef enum {

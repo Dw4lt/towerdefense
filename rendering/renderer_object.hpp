@@ -1,5 +1,5 @@
-#ifndef RENDERER_OBJECT
-#define RENDERER_OBJECT
+#ifndef RENDERER_OBJECT_H
+#define RENDERER_OBJECT_H
 #include <SDL/SDL.h>
 #include <vector>
 #include"../primitives/essentials.hpp"

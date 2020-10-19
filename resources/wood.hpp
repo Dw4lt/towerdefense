@@ -1,5 +1,5 @@
-#ifndef WOOD
-#define WOOD
+#ifndef WOOD_H
+#define WOOD_H
 #include "resource.hpp"
 
 class Wood : public Resource {

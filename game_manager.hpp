@@ -1,5 +1,5 @@
-#ifndef GAME_MANAGER
-#define GAME_MANAGER
+#ifndef GAME_MANAGER_H
+#define GAME_MANAGER_H
 #include"rendering/renderer.hpp"
 #include"enemies/enemy.hpp"
 #include"map/field.hpp"

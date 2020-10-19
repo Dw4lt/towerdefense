@@ -1,11 +1,12 @@
-#ifndef MAP
-#define MAP
+#ifndef MAP_H
+#define MAP_H
 #include <SDL/SDL.h>
 #include "../rendering/renderer_object.hpp"
 #include "tile.hpp"
 
 class Renderer;
 
+// Game field. Made up of Tiles.
 class Field : public RendererObject {
 public:
     Field(int x, int y, int width, int height, int tiles_x, int tiles_y);

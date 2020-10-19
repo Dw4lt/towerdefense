@@ -1,5 +1,5 @@
-#ifndef CURSOR
-    #define CURSOR
+#ifndef CURSOR_H
+#define CURSOR_H
 
     #include "field.hpp"
     #include "../rendering/renderer_object.hpp"

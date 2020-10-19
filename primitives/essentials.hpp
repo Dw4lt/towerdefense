@@ -1,5 +1,5 @@
-#ifndef ESSENTIALS
-#define ESSENTIALS
+#ifndef ESSENTIALS_H
+#define ESSENTIALS_H
 #include<SDL/SDL.h>
 #include <iostream>
 
@@ -10,6 +10,8 @@ public:
     int x_;
     int y_;
 };
+
+static const int STANDARD_TICK_DURATION(41);
 
 class Rect {
 public:

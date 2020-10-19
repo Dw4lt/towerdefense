@@ -1,5 +1,5 @@
-#ifndef ENEMY
-#define ENEMY
+#ifndef ENEMY_H
+#define ENEMY_H
 #include <SDL/SDL.h>
 #include "../rendering/renderer_object.hpp"
 

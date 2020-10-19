@@ -31,7 +31,7 @@ void GameManager::start() {
         
         Uint32 stop = SDL_GetTicks();
         Uint32 tick_duration = stop - start;
-        if (tick_duration < 41){
+        if (tick_duration < STANDARD_TICK_DURATION){
             SDL_Delay(41-tick_duration);
         }
         if (any_key_pressed()){

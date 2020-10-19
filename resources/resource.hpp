@@ -1,5 +1,5 @@
-#ifndef RESOURCE
-#define RESOURCE
+#ifndef RESOURCE_H
+#define RESOURCE_H
 #include <SDL/SDL.h>
 #include<string>
 

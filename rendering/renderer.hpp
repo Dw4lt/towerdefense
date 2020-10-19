@@ -1,5 +1,5 @@
-#ifndef RENDERER
-#define RENDERER
+#ifndef RENDERER_H
+#define RENDERER_H
 #include<SDL/SDL.h>
 #include<vector>
 #include<map>
