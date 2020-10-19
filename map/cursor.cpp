@@ -3,7 +3,7 @@
 #include <os.h>
 
 Cursor::Cursor(const Field* field)
-    : RendererObject(Point(0,0)
+    : RendererObject(Point(-1,-1)
                      , field->getWidth() / field->getMaxX() + 2
                      , field->getHeight() / field->getMaxY() + 2)
     , field_{field}
@@ -47,8 +47,8 @@ void Cursor::poll(){
 
 void Cursor::updatePosition(){
     Rect rect = field_->get(cursor_x_, cursor_y_)->boundingBox();
-    x_ = rect.left() - 2;
-    y_ = rect.top() - 2;
+    x_ = rect.left() - 1;
+    y_ = rect.top() - 1;
     width_ = rect.width_ + 2;
     height_ = rect.height_ + 2;
 }
