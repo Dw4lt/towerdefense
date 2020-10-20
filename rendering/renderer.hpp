@@ -21,7 +21,7 @@ public:
     ~Renderer();
 
     void addToSchene(RendererObject* object, int layer);
-    void display();
+    void show();
     void render();
     void setPixel(int x, int y, Uint16 color);
     void fillColor(Rect rect, Uint16 color);

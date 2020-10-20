@@ -46,7 +46,7 @@ void GameManager::game_loop() {
         enemy->pathfind(field_);
     }
     renderer_->render();
-    renderer_->display();
+    renderer_->show();
 }
 
 void GameManager::shop_loop() {

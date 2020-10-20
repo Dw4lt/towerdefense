@@ -67,6 +67,6 @@ Renderer::~Renderer(){
     SDL_free(screen_);
 }
 
-void Renderer::display(){
+void Renderer::show(){
     SDL_Flip(screen_);
 }
