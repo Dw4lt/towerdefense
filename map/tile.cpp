@@ -17,6 +17,7 @@ Tile::Tile(int x, int y, int width, int height, int index_x, int index_y)
 
 void Tile::render(Renderer* renderer){
     renderer->fillColor(RendererObject::boundingBox(), color_);
+    RendererObject::renderChildren(renderer);
 }
 
 void Tile::updateType(TileType newType){

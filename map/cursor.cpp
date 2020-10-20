@@ -56,4 +56,5 @@ void Cursor::updatePosition(){
 
 void Cursor::render(Renderer* renderer){
     renderer->drawRect(boundingBox(), RGB_888_TO_565(0xCF2020), 2);
+    RendererObject::renderChildren(renderer);
 }

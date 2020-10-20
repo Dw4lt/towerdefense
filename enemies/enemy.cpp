@@ -26,6 +26,7 @@ Rect Enemy::boundingBox() const{
 
 void Enemy::render(Renderer* renderer){
     renderer->fillColor(boundingBox(), color_);
+    RendererObject::renderChildren(renderer);
 }
 
 void Enemy::setNextTarget(Field* field){

@@ -14,14 +14,19 @@ public:
     virtual Rect boundingBox() const;
     Uint16 getWidth() const;
     Uint16 getHeight() const;
+    void addChild(RendererObject* child);
+    void setParent(RendererObject* parent);
+    virtual void renderChildren(Renderer* renderer);
     virtual void render(Renderer* renderer) = 0;
     virtual void render(Renderer* renderer, const Rect& region);
     
-    std::vector<RendererObject*> children_;
     Point getCenter() const;
 
 
 protected:
+    std::vector<RendererObject*> children_; // If parent is nullptr the object is added directly to the renderer
+    RendererObject* parent_;
+
     Sint16 x_;
     Sint16 y_;
     Uint16 width_;

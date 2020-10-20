@@ -20,7 +20,7 @@ Field::Field(int x, int y, int width, int height, int tiles_x, int tiles_y)
         double y_stop = y_increment;
         for (int i = 0; i < tiles_y_; i++){
             auto child = new Tile(x_start, y_start, std::round(x_stop-x_start), std::round(y_stop-y_start), k, i);
-            children_.push_back(child);
+            addChild(child);
             tile_grid_[k][i] = child;
             y_start = y_stop;
             y_stop += y_increment;
@@ -103,7 +103,7 @@ Field::~Field(){
 }
 
 void Field::render(Renderer* renderer){
-
+    renderChildren(renderer);
 }
 
 Tile* Field::get(int x, int y) const{

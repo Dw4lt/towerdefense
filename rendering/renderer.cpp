@@ -22,9 +22,6 @@ void Renderer::addToSchene(RendererObject* object, int layer){
     if (render_objects_.count(layer) == 0){
         render_objects_[layer] = std::vector<RendererObject*>();
     }
-    for (RendererObject* child : object->children_){
-        addToSchene(child, layer + 1); // Children always on top of parents. This may need changing in the future
-    }
     render_objects_[layer].push_back(object);
 }
 
