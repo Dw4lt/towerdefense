@@ -12,6 +12,10 @@ RendererObject::RendererObject(int x, int y, int width, int height)
 {
 }
 
+RendererObject::RendererObject(const Rect& rect)
+    : RendererObject(rect.origin_, rect.width_, rect.height_)
+{}
+
 RendererObject::RendererObject(Point pos, int width, int height)
     : RendererObject(pos.x_, pos.y_, width, height)
 {}

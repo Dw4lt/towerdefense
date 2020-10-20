@@ -9,6 +9,7 @@ class Renderer;
 class RendererObject {
 public:
     RendererObject(int x, int y, int width, int height);
+    RendererObject(const Rect& rect);
     RendererObject(Point pos, int width, int height);
     virtual ~RendererObject();
     virtual Rect boundingBox() const;
