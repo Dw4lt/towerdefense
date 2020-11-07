@@ -11,7 +11,7 @@
 GameManager::GameManager()
     : renderer_(Renderer::Init(320, 240, 16))
     , field_(new Field(0,0,320,210,40,30))
-    , field_cursor_(new Cursor(field_))
+    , field_cursor_(new Cursor(field_, this))
 {
     renderer_->addToSchene(field_, Renderer::LAYER::FIELD_LAYER);
     renderer_->addToSchene(field_cursor_, Renderer::LAYER::CURSOR_LAYER);
@@ -54,5 +54,15 @@ void GameManager::shop_loop() {
 }
 
 void GameManager::poll() {
+}
 
+void GameManager::onMapCursorClickOn(int x, int y){
+    Tile* tile = field_->get(x, y);
+    TileType type = tile->getType();
+    if (TileType::LAND == type){
+        tile->addChild(new Structure(tile));
+        tile->updateType(TileType::STRUCTURE);
+    }
+    else if (TileType::PATH == type){
+    }
 }

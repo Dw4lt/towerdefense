@@ -4,6 +4,7 @@
 #include"enemies/enemy.hpp"
 #include"map/field.hpp"
 #include"map/cursor.hpp"
+#include"structures/structure.hpp"
 #include <vector>
 
 
@@ -12,10 +13,13 @@ public:
     GameManager();
     ~GameManager();
     void start();
+    void onMapCursorClickOn(int x, int y);
+    
 private:
     void game_loop();
     void shop_loop();
     void poll();
+
 
     Renderer* renderer_;
     Field* field_;
