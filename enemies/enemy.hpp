@@ -2,6 +2,7 @@
 #define ENEMY_H
 #include <SDL/SDL.h>
 #include "../rendering/renderer_object.hpp"
+#include "../primitives/damage.hpp"
 
 class Renderer;
 class Field;
@@ -13,6 +14,8 @@ public:
     virtual void render(Renderer* renderer) override;
     virtual void pathfind(Field* field);
     virtual Rect boundingBox() const override;
+    virtual bool isImmune(DAMAGE_TYPE type);
+    virtual void damage(int damage, DAMAGE_TYPE type);
 
 private:
     void setNextTarget(Field* field);

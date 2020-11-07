@@ -20,6 +20,16 @@ Enemy::~Enemy(){
     
 }
 
+bool Enemy::isImmune(DAMAGE_TYPE type) {
+    return false;
+}
+
+void Enemy::damage(int damage, DAMAGE_TYPE type) {
+    if (!isImmune(type)) {
+        hp_ -= damage;
+    }
+}
+
 Rect Enemy::boundingBox() const{
     return Rect(x_- width_/2.0, y_ - height_/2.0, width_, height_);
 }
