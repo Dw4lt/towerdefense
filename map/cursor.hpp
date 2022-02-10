@@ -1,9 +1,9 @@
 #ifndef CURSOR_H
 #define CURSOR_H
 
-#include "field.hpp"
-#include "../rendering/renderer_object.hpp"
 #include "../rendering/renderer.hpp"
+#include "../rendering/renderer_object.hpp"
+#include "field.hpp"
 
 class GameManager;
 
@@ -24,7 +24,7 @@ public:
 private:
     void updatePosition();
     void updateAnimationState();
-    
+
     GameManager* game_manager_;
     ANIMATION_STATE animation_state_;
 

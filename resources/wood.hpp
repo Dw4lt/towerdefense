@@ -7,6 +7,7 @@ public:
     static Wood& instance();
     static void init(unsigned long start_amount = 0);
     virtual ~Wood();
+
 private:
     Wood(unsigned long start_amount = 0);
     static bool initialized_;

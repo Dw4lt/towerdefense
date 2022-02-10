@@ -1,8 +1,8 @@
 #ifndef ARCHER_H
 #define ARCHER_H
-#include "tower.hpp"
 #include "../enemies/enemy.hpp"
 #include "../primitives/damage.hpp"
+#include "tower.hpp"
 
 class Archer : public Tower {
 public:

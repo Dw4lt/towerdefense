@@ -1,14 +1,14 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
 #include <SDL/SDL.h>
-#include<string>
+#include <string>
 
 class Resource {
 public:
     Resource(unsigned long start_amount,
              std::string full_name,
              std::string description,
-             std::string short_name, 
+             std::string short_name,
              std::string name_symbol);
     virtual ~Resource();
 
@@ -29,7 +29,6 @@ protected:
     std::string name_short_;
     std::string name_symbol_;
     std::string description_;
-
 };
 
 #endif

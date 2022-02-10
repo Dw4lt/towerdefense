@@ -1,7 +1,7 @@
 #ifndef TOWER_H
 #define TOWER_H
-#include "structure.hpp"
 #include "../enemies/enemy.hpp"
+#include "structure.hpp"
 
 class Tower : public Structure {
 public:

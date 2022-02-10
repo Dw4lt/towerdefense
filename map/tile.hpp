@@ -1,7 +1,7 @@
 #ifndef TILE_H
 #define TILE_H
-#include <SDL/SDL.h>
 #include "../rendering/renderer_object.hpp"
+#include <SDL/SDL.h>
 
 class Renderer;
 
@@ -17,14 +17,13 @@ typedef enum {
     PLAIN
 } TileTerrain;
 
-typedef enum{
+typedef enum {
     UP,
     RIGHT,
     DOWN,
     LEFT,
     NONE
 } Direction;
-
 
 class Tile : public RendererObject {
 public:
@@ -34,9 +33,10 @@ public:
     void updateType(TileType newType);
     void updateNextNeighbour(Direction direction);
     void updateTerrain(TileTerrain terrain);
-    const TileType& getType() const {return type_;};
-    const Direction& getDirectionToNeighbour()const {return next_neighbour_;};
+    const TileType& getType() const { return type_; };
+    const Direction& getDirectionToNeighbour() const { return next_neighbour_; };
     virtual void render(Renderer* renderer) override;
+
 private:
     void updateColor();
 

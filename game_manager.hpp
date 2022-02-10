@@ -1,12 +1,11 @@
 #ifndef GAME_MANAGER_H
 #define GAME_MANAGER_H
-#include"rendering/renderer.hpp"
-#include"enemies/enemy.hpp"
-#include"map/field.hpp"
-#include"map/cursor.hpp"
-#include"structures/structure.hpp"
+#include "enemies/enemy.hpp"
+#include "map/cursor.hpp"
+#include "map/field.hpp"
+#include "rendering/renderer.hpp"
+#include "structures/structure.hpp"
 #include <vector>
-
 
 class GameManager {
 public:
@@ -14,12 +13,11 @@ public:
     ~GameManager();
     void start();
     void onMapCursorClickOn(int x, int y);
-    
+
 private:
     void game_loop();
     void shop_loop();
     void poll();
-
 
     Renderer* renderer_;
     Field* field_;

@@ -1,10 +1,9 @@
 #ifndef ESSENTIALS_H
 #define ESSENTIALS_H
-#include<SDL/SDL.h>
+#include <SDL/SDL.h>
 #include <iostream>
 
-class Point
-{
+class Point {
 public:
     Point(int x = 0, int y = 0);
     int x_;
@@ -18,16 +17,16 @@ public:
     Rect(Point origin, int width, int height);
     Rect(int x, int y, int width, int height);
     SDL_Rect toSDLRect();
-    int right(){return origin_.x_ + width_;};
-    int top(){return origin_.y_;};
-    int left(){return origin_.x_;};
-    int bottom(){return origin_.y_ + height_;};
+    int right() { return origin_.x_ + width_; };
+    int top() { return origin_.y_; };
+    int left() { return origin_.x_; };
+    int bottom() { return origin_.y_ + height_; };
     Point origin_;
     int width_;
     int height_;
     bool contains(const Point& point);
 };
-#define ErrorStream(x)  std::cout << "## Exception in " << __func__ << "() ##\n" << x << "\n####################\n"
-
+#define ErrorStream(x) std::cout << "## Exception in " << __func__ << "() ##\n" \
+                                 << x << "\n####################\n"
 
 #endif

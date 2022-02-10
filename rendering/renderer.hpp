@@ -1,15 +1,14 @@
 #ifndef RENDERER_H
 #define RENDERER_H
-#include<SDL/SDL.h>
-#include<vector>
-#include<map>
-#include"../primitives/essentials.hpp"
-#include"renderer_object.hpp"
-
+#include "../primitives/essentials.hpp"
+#include "renderer_object.hpp"
+#include <SDL/SDL.h>
+#include <map>
+#include <vector>
 
 class Renderer {
 public:
-    typedef enum{
+    typedef enum {
         FIELD_LAYER = 0,
         ENEMIES_LAYER = 10,
         STRUCTURES_LAYER = 15,

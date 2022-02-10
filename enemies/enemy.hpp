@@ -1,8 +1,8 @@
 #ifndef ENEMY_H
 #define ENEMY_H
-#include <SDL/SDL.h>
-#include "../rendering/renderer_object.hpp"
 #include "../primitives/damage.hpp"
+#include "../rendering/renderer_object.hpp"
+#include <SDL/SDL.h>
 
 class Renderer;
 class Field;

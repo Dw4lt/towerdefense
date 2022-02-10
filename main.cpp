@@ -1,14 +1,10 @@
+#include "enemies/enemy.hpp"
 #include <stdio.h>
-#include"enemies/enemy.hpp"
-#include<string>
+#include <string>
 
 #include "game_manager.hpp"
 
-
-
-
-int main ()
-{
+int main() {
     srand(time(NULL));
     printf("############## Start ##############\n");
     GameManager manager;

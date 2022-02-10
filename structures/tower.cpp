@@ -1,7 +1,6 @@
 #include "tower.hpp"
 #include "../rendering/renderer.hpp"
 
-
 double Tower::global_range_multiplier_(1);
 double Tower::global_cooldown_multiplier_(1);
 double Tower::global_damage_multiplier_(1);
@@ -11,18 +10,14 @@ Tower::Tower(int cooldown, int tower_range, double damage, Tile* tile)
     , cooldown_(cooldown)
     , damage_(damage)
     , range_(tower_range)
-    , cooldown_timer_(0)
-{
-
+    , cooldown_timer_(0) {
 }
 
-Tower::~Tower()
-{
-
+Tower::~Tower() {
 }
 
 bool Tower::withinRange(const Enemy& enemy) const {
-    if (range_ < 0){
+    if (range_ < 0) {
         return true;
     }
     auto epos = enemy.getCenter();
@@ -57,8 +52,7 @@ void Tower::setGlobalDamageMultiplier(double new_multiplier) {
     global_damage_multiplier_ = new_multiplier;
 }
 
-
-void Tower::render(Renderer* renderer){
+void Tower::render(Renderer* renderer) {
     renderer->fillColor(boundingBox(), RGB_888_TO_565(0xFF00FF));
     RendererObject::renderChildren(renderer);
 }

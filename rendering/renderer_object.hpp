@@ -1,8 +1,8 @@
 #ifndef RENDERER_OBJECT_H
 #define RENDERER_OBJECT_H
+#include "../primitives/essentials.hpp"
 #include <SDL/SDL.h>
 #include <vector>
-#include"../primitives/essentials.hpp"
 
 class Renderer;
 
@@ -20,9 +20,8 @@ public:
     virtual void renderChildren(Renderer* renderer);
     virtual void render(Renderer* renderer) = 0;
     virtual void render(Renderer* renderer, const Rect& region);
-    
-    Point getCenter() const;
 
+    Point getCenter() const;
 
 protected:
     std::vector<RendererObject*> children_; // If parent is nullptr the object is added directly to the renderer
