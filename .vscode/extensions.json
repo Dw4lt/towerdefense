@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "ms-vscode.cpptools",
+        "coenraads.bracket-pair-colorizer",
+        "notskm.clang-tidy"
+    ]
+}

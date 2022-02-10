@@ -1,2 +1,6 @@
 *.elf
 *.o
+_ndless-install/**/*
+ndless-install/**/*
+.vs
+out

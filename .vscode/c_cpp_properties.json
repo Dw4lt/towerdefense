@@ -5,12 +5,11 @@
             "includePath": [
                 "${default}",
                 "${workspaceFolder}/**",
-                "C:/Users/domin/AppData/Local/Packages/CanonicalGroupLimited.Ubuntu18.04onWindows_79rhkp1fndgsc/LocalState/rootfs/usr/include/",
-                "C:/Work/TD/Ndless/ndless-sdk/include",
-                "C:/Work/TD/Ndless/ndless-sdk/toolchain/install/arm-none-eabi/include/c++/10.1.0",
-                "C:/Work/TD/Ndless/ndless-sdk/toolchain/install/arm-none-eabi/include",
-                "C:/Work/TD/Ndless/ndless-sdk/toolchain/install/arm-none-eabi/include/c++/10.1.0/arm-none-eabi/",
-                "C:/Work/TD/Ndless/ndless-sdk/toolchain/install/lib/gcc/arm-none-eabi/10.1.0/include"
+                "${workspaceRoot}/../Ndless/ndless-sdk/include",
+                "${workspaceRoot}/ndless-install/arm-none-eabi/include/c++/10.1.0",
+                "${workspaceRoot}/ndless-install/arm-none-eabi/include",
+                "${workspaceRoot}/ndless-install/arm-none-eabi/include/c++/10.1.0/arm-none-eabi/",
+                "${workspaceRoot}/ndless-install/lib/gcc/arm-none-eabi/10.1.0/include"
             ],
             "defines": [
                 "_DEBUG",
@@ -19,7 +18,7 @@
             ],
             "intelliSenseMode": "clang-x86",
             "cppStandard": "c++17",
-            "compilerPath": "C:/Work/TD/Ndless/ndless-sdk/bin/nspire-g++"
+            "compilerPath": "${workspaceRoot}/../Ndless/ndless-sdk/bin/nspire-g++"
         }
     ],
     "version": 4
