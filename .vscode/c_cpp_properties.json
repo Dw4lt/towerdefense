@@ -3,22 +3,17 @@
         {
             "name": "Win32",
             "includePath": [
-                "${default}",
-                "${workspaceFolder}/**",
-                "${workspaceRoot}/../Ndless/ndless-sdk/include",
-                "${workspaceRoot}/ndless-install/arm-none-eabi/include/c++/10.1.0",
-                "${workspaceRoot}/ndless-install/arm-none-eabi/include",
-                "${workspaceRoot}/ndless-install/arm-none-eabi/include/c++/10.1.0/arm-none-eabi/",
-                "${workspaceRoot}/ndless-install/lib/gcc/arm-none-eabi/10.1.0/include"
+                "/opt/ndless-dev/Ndless/ndless-sdk/include"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
-            "intelliSenseMode": "clang-x86",
-            "cppStandard": "c++17",
-            "compilerPath": "${workspaceRoot}/../Ndless/ndless-sdk/bin/nspire-g++"
+            "compilerPath": "/opt/ndless-dev/Ndless/ndless-sdk/bin/nspire-gcc",
+            "cStandard": "c23",
+            "cppStandard": "gnu++23",
+            "intelliSenseMode": "clang-arm"
         }
     ],
     "version": 4

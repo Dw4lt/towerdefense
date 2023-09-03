@@ -1,6 +1,5 @@
-*.elf
+*.out
 *.o
-_ndless-install/**/*
-ndless-install/**/*
-.vs
-out
+build/
+*.elf
+*.zehn

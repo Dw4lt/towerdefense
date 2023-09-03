@@ -1,3 +1,5 @@
+include .env
+
 DEBUG = FALSE
 
 GCC = nspire-gcc
@@ -8,7 +10,7 @@ GENZEHN = genzehn
 
 GCCFLAGS = -Wall -W -marm
 LDFLAGS =
-ZEHNFLAGS = --name "TowerDefense"
+ZEHNFLAGS = --name "$(PROJECT_NAME)"
 
 ifeq ($(DEBUG),FALSE)
 	GCCFLAGS += -Os
@@ -19,8 +21,8 @@ endif
 OBJS = $(patsubst %.c, %.o, $(shell find . -name \*.c))
 OBJS += $(patsubst %.cpp, %.o, $(shell find . -name \*.cpp))
 OBJS += $(patsubst %.S, %.o, $(shell find . -name \*.S))
-EXE = TowerDefense
-DISTDIR = .
+EXE = $(PROJECT_NAME)
+DISTDIR = ./build
 vpath %.tns $(DISTDIR)
 vpath %.elf $(DISTDIR)
 
@@ -31,7 +33,7 @@ all: $(EXE).tns
 
 %.o: %.cpp
 	$(GXX) $(GCCFLAGS) -c $< -o $@
-	
+
 %.o: %.S
 	$(AS) -c $< -o $@
 
@@ -40,9 +42,9 @@ $(EXE).elf: $(OBJS)
 	$(LD) $^ -o $@ $(LDFLAGS)
 
 $(EXE).tns: $(EXE).elf
-	$(GENZEHN) --input $^ --output $@.zehn $(ZEHNFLAGS)
-	make-prg $@.zehn $@
-	rm $@.zehn
+	$(GENZEHN) --input $^ --output $(DISTDIR)/$@.zehn $(ZEHNFLAGS)
+	make-prg $(DISTDIR)/$@.zehn $(DISTDIR)/$@
+	rm $(DISTDIR)/$@.zehn
 
 clean:
 	rm -f $(OBJS) $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).zehn

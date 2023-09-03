@@ -4,7 +4,6 @@
     "clang-tidy.lintOnSave": true,
     "cmake.configureOnOpen": false,
     "files.exclude": {
-        "**/*.o": true,
-        "ndless-install": true
+        "**/*.o": true
     }
 }

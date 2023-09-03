@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  project:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+    init: true
+    stdin_open: true
+    tty: true
