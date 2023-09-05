@@ -4,8 +4,8 @@
 #include "map/cursor.hpp"
 #include "map/field.hpp"
 #include "rendering/renderer.hpp"
-#include "structures/structure.hpp"
 #include <vector>
+#include "game_state.hpp"
 
 class GameManager {
 public:
@@ -22,7 +22,7 @@ private:
     Renderer* renderer_;
     Field* field_;
     Cursor* field_cursor_;
-    std::vector<Enemy*> enemy_list_;
+    GameState* game_state_;
 };
 
 #endif

@@ -16,11 +16,11 @@ Tower::Tower(int cooldown, int tower_range, double damage, Tile* tile)
 Tower::~Tower() {
 }
 
-bool Tower::withinRange(const Enemy& enemy) const {
+bool Tower::withinRange(const Enemy* enemy) const {
     if (range_ < 0) {
         return true;
     }
-    auto epos = enemy.getCenter();
+    auto epos = enemy->getCenter();
     auto pos = getCenter();
     auto delta_x = epos.x_ - pos.x_;
     auto delta_y = epos.y_ - pos.y_;
@@ -53,14 +53,20 @@ void Tower::setGlobalDamageMultiplier(double new_multiplier) {
 }
 
 void Tower::render(Renderer* renderer) {
-    renderer->fillColor(boundingBox(), RGB_888_TO_565(0xFF00FF));
+    if (just_fired_){
+        renderer->fillColor(boundingBox(), RGB_888_TO_565(0xFFAAFF));
+        just_fired_ = false;
+    } else {
+        renderer->fillColor(boundingBox(), RGB_888_TO_565(0xFF00FF));
+    }
     RendererObject::renderChildren(renderer);
 }
 
-void Tower::tick(int elapsed_time_in_ms, std::vector<Enemy>& enemy_list) {
-    cooldown_timer_ -= elapsed_time_in_ms;
-    while (cooldown_timer_ <= 0) {
-        fire(enemy_list);
+void Tower::tick() {
+    cooldown_timer_ --;
+    if (cooldown_timer_ <= 0){
+        auto state = GameState::Get();
+        just_fired_ |= fire(state->enemy_list_);
         cooldown_timer_ += cooldown_ * global_cooldown_multiplier_;
     }
 }

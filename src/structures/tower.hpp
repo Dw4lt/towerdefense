@@ -1,6 +1,7 @@
 #ifndef TOWER_H
 #define TOWER_H
 #include "../enemies/enemy.hpp"
+#include "../game_state.hpp"
 #include "structure.hpp"
 
 class Tower : public Structure {
@@ -17,10 +18,14 @@ public:
     static double getGlobalDamageMultiplier();
     static void setGlobalDamageMultiplier(double new_multiplier);
 
-    virtual void tick(int elapsed_time_in_ms, std::vector<Enemy>& enemy_lis);
-    bool withinRange(const Enemy& enemy) const;
+    virtual void tick() override;
 
-    virtual void fire(std::vector<Enemy>& enemy_list) = 0;
+    bool withinRange(const Enemy* enemy) const;
+
+    /// @brief Attempts to fire at an enemy within range
+    /// @param enemy_list Enemies to look through
+    /// @return Whether or not an enemy was found
+    virtual bool fire(EnemyList& enemy_list) = 0;
 
 private:
     static double global_range_multiplier_;
@@ -32,6 +37,9 @@ private:
     int range_;
 
     int cooldown_timer_;
+
+    /// @brief Flag set when a tower has succesfully fired. Resets upon render.
+    bool just_fired_;
 };
 
 #endif

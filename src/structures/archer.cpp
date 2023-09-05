@@ -8,11 +8,12 @@ Archer::Archer(int cooldown, int tower_range, double damage, Tile* tile)
 Archer::~Archer() {
 }
 
-void Archer::fire(std::vector<Enemy>& enemy_list) {
+bool Archer::fire(EnemyList& enemy_list) {
     for (auto enemy : enemy_list) {
         if (withinRange(enemy)) {
-            enemy.damage(damage_ * getGlobalDamageMultiplier(), DAMAGE_TYPE::PROJECTILE);
-            return;
+            enemy->damage(damage_ * getGlobalDamageMultiplier(), DAMAGE_TYPE::PROJECTILE);
+            return true;
         }
     }
+    return false;
 }

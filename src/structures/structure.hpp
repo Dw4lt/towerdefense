@@ -10,6 +10,8 @@ public:
     Structure(Tile* tile);
     virtual ~Structure();
 
+    virtual void tick() = 0;
+
     virtual void render(Renderer* renderer);
 
 protected:
