@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach gdb",
+            "type": "gdb",
+            "request": "attach",
+            "executable": "${workspaceRoot}/build/TowerDefense.elf",
+            "target": "host.docker.internal:3333",
+            "gdbpath": "arm-none-eabi-gdb",
+            "debugger_args": [],
+            "autorun": [
+                "set confirm off",
+                "make",
+                "set debug remote 1",
+            ],
+            "remote": true,
+            "cwd": "${workspaceRoot}",
+            "valuesFormatting": "prettyPrinters",
+            "printCalls": true,
+            "stopAtConnect": false,
+            "stopAtEntry": true
+        }
+    ]
+}

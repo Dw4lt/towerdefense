@@ -1,6 +1,6 @@
 include .env
 
-DEBUG = FALSE
+DEBUG = TRUE
 
 GCC = nspire-gcc
 AS  = nspire-as
@@ -39,10 +39,10 @@ all: $(EXE).tns
 
 $(EXE).elf: $(OBJS)
 	mkdir -p $(DISTDIR)
-	$(LD) $^ -o $@ $(LDFLAGS)
+	$(LD) $^ -o $(DISTDIR)/$@ $(LDFLAGS)
 
 $(EXE).tns: $(EXE).elf
-	$(GENZEHN) --input $^ --output $(DISTDIR)/$@.zehn $(ZEHNFLAGS)
+	$(GENZEHN) --input $(DISTDIR)/$^ --output $(DISTDIR)/$@.zehn $(ZEHNFLAGS)
 	make-prg $(DISTDIR)/$@.zehn $(DISTDIR)/$@
 	rm $(DISTDIR)/$@.zehn
 
