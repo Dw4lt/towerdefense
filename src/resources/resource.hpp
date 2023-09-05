@@ -18,8 +18,8 @@ public:
     unsigned long stock() const;
 
     std::string name() const;
-    std::string name_short() const;
-    std::string name_symbol() const;
+    std::string nameShort() const;
+    std::string nameSymbol() const;
     std::string description() const;
 
 protected:

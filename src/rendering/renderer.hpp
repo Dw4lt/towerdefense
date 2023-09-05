@@ -19,7 +19,7 @@ public:
     static Renderer* Init(int width, int height, int bit_per_color);
     ~Renderer();
 
-    void addToSchene(RendererObject* object, int layer);
+    void addToScene(RendererObject* object, int layer);
     void show();
     void render();
     void setPixel(int x, int y, Uint16 color);

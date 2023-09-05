@@ -15,7 +15,7 @@ Renderer::Renderer(int width, int height, int bit_per_color)
     , screen_(SDL_SetVideoMode(screen_width_, screen_height_, screen_bit_color_, SDL_FULLSCREEN)) {
 }
 
-void Renderer::addToSchene(RendererObject* object, int layer) {
+void Renderer::addToScene(RendererObject* object, int layer) {
     if (render_objects_.count(layer) == 0) {
         render_objects_[layer] = std::vector<RendererObject*>();
     }

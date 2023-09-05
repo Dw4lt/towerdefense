@@ -34,11 +34,11 @@ std::string Resource::name() const {
     return name_full_;
 }
 
-std::string Resource::name_short() const {
+std::string Resource::nameShort() const {
     return name_short_;
 }
 
-std::string Resource::name_symbol() const {
+std::string Resource::nameSymbol() const {
     return name_symbol_;
 }
 

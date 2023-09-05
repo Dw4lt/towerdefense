@@ -10,10 +10,10 @@ GameManager::GameManager()
     : renderer_(Renderer::Init(320, 240, 16))
     , field_(new Field(0, 0, 320, 210, 40, 30))
     , field_cursor_(new Cursor(field_, this)) {
-    renderer_->addToSchene(field_, Renderer::LAYER::FIELD_LAYER);
-    renderer_->addToSchene(field_cursor_, Renderer::LAYER::CURSOR_LAYER);
+    renderer_->addToScene(field_, Renderer::LAYER::FIELD_LAYER);
+    renderer_->addToScene(field_cursor_, Renderer::LAYER::CURSOR_LAYER);
     enemy_list_.push_back(new Enemy(field_->get(field_->getStart())->getCenter(), 4, 4, Point{field_->getStart()}, 100, 4.2, 0xf00f));
-    renderer_->addToSchene(enemy_list_.back(), Renderer::LAYER::ENEMIES_LAYER);
+    renderer_->addToScene(enemy_list_.back(), Renderer::LAYER::ENEMIES_LAYER);
 }
 
 GameManager::~GameManager() {
@@ -24,7 +24,7 @@ void GameManager::start() {
     while (!isKeyPressed(KEY_NSPIRE_ESC)) {
         Uint32 start = SDL_GetTicks();
 
-        game_loop();
+        gameLoop();
 
         Uint32 stop = SDL_GetTicks();
         Uint32 tick_duration = stop - start;
@@ -37,7 +37,7 @@ void GameManager::start() {
     }
 }
 
-void GameManager::game_loop() {
+void GameManager::gameLoop() {
     field_cursor_->poll();
     for (Enemy* enemy : enemy_list_) {
         enemy->pathfind(field_);
@@ -46,7 +46,7 @@ void GameManager::game_loop() {
     renderer_->show();
 }
 
-void GameManager::shop_loop() {
+void GameManager::shopLoop() {
 }
 
 void GameManager::poll() {

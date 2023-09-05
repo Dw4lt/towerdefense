@@ -15,8 +15,8 @@ public:
     void onMapCursorClickOn(int x, int y);
 
 private:
-    void game_loop();
-    void shop_loop();
+    void gameLoop();
+    void shopLoop();
     void poll();
 
     Renderer* renderer_;
