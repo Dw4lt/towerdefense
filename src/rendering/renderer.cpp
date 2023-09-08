@@ -30,8 +30,8 @@ void Renderer::addToScene(RendererObjectPtr object) {
         render_objects_[layer] = std::vector<RendererObjectPtr>();
     }
     object->part_of_a_scene = true;
+    object->inheritScene();
     render_objects_[layer].push_back(object);
-    object->part_of_a_scene = true;
 }
 
 void Renderer::removeFromScene(RendererObjectPtr object) {

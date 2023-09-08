@@ -8,6 +8,13 @@ Renderable::Renderable() {
 
 auto Renderable::addChild(RReader<Renderable> child) -> void {
     children_.push_back(child);
+    child->part_of_a_scene |= part_of_a_scene; // Inherit scene if assigned
+}
+
+void Renderable::inheritScene() { // TODO: hacky approach. Add proper state management
+    for(auto& child: children_) {
+        child->part_of_a_scene = part_of_a_scene;
+    }
 }
 
 Renderable::~Renderable() {

@@ -21,6 +21,8 @@ public:
 
     void addChild(RReader<Renderable> child);
 
+    void inheritScene();
+
     bool part_of_a_scene = false;
 
 private:

@@ -24,7 +24,6 @@ void GameState::addStructure(std::shared_ptr<Structure> structure, Tile& tile){
     structure_list_.push_back(ROwner<Structure>(structure));
     tile.addChild(structure_list_.back().makeReader());
     tile.updateType(TileType::STRUCTURE);
-    Renderer::get()->addToScene(structure_list_.back().makeReader());
 }
 
 
