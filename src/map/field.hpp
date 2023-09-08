@@ -29,8 +29,8 @@ public:
     const Tile& getTile(int x, int y) const;
     const Tile& getTile(const Point& tile_coords) const;
 
-    constexpr bool checkBounds(int x, int y) const;
-    constexpr bool checkBounds(const Point& tile_coords) const;
+    bool checkBounds(int x, int y) const;
+    bool checkBounds(const Point& tile_coords) const;
 
     int getMaxX() const;
     int getMaxY() const;

@@ -121,11 +121,11 @@ auto Field::getTile(const Point& tile_coords) const -> const Tile& {
     return getTile(tile_coords.x_, tile_coords.y_);
 }
 
-constexpr auto Field::checkBounds(int x, int y) const -> bool {
+auto Field::checkBounds(int x, int y) const -> bool {
     return x >= 0 && x < tiles_x_ && y >= 0 && y <tiles_y_;
 }
 
-constexpr auto Field::checkBounds(const Point& tile_coords) const -> bool {
+auto Field::checkBounds(const Point& tile_coords) const -> bool {
     return checkBounds(tile_coords.x_, tile_coords.y_);
 }
 
