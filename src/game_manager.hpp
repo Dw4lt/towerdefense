@@ -2,7 +2,7 @@
 #define GAME_MANAGER_H
 #include "enemies/enemy.hpp"
 #include "map/cursor.hpp"
-#include "rendering/renderer.hpp"
+#include "rendering/scene.hpp"
 #include <vector>
 #include "game_state.hpp"
 

@@ -6,16 +6,16 @@
 #include <vector>
 #include <memory>
 
-class Renderer;
+class Scene;
 
 class Renderable {
 public:
     Renderable();
     virtual ~Renderable();
 
-    virtual void render(Renderer* renderer) = 0;
+    virtual void render(Scene* scene) = 0;
 
-    virtual void renderChildren(Renderer* renderer);
+    virtual void renderChildren(Scene* scene);
 
     virtual Rect boundingBox() const = 0;
 
@@ -40,8 +40,8 @@ public:
     virtual Rect boundingBox() const;
     Uint16 getWidth() const;
     Uint16 getHeight() const;
-    virtual void render(Renderer* renderer) = 0;
-    virtual void render(Renderer* renderer, const Rect& region);
+    virtual void render(Scene* scene) = 0;
+    virtual void render(Scene* scene, const Rect& region);
 
     virtual SCREEN_LAYER getDepth() const = 0;
 

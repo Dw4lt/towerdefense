@@ -1,5 +1,5 @@
 #include "enemy.hpp"
-#include "../rendering/renderer.hpp"
+#include "../rendering/scene.hpp"
 #include <assert.h>
 #include <stdio.h>
 
@@ -35,9 +35,9 @@ Rect Enemy::boundingBox() const {
     return Rect(x_ - width_ / 2.0, y_ - height_ / 2.0, width_, height_);
 }
 
-void Enemy::render(Renderer* renderer) {
-    renderer->fillColor(boundingBox(), color_);
-    RendererObject::renderChildren(renderer);
+void Enemy::render(Scene* scene) {
+    scene->fillColor(boundingBox(), color_);
+    RendererObject::renderChildren(scene);
 }
 
 void Enemy::setNextTarget(const Field& field) {

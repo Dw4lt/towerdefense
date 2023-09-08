@@ -1,5 +1,5 @@
 #include "archer.hpp"
-#include "../rendering/renderer.hpp"
+#include "../rendering/scene.hpp"
 
 Archer::Archer(int cooldown, int tower_range, double damage, const Tile& tile)
     : Tower(cooldown, tower_range, damage, tile)

@@ -6,7 +6,7 @@
 #include "tile.hpp"
 #include <SDL/SDL.h>
 
-class Renderer;
+class Scene;
 
 
 // Game field. Made up of Tiles.
@@ -20,7 +20,7 @@ public:
 
     Field(int x, int y, int width, int height, int tiles_x = FIELD_TILE_COUNT_X, int tiles_y = FIELD_TILE_COUNT_Y);
     virtual ~Field() = default;
-    virtual void render(Renderer* renderer) override;
+    virtual void render(Scene* scene) override;
 
     void generatePath();
 

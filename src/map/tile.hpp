@@ -3,7 +3,7 @@
 #include "../rendering/renderer_object.hpp"
 #include <SDL/SDL.h>
 
-class Renderer;
+class Scene;
 
 enum class TileType {
     LAND,
@@ -35,7 +35,7 @@ public:
     void updateTerrain(TileTerrain terrain);
     const TileType& getType() const { return type_; };
     const Direction& getDirectionToNeighbour() const { return next_neighbour_; };
-    virtual void render(Renderer* renderer) override;
+    virtual void render(Scene* scene) override;
 
     SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::BACKGROUND; };
 

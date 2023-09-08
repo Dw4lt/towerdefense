@@ -9,13 +9,13 @@
 #include <memory>
 
 
-class Renderer {
+class Scene {
     using RendererObjectPtr = RReader<RendererObject>;
-    using RendererRef = std::unique_ptr<Renderer>&;
+    using SceneRef = std::unique_ptr<Scene>&;
 public:
-    static RendererRef get();
-    static RendererRef Init(int width, int height, int bit_per_color);
-    ~Renderer();
+    static SceneRef get();
+    static SceneRef Init(int width, int height, int bit_per_color);
+    ~Scene();
 
     void addToScene(RendererObjectPtr object);
     void removeFromScene(RendererObjectPtr object);
@@ -31,10 +31,9 @@ public:
     const int screen_bit_color_;
     SDL_Surface* screen_;
 
-
 private:
-    Renderer(int width, int height, int bit_per_color);
-    static std::unique_ptr<Renderer> singleton_;
+    Scene(int width, int height, int bit_per_color);
+    static std::unique_ptr<Scene> singleton_;
 
     std::map<SCREEN_LAYER, std::vector<RendererObjectPtr>> render_objects_; // int -> Layer, vector -> objects
 };

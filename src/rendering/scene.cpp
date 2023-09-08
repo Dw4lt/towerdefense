@@ -1,26 +1,26 @@
-#include "renderer.hpp"
+#include "scene.hpp"
 #include <stdio.h>
 
-std::unique_ptr<Renderer> Renderer::singleton_(nullptr);
+std::unique_ptr<Scene> Scene::singleton_(nullptr);
 
-auto Renderer::Init(int width, int height, int bit_per_color) -> Renderer::RendererRef {
-    singleton_.reset(new Renderer(width, height, bit_per_color));
-    return Renderer::singleton_;
+auto Scene::Init(int width, int height, int bit_per_color) -> Scene::SceneRef {
+    singleton_.reset(new Scene(width, height, bit_per_color));
+    return Scene::singleton_;
 }
 
-Renderer::Renderer(int width, int height, int bit_per_color)
+Scene::Scene(int width, int height, int bit_per_color)
     : screen_width_(width)
     , screen_height_(height)
     , screen_bit_color_(bit_per_color)
     , screen_(SDL_SetVideoMode(screen_width_, screen_height_, screen_bit_color_, SDL_FULLSCREEN)) {
 }
 
-auto Renderer::get() -> Renderer::RendererRef {
-    if (!singleton_) throw std::runtime_error("Renderer requested before initialization");
+auto Scene::get() -> Scene::SceneRef {
+    if (!singleton_) throw std::runtime_error("Scene requested before initialization");
     return singleton_;
 }
 
-void Renderer::addToScene(RendererObjectPtr object) {
+void Scene::addToScene(RendererObjectPtr object) {
     if (object->part_of_a_scene) {
         std::cout << "RendererObject is already part of a scene.\n";
         return;
@@ -34,7 +34,7 @@ void Renderer::addToScene(RendererObjectPtr object) {
     render_objects_[layer].push_back(object);
 }
 
-void Renderer::removeFromScene(RendererObjectPtr object) {
+void Scene::removeFromScene(RendererObjectPtr object) {
     if (object.isValid()) {
         auto layer = object->getDepth();
         if (render_objects_.count(layer) > 0) {
@@ -50,18 +50,18 @@ void Renderer::removeFromScene(RendererObjectPtr object) {
     }
 }
 
-void Renderer::setPixel(int x, int y, Uint16 color) {
+void Scene::setPixel(int x, int y, Uint16 color) {
     if (x >= 0 && y >= 0 && x < screen_width_ && y < screen_height_) {
         *((Uint16*)screen_->pixels + y * screen_->pitch + x * screen_bit_color_) = color;
     }
 }
 
-void Renderer::fillColor(Rect rect, Uint16 color) {
+void Scene::fillColor(Rect rect, Uint16 color) {
     SDL_Rect rect2{rect.toSDLRect()};
     SDL_FillRect(screen_, &rect2, color);
 }
 
-void Renderer::drawRect(Rect rect, Uint16 color, unsigned int thickness, Uint8 alpha) {
+void Scene::drawRect(Rect rect, Uint16 color, unsigned int thickness, Uint8 alpha) {
     int x = rect.origin_.x_, y = rect.origin_.y_;
     int width = rect.width_, height = rect.height_;
     SDL_Rect rect0{Rect(rect.origin_, thickness, rect.height_ - thickness).toSDLRect()};                          // left margin
@@ -74,7 +74,7 @@ void Renderer::drawRect(Rect rect, Uint16 color, unsigned int thickness, Uint8 a
     SDL_FillRect(screen_, &rect3, color);
 }
 
-void Renderer::render() {
+void Scene::render() {
     std::vector<RendererObject> v;
     for (auto vect : render_objects_) {
         for (auto obj : vect.second) {
@@ -87,10 +87,10 @@ void Renderer::render() {
     }
 }
 
-Renderer::~Renderer() {
+Scene::~Scene() {
     SDL_free(screen_);
 }
 
-void Renderer::show() {
+void Scene::show() {
     SDL_Flip(screen_);
 }

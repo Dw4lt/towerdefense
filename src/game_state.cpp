@@ -1,12 +1,12 @@
 #include "game_state.hpp"
-#include "rendering/renderer.hpp"
+#include "rendering/scene.hpp"
 
 ROwner<GameState> GameState::singleton_{nullptr};
 
 GameState::GameState()
     : field_ptr_{new Field(0, 0, FIELD_WIDTH, FIELD_HEIGHT)}
     {
-    Renderer::get()->addToScene(field_ptr_.makeReader());
+    Scene::get()->addToScene(field_ptr_.makeReader());
 }
 
 auto GameState::getField() -> Field& {
@@ -29,7 +29,7 @@ void GameState::addStructure(std::shared_ptr<Structure> structure, Tile& tile){
 
 void GameState::addEnemy(std::shared_ptr<Enemy> enemy){
     enemy_list_.push_back(ROwner(enemy));
-    Renderer::get()->addToScene(enemy_list_.back().makeReader());
+    Scene::get()->addToScene(enemy_list_.back().makeReader());
 }
 
 void GameState::purgeEnemies(bool (*func)(Enemy& e)) {

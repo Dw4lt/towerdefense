@@ -1,5 +1,5 @@
 #include "field.hpp"
-#include "../rendering/renderer.hpp"
+#include "../rendering/scene.hpp"
 
 Field::Field(int x, int y, int width, int height, int tiles_x, int tiles_y)
     : RendererObject(x, y, width, height)
@@ -93,8 +93,8 @@ auto Field::generatePath() -> void {
     }
 }
 
-auto Field::render(Renderer* renderer) -> void {
-    renderChildren(renderer);
+auto Field::render(Scene* scene) -> void {
+    renderChildren(scene);
 }
 
 auto Field::getTile(int x, int y) -> Tile& {

@@ -1,7 +1,7 @@
 #ifndef CURSOR_H
 #define CURSOR_H
 
-#include "../rendering/renderer.hpp"
+#include "../rendering/scene.hpp"
 #include "../rendering/renderer_object.hpp"
 #include "field.hpp"
 
@@ -17,7 +17,7 @@ class FieldCursor : public RendererObject {
 public:
     FieldCursor(GameManager* manager);
     virtual ~FieldCursor();
-    virtual void render(Renderer* renderer);
+    virtual void render(Scene* scene);
 
     void poll();
 

@@ -82,7 +82,7 @@ void FieldCursor::updatePosition() {
     height_ = rect.height_ + 2;
 }
 
-void FieldCursor::render(Renderer* renderer) {
+void FieldCursor::render(Scene* scene) {
     Uint32 color;
     switch (animation_state_) {
     case ANIMATION_STATE::BLOCKED:
@@ -96,6 +96,6 @@ void FieldCursor::render(Renderer* renderer) {
         color = (Uint32)0x344ceb;
         break;
     }
-    renderer->drawRect(boundingBox(), RGB_888_TO_565(color), 2);
-    RendererObject::renderChildren(renderer);
+    scene->drawRect(boundingBox(), RGB_888_TO_565(color), 2);
+    RendererObject::renderChildren(scene);
 }

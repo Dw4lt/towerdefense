@@ -9,10 +9,10 @@
 
 GameManager::GameManager()
 {
-    Renderer::Init(320, 240, 16);
+    Scene::Init(320, 240, 16);
     GameState::getState();
     field_cursor_ = ROwner(new FieldCursor(this));
-    Renderer::get()->addToScene(field_cursor_.makeReader());
+    Scene::get()->addToScene(field_cursor_.makeReader());
 
     spawnWave();
 }
@@ -55,9 +55,9 @@ void GameManager::gameLoop() {
         structure->tick();
     }
     removeDeadEnemies();
-    auto& renderer = Renderer::get();
-    renderer->render();
-    renderer->show();
+    auto& scene = Scene::get();
+    scene->render();
+    scene->show();
 }
 
 void GameManager::removeDeadEnemies() {

@@ -1,6 +1,6 @@
 #include "tile.hpp"
 #include "../primitives/color_conversion.hpp"
-#include "../rendering/renderer.hpp"
+#include "../rendering/scene.hpp"
 #include <stdio.h>
 
 Tile::Tile(int x, int y, int width, int height, int index_x, int index_y)
@@ -14,9 +14,9 @@ Tile::Tile(int x, int y, int width, int height, int index_x, int index_y)
     updateColor();
 }
 
-void Tile::render(Renderer* renderer) {
-    renderer->fillColor(RendererObject::boundingBox(), color_);
-    RendererObject::renderChildren(renderer);
+void Tile::render(Scene* scene) {
+    scene->fillColor(RendererObject::boundingBox(), color_);
+    RendererObject::renderChildren(scene);
 }
 
 void Tile::updateType(TileType newType) {

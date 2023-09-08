@@ -6,13 +6,13 @@
 #include "../map/field.hpp"
 #include <SDL/SDL.h>
 
-class Renderer;
+class Scene;
 
 class Enemy : public RendererObject {
 public:
     Enemy(Point pos, int width, int height, Point current_field, long int hp_, double speed, Uint16 color);
     virtual ~Enemy();
-    virtual void render(Renderer* renderer) override;
+    virtual void render(Scene* scene) override;
     virtual void pathfind(Field& field);
     virtual Rect boundingBox() const override;
     virtual bool isImmune(DAMAGE_TYPE type);

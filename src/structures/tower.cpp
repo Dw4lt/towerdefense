@@ -1,5 +1,5 @@
 #include "tower.hpp"
-#include "../rendering/renderer.hpp"
+#include "../rendering/scene.hpp"
 
 double Tower::global_range_multiplier_(1);
 double Tower::global_cooldown_multiplier_(1);
@@ -52,14 +52,14 @@ void Tower::setGlobalDamageMultiplier(double new_multiplier) {
     global_damage_multiplier_ = new_multiplier;
 }
 
-void Tower::render(Renderer* renderer) {
+void Tower::render(Scene* scene) {
     if (just_fired_){
-        renderer->fillColor(boundingBox(), RGB_888_TO_565(0xFFAAFF));
+        scene->fillColor(boundingBox(), RGB_888_TO_565(0xFFAAFF));
         just_fired_ = false;
     } else {
-        renderer->fillColor(boundingBox(), RGB_888_TO_565(0xFF00FF));
+        scene->fillColor(boundingBox(), RGB_888_TO_565(0xFF00FF));
     }
-    renderChildren(renderer);
+    renderChildren(scene);
 }
 
 void Tower::tick() {

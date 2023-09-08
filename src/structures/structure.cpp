@@ -1,5 +1,5 @@
 #include "structure.hpp"
-#include "../rendering/renderer.hpp"
+#include "../rendering/scene.hpp"
 
 Structure::Structure(const Tile& tile)
     : RendererObject(tile.boundingBox())
@@ -8,7 +8,7 @@ Structure::Structure(const Tile& tile)
 
 Structure::~Structure() {}
 
-void Structure::render(Renderer* renderer) {
-    renderer->fillColor(boundingBox(), RGB_888_TO_565(0xFF00FF));
-    RendererObject::renderChildren(renderer);
+void Structure::render(Scene* scene) {
+    scene->fillColor(boundingBox(), RGB_888_TO_565(0xFF00FF));
+    RendererObject::renderChildren(scene);
 }

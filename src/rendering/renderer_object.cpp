@@ -1,7 +1,7 @@
 #include "renderer_object.hpp"
 
 #include "assert.h"
-#include "renderer.hpp"
+#include "scene.hpp"
 
 Renderable::Renderable() {
 }
@@ -23,9 +23,9 @@ Renderable::~Renderable() {
     }
 }
 
-void Renderable::renderChildren(Renderer* renderer) {
+void Renderable::renderChildren(Scene* scene) {
     for (auto child : children_) {
-        child->render(renderer);
+        child->render(scene);
     }
 }
 
@@ -53,8 +53,8 @@ Rect RendererObject::boundingBox() const {
     return Rect{x_, y_, width_, height_};
 }
 
-void RendererObject::render(Renderer* renderer, const Rect& region) {
-    render(renderer);
+void RendererObject::render(Scene* scene, const Rect& region) {
+    render(scene);
 }
 
 Uint16 RendererObject::getWidth() const {
