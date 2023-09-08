@@ -10,13 +10,22 @@
 GameManager::GameManager()
 {
     Renderer::Init(320, 240, 16);
-    auto game_state = GameState::getState();
+    GameState::getState();
     field_cursor_ = ROwner(new FieldCursor(this));
     Renderer::get()->addToScene(field_cursor_.makeReader());
 
+    spawnWave();
+}
+
+void GameManager::spawnWave() {
+    auto game_state = GameState::getState();
     auto& field = game_state->getField();
     auto& starting_point = field.getStart();
-    game_state->addEnemy(std::make_shared<Enemy>(field.getTile(starting_point).getCenter(), 4, 4, Point{starting_point}, 100, 1.2, 0xf00f));
+    auto pos = field.getTile(starting_point).getCenter();
+    for (int i = 0; i < 10; i ++) {
+        game_state->addEnemy(std::make_shared<Enemy>(pos, 4, 4, Point{starting_point}, 100, 1.2, 0xf00f));
+        pos.x_ -= 15;
+    }
 }
 
 void GameManager::start() {

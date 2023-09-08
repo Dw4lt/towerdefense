@@ -13,6 +13,8 @@ public:
     void start();
     void onMapCursorClickOn(int x, int y);
 
+    void spawnWave();
+
 private:
     void gameLoop();
     void shopLoop();
