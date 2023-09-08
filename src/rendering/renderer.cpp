@@ -1,10 +1,10 @@
 #include "renderer.hpp"
 #include <stdio.h>
 
-Renderer* Renderer::singleton_(nullptr);
+std::unique_ptr<Renderer> Renderer::singleton_(nullptr);
 
-Renderer* Renderer::Init(int width, int height, int bit_per_color) {
-    Renderer::singleton_ = new Renderer(width, height, bit_per_color);
+auto Renderer::Init(int width, int height, int bit_per_color) -> Renderer::RendererRef {
+    singleton_.reset(new Renderer(width, height, bit_per_color));
     return Renderer::singleton_;
 }
 
@@ -13,6 +13,11 @@ Renderer::Renderer(int width, int height, int bit_per_color)
     , screen_height_(height)
     , screen_bit_color_(bit_per_color)
     , screen_(SDL_SetVideoMode(screen_width_, screen_height_, screen_bit_color_, SDL_FULLSCREEN)) {
+}
+
+auto Renderer::get() -> Renderer::RendererRef {
+    if (!singleton_) throw std::runtime_error("Renderer requested before initialization");
+    return singleton_;
 }
 
 void Renderer::addToScene(RendererObjectPtr object) {

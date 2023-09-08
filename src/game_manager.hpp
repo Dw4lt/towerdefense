@@ -9,7 +9,7 @@
 class GameManager {
 public:
     GameManager();
-    ~GameManager();
+    ~GameManager() = default;
     void start();
     void onMapCursorClickOn(int x, int y);
 
@@ -19,7 +19,6 @@ private:
     void poll();
     void removeDeadEnemies();
 
-    Renderer* renderer_;
     ROwner<FieldCursor> field_cursor_;
 };
 

@@ -8,19 +8,15 @@
 #include <string>
 
 GameManager::GameManager()
-    : renderer_(Renderer::Init(320, 240, 16))
 {
+    Renderer::Init(320, 240, 16);
     auto game_state = GameState::getState();
     field_cursor_ = ROwner(new FieldCursor(this));
-    renderer_->addToScene(field_cursor_.makeReader());
+    Renderer::get()->addToScene(field_cursor_.makeReader());
 
     auto& field = game_state->getField();
     auto& starting_point = field.getStart();
     game_state->addEnemy(std::make_shared<Enemy>(field.getTile(starting_point).getCenter(), 4, 4, Point{starting_point}, 100, 1.2, 0xf00f));
-}
-
-GameManager::~GameManager() {
-    delete renderer_;
 }
 
 void GameManager::start() {
@@ -50,8 +46,9 @@ void GameManager::gameLoop() {
         structure->tick();
     }
     removeDeadEnemies();
-    renderer_->render();
-    renderer_->show();
+    auto& renderer = Renderer::get();
+    renderer->render();
+    renderer->show();
 }
 
 void GameManager::removeDeadEnemies() {

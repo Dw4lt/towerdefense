@@ -6,12 +6,15 @@
 #include <SDL/SDL.h>
 #include <map>
 #include <vector>
+#include <memory>
 
 
 class Renderer {
     using RendererObjectPtr = RReader<RendererObject>;
+    using RendererRef = std::unique_ptr<Renderer>&;
 public:
-    static Renderer* Init(int width, int height, int bit_per_color);
+    static RendererRef get();
+    static RendererRef Init(int width, int height, int bit_per_color);
     ~Renderer();
 
     void addToScene(RendererObjectPtr object);
@@ -28,10 +31,10 @@ public:
     const int screen_bit_color_;
     SDL_Surface* screen_;
 
-    static Renderer* singleton_;
 
 private:
     Renderer(int width, int height, int bit_per_color);
+    static std::unique_ptr<Renderer> singleton_;
 
     std::map<SCREEN_LAYER, std::vector<RendererObjectPtr>> render_objects_; // int -> Layer, vector -> objects
 };
