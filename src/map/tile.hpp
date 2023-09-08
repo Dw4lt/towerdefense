@@ -5,11 +5,11 @@
 
 class Renderer;
 
-typedef enum {
+enum class TileType {
     LAND,
     PATH,
     STRUCTURE
-} TileType;
+};
 
 typedef enum {
     TREE,
@@ -36,6 +36,8 @@ public:
     const TileType& getType() const { return type_; };
     const Direction& getDirectionToNeighbour() const { return next_neighbour_; };
     virtual void render(Renderer* renderer) override;
+
+    SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::BACKGROUND; };
 
 private:
     void updateColor();

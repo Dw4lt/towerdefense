@@ -2,7 +2,6 @@
 #define GAME_MANAGER_H
 #include "enemies/enemy.hpp"
 #include "map/cursor.hpp"
-#include "map/field.hpp"
 #include "rendering/renderer.hpp"
 #include <vector>
 #include "game_state.hpp"
@@ -18,11 +17,10 @@ private:
     void gameLoop();
     void shopLoop();
     void poll();
+    void removeDeadEnemies();
 
     Renderer* renderer_;
-    Field* field_;
-    Cursor* field_cursor_;
-    GameState* game_state_;
+    ROwner<FieldCursor> field_cursor_;
 };
 
 #endif

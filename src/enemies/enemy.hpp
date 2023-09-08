@@ -2,23 +2,27 @@
 #define ENEMY_H
 #include "../primitives/damage.hpp"
 #include "../rendering/renderer_object.hpp"
+#include "../primitives/essentials.hpp"
+#include "../map/field.hpp"
 #include <SDL/SDL.h>
 
 class Renderer;
-class Field;
 
 class Enemy : public RendererObject {
 public:
     Enemy(Point pos, int width, int height, Point current_field, long int hp_, double speed, Uint16 color);
     virtual ~Enemy();
     virtual void render(Renderer* renderer) override;
-    virtual void pathfind(Field* field);
+    virtual void pathfind(Field& field);
     virtual Rect boundingBox() const override;
     virtual bool isImmune(DAMAGE_TYPE type);
     virtual void damage(int damage, DAMAGE_TYPE type);
 
+    virtual long int getHP() const;
+    virtual SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::ENEMY; };
+
 private:
-    void setNextTarget(Field* field);
+    void setNextTarget(const Field& field);
 
     Point current_tile_;
     Point current_target_tile_;

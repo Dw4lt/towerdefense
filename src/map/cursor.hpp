@@ -13,13 +13,15 @@ typedef enum {
     BLOCKED
 } ANIMATION_STATE;
 
-class Cursor : public RendererObject {
+class FieldCursor : public RendererObject {
 public:
-    Cursor(const Field* field, GameManager* manager);
-    virtual ~Cursor();
+    FieldCursor(GameManager* manager);
+    virtual ~FieldCursor();
     virtual void render(Renderer* renderer);
 
     void poll();
+
+    SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::CURSOR; };
 
 private:
     void updatePosition();
@@ -28,7 +30,6 @@ private:
     GameManager* game_manager_;
     ANIMATION_STATE animation_state_;
 
-    const Field* field_;
     const unsigned int line_width_;
     int max_x_;
     int max_y_;

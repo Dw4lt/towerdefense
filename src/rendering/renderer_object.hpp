@@ -1,32 +1,51 @@
 #ifndef RENDERER_OBJECT_H
 #define RENDERER_OBJECT_H
 #include "../primitives/essentials.hpp"
+#include "../primitives/ownership.hpp"
 #include <SDL/SDL.h>
 #include <vector>
+#include <memory>
 
 class Renderer;
 
-class RendererObject {
+class Renderable {
 public:
-    RendererObject(int x, int y, int width, int height);
+    Renderable();
+    virtual ~Renderable();
+
+    virtual void render(Renderer* renderer) = 0;
+
+    virtual void renderChildren(Renderer* renderer);
+
+    virtual Rect boundingBox() const = 0;
+
+    void addChild(RReader<Renderable> child);
+
+    bool part_of_a_scene = false;
+
+private:
+    std::weak_ptr<Renderable> parent_;
+    std::vector<RReader<Renderable>> children_;
+};
+
+
+class RendererObject : public Renderable {
+public:
+    RendererObject(int x = 0, int y = 0, int width = 1, int height = 1);
     RendererObject(const Rect& rect);
     RendererObject(Point pos, int width, int height);
     virtual ~RendererObject();
     virtual Rect boundingBox() const;
     Uint16 getWidth() const;
     Uint16 getHeight() const;
-    void addChild(RendererObject* child);
-    void setParent(RendererObject* parent);
-    virtual void renderChildren(Renderer* renderer);
     virtual void render(Renderer* renderer) = 0;
     virtual void render(Renderer* renderer, const Rect& region);
+
+    virtual SCREEN_LAYER getDepth() const = 0;
 
     Point getCenter() const;
 
 protected:
-    std::vector<RendererObject*> children_; // If parent is nullptr the object is added directly to the renderer
-    RendererObject* parent_;
-
     Sint16 x_;
     Sint16 y_;
     Uint16 width_;

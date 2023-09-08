@@ -184,14 +184,26 @@ private:
     Func func;
 }; // ContainerWrapper
 
+// TODO find neater way of doing this
+// Functor needed to instantiate template in subsequent code
+template <typename T>
+struct MakeReader {
+    RReader<T> operator()(ROwner<T>& e) const {
+        return e.makeReader();
+    }
+};
+
+// Type alias using the functor
+template <typename T>
+using RReaderIterable = ContainerWrapper<std::vector<ROwner<T>>, MakeReader<T>>;
+
 /// @brief Wrap iterator of vector of owners to behave like an iterator of vector of readers
 template <typename T>
-auto OwnerToReaderWrapper(std::vector<ROwner<T>>& container) -> decltype(auto) {
+auto makeOwnerToReaderWrapper(std::vector<ROwner<T>>& container) -> RReaderIterable<T> {
     return ContainerWrapper(
         container,
-        [](ROwner<T>& e){ return e.makeReader();}
+        MakeReader<T>()
     );
 }
-
 
 #endif

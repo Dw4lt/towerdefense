@@ -6,7 +6,7 @@
 
 class Tower : public Structure {
 public:
-    Tower(int cooldown, int tower_range, double damage, Tile* tile);
+    Tower(int cooldown, int tower_range, double damage, const Tile& tile);
     virtual ~Tower();
 
     virtual void render(Renderer* renderer);
@@ -25,13 +25,14 @@ public:
     /// @brief Attempts to fire at an enemy within range
     /// @param enemy_list Enemies to look through
     /// @return Whether or not an enemy was found
-    virtual bool fire(EnemyList& enemy_list) = 0;
+    virtual bool fire(RReaderIterable<Enemy> enemy_list) = 0;
 
 private:
     static double global_range_multiplier_;
     static double global_cooldown_multiplier_;
     static double global_damage_multiplier_;
 
+protected:
     int cooldown_;
     double damage_;
     int range_;

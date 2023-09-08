@@ -3,9 +3,8 @@
 
 Field::Field(int x, int y, int width, int height, int tiles_x, int tiles_y)
     : RendererObject(x, y, width, height)
-    , tiles_x_(tiles_x)
-    , tiles_y_(tiles_y)
-    , tile_grid_((Tile***)malloc(tiles_x * sizeof(Tile**)))
+    , tiles_x_{tiles_x}
+    , tiles_y_{tiles_y}
     , start_tile_(0, 0) {
 
     // Generate Tile Objects
@@ -13,14 +12,18 @@ Field::Field(int x, int y, int width, int height, int tiles_x, int tiles_y)
     double y_increment = ((double)height) / (tiles_y);
     double x_start = 0;
     double x_stop = x_increment;
+
+    tile_grid_.reserve(tiles_x_);
+
     for (int k = 0; k < tiles_x_; k++) {
-        tile_grid_[k] = (Tile**)calloc(tiles_y_, sizeof(Tile**));
+        tile_grid_.emplace_back(); // Create nested row-vector
+        tile_grid_.back().reserve(tiles_y_);
+
         double y_start = 0;
         double y_stop = y_increment;
         for (int i = 0; i < tiles_y_; i++) {
-            auto child = new Tile(x_start, y_start, std::round(x_stop - x_start), std::round(y_stop - y_start), k, i);
-            addChild(child);
-            tile_grid_[k][i] = child;
+            tile_grid_.back().push_back(ROwner(new Tile(x_start, y_start, std::round(x_stop - x_start), std::round(y_stop - y_start), k, i)));
+            addChild(tile_grid_.back().back().makeReader());
             y_start = y_stop;
             y_stop += y_increment;
         }
@@ -33,7 +36,7 @@ Field::Field(int x, int y, int width, int height, int tiles_x, int tiles_y)
     populateTrees();
 }
 
-void Field::generatePath() {
+auto Field::generatePath() -> void {
     // Start Point
     int x = 0;
     int y = (rand() % (tiles_y_ / 3)) + tiles_y_ / 3;
@@ -90,46 +93,57 @@ void Field::generatePath() {
     }
 }
 
-Field::~Field() {
-    for (int x = 0; x < tiles_x_; x++) {
-        for (int y = 0; y < tiles_x_; y++) {
-            delete &tile_grid_[x][y];
-        }
-    }
-    free(tile_grid_);
-}
-
-void Field::render(Renderer* renderer) {
+auto Field::render(Renderer* renderer) -> void {
     renderChildren(renderer);
 }
 
-Tile* Field::get(int x, int y) const {
-    if (x >= 0 && x < tiles_x_ && y >= 0 && y < tiles_y_) {
-        return tile_grid_[x][y];
+auto Field::getTile(int x, int y) -> Tile& {
+    if (checkBounds(x, y)) {
+        return *tile_grid_[x][y];
     } else {
-        return nullptr;
+        throw "Invalid tile index.";
     }
 }
 
-Tile* Field::get(Point tile_coords) const {
-    return get(tile_coords.x_, tile_coords.y_);
+auto Field::getTile(const Point& tile_coords) -> Tile& {
+    return getTile(tile_coords.x_, tile_coords.y_);
 }
 
-int Field::getMaxX() const {
+auto Field::getTile(int x, int y) const -> const Tile& {
+    if (checkBounds(x, y)) {
+        return *tile_grid_[x][y];
+    } else {
+        throw "Invalid tile index.";
+    }
+}
+
+auto Field::getTile(const Point& tile_coords) const -> const Tile& {
+    return getTile(tile_coords.x_, tile_coords.y_);
+}
+
+constexpr auto Field::checkBounds(int x, int y) const -> bool {
+    return x >= 0 && x < tiles_x_ && y >= 0 && y <tiles_y_;
+}
+
+constexpr auto Field::checkBounds(const Point& tile_coords) const -> bool {
+    return checkBounds(tile_coords.x_, tile_coords.y_);
+}
+
+auto Field::getMaxX() const -> int {
     return tiles_x_ - 1;
 }
 
-int Field::getMaxY() const {
+auto Field::getMaxY() const -> int {
     return tiles_y_ - 1;
 }
 
-const Point& Field::getStart() const {
+auto Field::getStart() const -> const Point& {
     return start_tile_;
 }
 
-Point Field::findNextCornerNode(Point coord) {
-    auto tile = get(coord);
-    if (tile) {
+auto Field::findNextCornerNode(Point coord) const -> Point {
+    if (checkBounds(coord)) {
+        const Tile* tile = &getTile(coord);
         Direction dir = tile->getDirectionToNeighbour();
         do {
             switch (dir) {
@@ -150,13 +164,12 @@ Point Field::findNextCornerNode(Point coord) {
             default:
                 break;
             }
-            tile = get(coord);
-        } while (tile && tile->getDirectionToNeighbour() == dir);
+        } while (checkBounds(coord) && (tile = &getTile(coord)) && tile->getDirectionToNeighbour() == dir);
     }
     return coord;
 }
 
-void Field::populateTrees() {
+auto Field::populateTrees() -> void {
     const int radius = 5;
     for (int x = 0; x < tiles_x_; x++) {
         for (int y = 0; y < tiles_y_; y++) {

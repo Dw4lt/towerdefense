@@ -9,14 +9,14 @@
 
 GameManager::GameManager()
     : renderer_(Renderer::Init(320, 240, 16))
-    , field_(new Field(0, 0, 320, 210, 40, 30))
-    , field_cursor_(new Cursor(field_, this))
-    , game_state_(GameState::Get())
-    {
-    renderer_->addToScene(field_, Renderer::LAYER::FIELD_LAYER);
-    renderer_->addToScene(field_cursor_, Renderer::LAYER::CURSOR_LAYER);
-    game_state_->enemy_list_.push_back(new Enemy(field_->get(field_->getStart())->getCenter(), 4, 4, Point{field_->getStart()}, 100, 4.2, 0xf00f));
-    renderer_->addToScene(game_state_->enemy_list_.back(), Renderer::LAYER::ENEMIES_LAYER);
+{
+    auto game_state = GameState::getState();
+    field_cursor_ = ROwner(new FieldCursor(this));
+    renderer_->addToScene(field_cursor_.makeReader());
+
+    auto& field = game_state->getField();
+    auto& starting_point = field.getStart();
+    game_state->addEnemy(std::make_shared<Enemy>(field.getTile(starting_point).getCenter(), 4, 4, Point{starting_point}, 100, 1.2, 0xf00f));
 }
 
 GameManager::~GameManager() {
@@ -42,14 +42,22 @@ void GameManager::start() {
 
 void GameManager::gameLoop() {
     field_cursor_->poll();
-    for (Enemy* enemy : game_state_->enemy_list_) {
-        enemy->pathfind(field_);
+    auto game_state = GameState::getState();
+    for (auto enemy : game_state->getEnemies()) {
+        enemy->pathfind(game_state->getField());
     }
-    for (Structure* structure : game_state_->structure_list_) {
+    for (auto structure : game_state->getStructures()) {
         structure->tick();
     }
+    removeDeadEnemies();
     renderer_->render();
     renderer_->show();
+}
+
+void GameManager::removeDeadEnemies() {
+    GameState::getState()->purgeEnemies(
+        [](Enemy& e){return e.getHP() <= 0;}
+    );
 }
 
 void GameManager::shopLoop() {
@@ -59,13 +67,11 @@ void GameManager::poll() {
 }
 
 void GameManager::onMapCursorClickOn(int x, int y) {
-    Tile* tile = field_->get(x, y);
-    TileType type = tile->getType();
+    auto game_state = GameState::getState();
+    auto& tile = game_state->getField().getTile(x, y);
+    TileType type = tile.getType();
     if (TileType::LAND == type) {
-        auto structure = new Archer(3, 15, 5, tile); // TODO: pick class based on store selection
-        tile->addChild(structure);
-        tile->updateType(TileType::STRUCTURE);
-        game_state_->structure_list_.push_back(structure);
+        game_state->addStructure(std::make_shared<Archer>(3, 15, 20, tile), tile); // TODO: pick class based on store selection
     } else if (TileType::PATH == type) {
     }
 }

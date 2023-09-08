@@ -3,23 +3,30 @@
 #include "../primitives/color_conversion.hpp"
 #include <os.h>
 
-Cursor::Cursor(const Field* field, GameManager* manager)
-    : RendererObject(Point(-1, -1), field->getWidth() / field->getMaxX() + 2, field->getHeight() / field->getMaxY() + 2)
+FieldCursor::FieldCursor(GameManager* manager)
+    : RendererObject()
     , game_manager_(manager)
-    , field_{field}
     , line_width_{2}
-    , max_x_{field->getMaxX()}
-    , max_y_{field->getMaxY()}
-    , cursor_x_{max_x_ / 2}
-    , cursor_y_{max_y_ / 2} {
+{
+    auto game_state = GameState::getState();
+    auto& field = game_state->getField();
+
+    max_x_ = field.getMaxX();
+    max_y_ = field.getMaxY();
+    cursor_x_ = max_x_ / 2;
+    cursor_y_ = max_y_ / 2;
+
+    width_ = field.getWidth() / field.getMaxX() + 2;
+    height_ = field.getHeight() / field.getMaxY() + 2;
+
     updatePosition();
     updateAnimationState();
 }
 
-Cursor::~Cursor() {
+FieldCursor::~FieldCursor() {
 }
 
-void Cursor::poll() {
+void FieldCursor::poll() {
     static bool enable = true;
     static Uint32 last_pass = SDL_GetTicks();
     if (enable == false && SDL_GetTicks() - last_pass >= STANDARD_TICK_DURATION * 2) {
@@ -55,8 +62,8 @@ void Cursor::poll() {
     }
 }
 
-void Cursor::updateAnimationState() {
-    TileType current_tile_type = field_->get(cursor_x_, cursor_y_)->getType();
+void FieldCursor::updateAnimationState() {
+    TileType current_tile_type = GameState::getState()->getField().getTile(cursor_x_, cursor_y_).getType();
     if (TileType::LAND == current_tile_type) {
         animation_state_ = ANIMATION_STATE::ON_EMTPY_FIELD;
     } else if (TileType::PATH == current_tile_type) {
@@ -66,15 +73,16 @@ void Cursor::updateAnimationState() {
     }
 }
 
-void Cursor::updatePosition() {
-    Rect rect = field_->get(cursor_x_, cursor_y_)->boundingBox();
+void FieldCursor::updatePosition() {
+    auto& field = GameState::getState()->getField();
+    Rect rect = field.getTile(cursor_x_, cursor_y_).boundingBox();
     x_ = rect.left() - 1;
     y_ = rect.top() - 1;
     width_ = rect.width_ + 2;
     height_ = rect.height_ + 2;
 }
 
-void Cursor::render(Renderer* renderer) {
+void FieldCursor::render(Renderer* renderer) {
     Uint32 color;
     switch (animation_state_) {
     case ANIMATION_STATE::BLOCKED:

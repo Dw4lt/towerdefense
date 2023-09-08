@@ -1,16 +1,16 @@
 #include "archer.hpp"
 #include "../rendering/renderer.hpp"
 
-Archer::Archer(int cooldown, int tower_range, double damage, Tile* tile)
-    : Tower(cooldown, tower_range, damage, tile) {
+Archer::Archer(int cooldown, int tower_range, double damage, const Tile& tile)
+    : Tower(cooldown, tower_range, damage, tile)
+    {
 }
 
-Archer::~Archer() {
-}
+Archer::~Archer() {}
 
-bool Archer::fire(EnemyList& enemy_list) {
+bool Archer::fire(RReaderIterable<Enemy> enemy_list) {
     for (auto enemy : enemy_list) {
-        if (withinRange(enemy)) {
+        if (enemy.isValid() && withinRange(enemy.get())) {
             enemy->damage(damage_ * getGlobalDamageMultiplier(), DAMAGE_TYPE::PROJECTILE);
             return true;
         }

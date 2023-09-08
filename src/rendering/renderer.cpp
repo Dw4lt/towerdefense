@@ -15,11 +15,34 @@ Renderer::Renderer(int width, int height, int bit_per_color)
     , screen_(SDL_SetVideoMode(screen_width_, screen_height_, screen_bit_color_, SDL_FULLSCREEN)) {
 }
 
-void Renderer::addToScene(RendererObject* object, int layer) {
-    if (render_objects_.count(layer) == 0) {
-        render_objects_[layer] = std::vector<RendererObject*>();
+void Renderer::addToScene(RendererObjectPtr object) {
+    if (object->part_of_a_scene) {
+        std::cout << "RendererObject is already part of a scene.\n";
+        return;
     }
+    auto layer = object->getDepth();
+    if (render_objects_.count(layer) == 0) {
+        render_objects_[layer] = std::vector<RendererObjectPtr>();
+    }
+    object->part_of_a_scene = true;
     render_objects_[layer].push_back(object);
+    object->part_of_a_scene = true;
+}
+
+void Renderer::removeFromScene(RendererObjectPtr object) {
+    if (object.isValid()) {
+        auto layer = object->getDepth();
+        if (render_objects_.count(layer) > 0) {
+            std::vector<RendererObjectPtr>& objects = render_objects_[layer];
+            int size = objects.size();
+            for (int i = 0; i < size; i++) {
+                if (objects[i].isValid() && objects[i].get() == object.get()) {
+                    objects.erase(objects.begin() + i);
+                    size--;
+                }
+            }
+        }
+    }
 }
 
 void Renderer::setPixel(int x, int y, Uint16 color) {
@@ -47,9 +70,14 @@ void Renderer::drawRect(Rect rect, Uint16 color, unsigned int thickness, Uint8 a
 }
 
 void Renderer::render() {
-    for (std::pair<int, std::vector<RendererObject*>> vect : render_objects_) {
+    std::vector<RendererObject> v;
+    for (auto vect : render_objects_) {
         for (auto obj : vect.second) {
-            obj->render(this);
+            if (obj.isValid()) {
+                obj->render(this);
+            } else {
+                // TODO: Remove from scene
+            }
         }
     }
 }

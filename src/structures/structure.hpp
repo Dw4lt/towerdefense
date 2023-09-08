@@ -7,15 +7,15 @@
 
 class Structure : public RendererObject {
 public:
-    Structure(Tile* tile);
+    Structure(const Tile& tile);
+
     virtual ~Structure();
 
     virtual void tick() = 0;
 
-    virtual void render(Renderer* renderer);
+    virtual void render(Renderer* renderer) override;
 
-protected:
-    Tile* tile_;
+    SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::STRUCTURE; };
 };
 
 #endif

@@ -36,7 +36,7 @@ void Tile::updateTerrain(TileTerrain terrain) {
 void Tile::updateColor() {
     Uint32 effective_color = 0x00c300;
     switch (type_) {
-    case LAND:
+    case TileType::LAND:
         switch (terrain_) {
         case TileTerrain::PLAIN:
             effective_color -= index_x_ % 2 * 0x1300;
@@ -51,7 +51,7 @@ void Tile::updateColor() {
             break;
         }
         break;
-    case PATH:
+    case TileType::PATH:
         effective_color = 0x0000ff;
         break;
     default:

@@ -1,14 +1,51 @@
 #include "game_state.hpp"
+#include "rendering/renderer.hpp"
 
-GameState* GameState::singleton_{nullptr};
+ROwner<GameState> GameState::singleton_{nullptr};
 
-GameState::GameState() {
-
+GameState::GameState()
+    : field_ptr_{new Field(0, 0, FIELD_WIDTH, FIELD_HEIGHT)}
+    {
+    if (Renderer::singleton_ != nullptr) {
+        Renderer::singleton_->addToScene(field_ptr_.makeReader());
+    }
 }
 
-GameState* GameState::Get() {
-    if (GameState::singleton_ == nullptr) {
-        GameState::singleton_ = new GameState();
+auto GameState::getField() -> Field& {
+    return *field_ptr_;
+}
+
+auto GameState::getState() -> GameStatePtr {
+    if (!GameState::singleton_) {
+        GameState::singleton_ = ROwner(new GameState());
     }
     return GameState::singleton_;
+}
+
+void GameState::addStructure(std::shared_ptr<Structure> structure, Tile& tile){
+    structure_list_.push_back(ROwner<Structure>(structure));
+    tile.addChild(structure_list_.back().makeReader());
+    tile.updateType(TileType::STRUCTURE);
+    if (Renderer::singleton_ != nullptr) {
+        Renderer::singleton_->addToScene(structure_list_.back().makeReader());
+    }
+}
+
+
+void GameState::addEnemy(std::shared_ptr<Enemy> enemy){
+    enemy_list_.push_back(ROwner<Enemy>(enemy));
+    if (Renderer::singleton_ != nullptr) {
+        Renderer::singleton_->addToScene(enemy_list_.back().makeReader());
+    }
+}
+
+void GameState::purgeEnemies(bool (*func)(Enemy& e)) {
+    for(auto e = enemy_list_.begin(); e != enemy_list_.end(); ) {
+        auto& enemy = *e;
+        if (func(*enemy)) {
+            e = enemy_list_.erase(e);
+        } else {
+            e++;
+        }
+    }
 }

@@ -1,30 +1,26 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 #include "../primitives/essentials.hpp"
+#include "../primitives/ownership.hpp"
 #include "renderer_object.hpp"
 #include <SDL/SDL.h>
 #include <map>
 #include <vector>
 
-class Renderer {
-public:
-    typedef enum {
-        FIELD_LAYER = 0,
-        ENEMIES_LAYER = 10,
-        STRUCTURES_LAYER = 15,
-        EFFECTS_LAYER = 20,
-        CURSOR_LAYER = 50
-    } LAYER;
 
+class Renderer {
+    using RendererObjectPtr = RReader<RendererObject>;
+public:
     static Renderer* Init(int width, int height, int bit_per_color);
     ~Renderer();
 
-    void addToScene(RendererObject* object, int layer);
+    void addToScene(RendererObjectPtr object);
+    void removeFromScene(RendererObjectPtr object);
     void show();
     void render();
     void setPixel(int x, int y, Uint16 color);
     void fillColor(Rect rect, Uint16 color);
-    void schedule(RendererObject* object);
+    // void schedule(RendererObjectPtr object); TODO ???
     void drawRect(Rect rect, Uint16 color, unsigned int thickness = 1, Uint8 alpha = SDL_ALPHA_OPAQUE);
 
     const int screen_width_;
@@ -37,7 +33,7 @@ public:
 private:
     Renderer(int width, int height, int bit_per_color);
 
-    std::map<int, std::vector<RendererObject*>> render_objects_; // int -> Layer, vector -> objects
+    std::map<SCREEN_LAYER, std::vector<RendererObjectPtr>> render_objects_; // int -> Layer, vector -> objects
 };
 
 #endif

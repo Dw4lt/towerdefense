@@ -1,5 +1,4 @@
 #include "enemy.hpp"
-#include "../map/field.hpp"
 #include "../rendering/renderer.hpp"
 #include <assert.h>
 #include <stdio.h>
@@ -22,6 +21,10 @@ bool Enemy::isImmune(DAMAGE_TYPE type) {
     return false;
 }
 
+long int Enemy::getHP() const {
+    return hp_;
+}
+
 void Enemy::damage(int damage, DAMAGE_TYPE type) {
     if (!isImmune(type)) {
         hp_ -= damage;
@@ -37,12 +40,12 @@ void Enemy::render(Renderer* renderer) {
     RendererObject::renderChildren(renderer);
 }
 
-void Enemy::setNextTarget(Field* field) {
+void Enemy::setNextTarget(const Field& field) {
     current_tile_ = current_target_tile_;
-    current_target_tile_ = field->findNextCornerNode(current_tile_);
+    current_target_tile_ = field.findNextCornerNode(current_tile_);
 }
 
-void Enemy::pathfind(Field* field) {
+void Enemy::pathfind(Field& field) {
     try {
         double distance_to_travel = speed_;
         double x_travel = 0;
@@ -50,17 +53,19 @@ void Enemy::pathfind(Field* field) {
 
         while (distance_to_travel > 0) {
             Direction dir = Direction::RIGHT;
-            Tile* current = field->get(current_tile_);
-            if (current != nullptr) {
-                dir = current->getDirectionToNeighbour();
+
+            // Apply direction of current tile if entity is on field
+            if (field.checkBounds(current_tile_)) {
+                dir = field.getTile(current_tile_).getDirectionToNeighbour();
             }
-            Tile* current_destination_tile = field->get(current_target_tile_);
+
             Point current_destination;
-            if (current_destination_tile != nullptr) {
-                current_destination = current_destination_tile->getCenter();
-            } else {
+            if (field.checkBounds(current_target_tile_)) { // Walk toward tile
+                current_destination = field.getTile(current_target_tile_).getCenter();
+            } else { // Walk off-screen
                 current_destination = Point{current_tile_.x_, INT_MAX};
             }
+
             if (dir == Direction::RIGHT || dir == Direction::LEFT) {
                 x_travel = std::min(std::abs(current_destination.x_ - real_x_), distance_to_travel);
                 real_x_ += (dir == Direction::RIGHT) ? x_travel : -x_travel;
