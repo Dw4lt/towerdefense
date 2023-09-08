@@ -22,3 +22,10 @@ jobs:
     - name: Run Command Inside Container
       run: |
         docker run -v $(pwd):/app --workdir /app builder-image "make"
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: latest
+        path: build/*.tns
+        if-no-files-found: error
