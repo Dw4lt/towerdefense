@@ -32,7 +32,7 @@ void Enemy::damage(int damage, DAMAGE_TYPE type) {
 }
 
 Rect Enemy::boundingBox() const {
-    return Rect(x_ - width_ / 2.0, y_ - height_ / 2.0, width_, height_);
+    return rect_.centeredOn(rect_.origin_);
 }
 
 void Enemy::render(Scene* scene) {
@@ -63,13 +63,13 @@ void Enemy::pathfind(Field& field) {
             if (field.checkBounds(current_target_tile_)) { // Walk toward tile
                 current_destination = field.getTile(current_target_tile_).getCenter();
             } else { // Walk off-screen
-                current_destination = Point{current_tile_.x_, INT_MAX};
+                current_destination = Point{current_tile_.x_, SHRT_MAX};
             }
 
             if (dir == Direction::RIGHT || dir == Direction::LEFT) {
                 x_travel = std::min(std::abs(current_destination.x_ - real_x_), distance_to_travel);
                 real_x_ += (dir == Direction::RIGHT) ? x_travel : -x_travel;
-                x_ = std::round(real_x_);
+                rect_.origin_.x_ = std::round(real_x_);
                 distance_to_travel -= x_travel;
                 if (current_destination.x_ <= real_x_) {
                     setNextTarget(field);
@@ -87,7 +87,7 @@ void Enemy::pathfind(Field& field) {
                         setNextTarget(field);
                     }
                 }
-                y_ = std::round(real_y_);
+                rect_.origin_.y_ = std::round(real_y_);
             }
         }
     } catch (...) {

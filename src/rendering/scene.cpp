@@ -61,13 +61,15 @@ void Scene::fillColor(Rect rect, Uint16 color) {
     SDL_FillRect(screen_, &rect2, color);
 }
 
-void Scene::drawRect(Rect rect, Uint16 color, unsigned int thickness, Uint8 alpha) {
-    int x = rect.origin_.x_, y = rect.origin_.y_;
-    int width = rect.width_, height = rect.height_;
-    SDL_Rect rect0{Rect(rect.origin_, thickness, rect.height_ - thickness).toSDLRect()};                          // left margin
-    SDL_Rect rect1{Rect(Point(x + thickness, y), width - thickness, thickness).toSDLRect()};                      // Top  Margin
-    SDL_Rect rect2{Rect(Point(x + width - thickness, y + thickness), thickness, height - thickness).toSDLRect()}; // Right  Margin
-    SDL_Rect rect3{Rect(Point(x, y + height - thickness), width - thickness, thickness).toSDLRect()};             // Bottom  Margin
+void Scene::drawRect(Rect rect, Uint16 color, Uint8 thickness, Uint8 alpha) {
+    Sint16 x = rect.origin_.x_, y = rect.origin_.y_;
+    Uint16 width = rect.width_, height = rect.height_;
+
+    SDL_Rect rect0{(Sint16)(x), (Sint16)(y), thickness, (Uint16)(height - thickness)};                                 // left margin
+    SDL_Rect rect1{(Sint16)(x + thickness), (Sint16)(y), (Uint16)(width - thickness), (Uint16)(thickness)};                      // top margin
+    SDL_Rect rect2{(Sint16)(x + width - thickness), (Sint16)(y + thickness), thickness, (Uint16)(height - thickness)}; // right margin
+    SDL_Rect rect3{(Sint16)(x), (Sint16)(y + height - thickness), (Uint16)(width - thickness), (Uint16)(thickness)};             // bottom margin
+
     SDL_FillRect(screen_, &rect0, color);
     SDL_FillRect(screen_, &rect1, color);
     SDL_FillRect(screen_, &rect2, color);

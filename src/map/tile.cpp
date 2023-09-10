@@ -43,7 +43,7 @@ void Tile::updateColor() {
             effective_color -= index_y_ % 2 * 0x1300;
             break;
         case TileTerrain::TREE:
-            effective_color = ((PSEUDO_RANDOM_SEEDED(x_, y_) % 6) * 3 + 0x75) << 8; // MAGIC
+            effective_color = ((PSEUDO_RANDOM_SEEDED(rect_.origin_.x_, rect_.origin_.y_) % 6) * 3 + 0x75) << 8; // MAGIC
             break;
         case TileTerrain::ROCK:
             break;

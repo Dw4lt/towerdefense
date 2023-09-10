@@ -16,8 +16,8 @@ FieldCursor::FieldCursor(GameManager* manager)
     cursor_x_ = max_x_ / 2;
     cursor_y_ = max_y_ / 2;
 
-    width_ = field.getWidth() / field.getMaxX() + 2;
-    height_ = field.getHeight() / field.getMaxY() + 2;
+    rect_.width_ = field.getWidth() / field.getMaxX() + 2;
+    rect_.height_ = field.getHeight() / field.getMaxY() + 2;
 
     updatePosition();
     updateAnimationState();
@@ -74,12 +74,8 @@ void FieldCursor::updateAnimationState() {
 }
 
 void FieldCursor::updatePosition() {
-    auto& field = GameState::getState()->getField();
-    Rect rect = field.getTile(cursor_x_, cursor_y_).boundingBox();
-    x_ = rect.left() - 1;
-    y_ = rect.top() - 1;
-    width_ = rect.width_ + 2;
-    height_ = rect.height_ + 2;
+    Rect rect = GameState::getState()->getField().getTile(cursor_x_, cursor_y_).boundingBox();
+    rect_ = Rect(rect.left() - 1, rect.top() - 1, rect.width_ + 2, rect.height_ + 2);
 }
 
 void FieldCursor::render(Scene* scene) {

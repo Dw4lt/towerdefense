@@ -33,25 +33,22 @@ private:
 
 class RendererObject : public Renderable {
 public:
-    RendererObject(int x = 0, int y = 0, int width = 1, int height = 1);
-    RendererObject(const Rect& rect);
+    RendererObject();
+    RendererObject(int x, int y, int width, int height);
+    RendererObject(Rect rect);
     RendererObject(Point pos, int width, int height);
     virtual ~RendererObject();
     virtual Rect boundingBox() const;
     Uint16 getWidth() const;
     Uint16 getHeight() const;
     virtual void render(Scene* scene) = 0;
-    virtual void render(Scene* scene, const Rect& region);
 
     virtual SCREEN_LAYER getDepth() const = 0;
 
     Point getCenter() const;
 
 protected:
-    Sint16 x_;
-    Sint16 y_;
-    Uint16 width_;
-    Uint16 height_;
+    Rect rect_;
 };
 
 #endif

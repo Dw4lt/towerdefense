@@ -1,13 +1,13 @@
 #ifndef ESSENTIALS_H
 #define ESSENTIALS_H
-#include <SDL/SDL.h>
+#include <SDL/SDL_video.h>
 #include <iostream>
 
 class Point {
 public:
-    Point(int x = 0, int y = 0);
-    int x_;
-    int y_;
+    Point(Sint16 x = 0, Sint16 y = 0);
+    Sint16 x_;
+    Sint16 y_;
 };
 
 enum SCREEN_LAYER {
@@ -29,17 +29,23 @@ static const int FIELD_TILE_COUNT_Y = 30;
 
 class Rect {
 public:
-    Rect(Point origin, int width, int height);
-    Rect(int x, int y, int width, int height);
-    SDL_Rect toSDLRect();
-    int right() { return origin_.x_ + width_; };
-    int top() { return origin_.y_; };
-    int left() { return origin_.x_; };
-    int bottom() { return origin_.y_ + height_; };
+    Rect(Point origin, Uint16 width, Uint16 height);
+    Rect(Sint16 x = 0, Sint16 y = 0, Uint16 width = 1, Uint16 height = 1);
+
+    Rect centeredOn(const Point& point) const;
+
+    SDL_Rect toSDLRect() const;
+    int right() const { return origin_.x_ + width_; };
+    int top() const { return origin_.y_; };
+    int left() const { return origin_.x_; };
+    int bottom() const { return origin_.y_ + height_; };
+    Point center() const;
+
     Point origin_;
-    int width_;
-    int height_;
-    bool contains(const Point& point);
+    Uint16 width_;
+    Uint16 height_;
+
+    bool contains(const Point& point) const;
 };
 #define ErrorStream(x) std::cout << "## Exception in " << __func__ << "() ##\n" \
                                  << x << "\n####################\n"

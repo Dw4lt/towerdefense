@@ -38,8 +38,8 @@ Field::Field(int x, int y, int width, int height, int tiles_x, int tiles_y)
 
 auto Field::generatePath() -> void {
     // Start Point
-    int x = 0;
-    int y = (rand() % (tiles_y_ / 3)) + tiles_y_ / 3;
+    Sint16 x = 0;
+    Sint16 y = (rand() % (tiles_y_ / 3)) + tiles_y_ / 3;
     tile_grid_[x][y]->updateType(TileType::PATH);
     start_tile_ = Point{x, y};
 

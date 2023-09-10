@@ -34,38 +34,42 @@ void Renderable::renderChildren(Scene* scene) {
 
 RendererObject::RendererObject(int x, int y, int width, int height)
     : Renderable()
-    , x_(x)
-    , y_(y)
-    , width_(width)
-    , height_(height) {
+    , rect_(x, y, width, height)
+{
+
 }
 
-RendererObject::RendererObject(const Rect& rect)
-    : RendererObject(rect.origin_, rect.width_, rect.height_) {}
+RendererObject::RendererObject(SCREEN_LAYER layer)
+    : RendererObject(Rect(), layer)
+{
+
+}
+
+RendererObject::RendererObject(Rect rect)
+    : Renderable()
+    , rect_(std::move(rect))
+{
+
+}
 
 RendererObject::RendererObject(Point pos, int width, int height)
-    : RendererObject(pos.x_, pos.y_, width, height) {}
+    : RendererObject(Rect(pos, width, height)) {}
 
 RendererObject::~RendererObject() {
 }
 
 Rect RendererObject::boundingBox() const {
-    return Rect{x_, y_, width_, height_};
-}
-
-void RendererObject::render(Scene* scene, const Rect& region) {
-    render(scene);
+    return rect_;
 }
 
 Uint16 RendererObject::getWidth() const {
-    return width_;
+    return rect_.width_;
 }
 
 Uint16 RendererObject::getHeight() const {
-    return height_;
+    return rect_.height_;
 }
 
 Point RendererObject::getCenter() const {
-    return Point((int)std::round(x_ + width_ / 2.0),
-                 (int)std::round(y_ + height_ / 2.0));
+    return rect_.center();
 }
