@@ -7,24 +7,38 @@ SceneLayer::SceneLayer()
 {
 }
 
-Scene::Scene(Screen* screen, SDL_Surface* surface, SDL_Rect rect, bool visible)
+AbstractScene::AbstractScene(Screen* screen, SDL_Surface* surface, SDL_Rect rect, bool visible)
     : visible_(visible)
     , screen_(screen)
-    , rect_on_screen_(rect)
+    , rect_on_screen_(std::move(rect))
     , background_surface_(surface)
 {
 }
 
+AbstractScene::~AbstractScene() {
+    SDL_free(background_surface_);
+}
+
+// ---
+
+Scene::Scene(Screen* screen, SDL_Surface* surface, SDL_Rect rect, bool visible)
+    : AbstractScene(screen, surface, std::move(rect), visible)
+{
+}
+
+RReader<Scene> Scene::create(Screen* screen, SDL_Rect rect, bool visible) {
+    return screen->initScene(ROwner<Scene>(new Scene(screen, screen->createSurface(rect.w, rect.h), rect, visible)));
+}
+
 void Scene::addToScene(RenderablePtr object) {
-    if (object->scene_) {
+    if (object->getScene()) {
         throw std::runtime_error("RendererObject is already part of a scene.");
     }
-    auto layer = object->layer_;
+    auto layer = object->getLayer();
     if (render_objects_.count(layer) == 0) {
         render_objects_[layer] = SceneLayer();
     }
     object->setScene(this);
-    object->scene_ = this;
     auto& scene_layer = render_objects_[layer];
     scene_layer.push_back(object);
     scene_layer.markDirty();
@@ -35,7 +49,7 @@ void Scene::removeFromScene(Renderable* object) {
 
 void Scene::removeFromScene(RenderablePtr object) {
     if (object.isValid()) {
-        auto layer = getLayer(object->layer_);
+        auto layer = getLayer(object->getLayer());
         if (layer) {
             auto& objects = *layer;
             int size = objects.size();
@@ -87,8 +101,4 @@ void Scene::renderLayer(SceneLayer& layer, SDL_Surface* surface){
             iter = layer.erase(iter);
         }
     }
-}
-
-Scene::~Scene() {
-    SDL_free(background_surface_);
 }

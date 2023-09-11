@@ -16,11 +16,13 @@ GameManager::GameManager()
 
     field_cursor_ = ROwner(new FieldCursor(this));
 
-    field_scene_ = screen_->createScene(SDL_Rect{x: 0, y: 0, w: FIELD_WIDTH, h: FIELD_HEIGHT});
-
+    // Main field
+    field_scene_ = Scene::create(screen_.get(), SDL_Rect{x: 0, y: 0, w: FIELD_WIDTH, h: FIELD_HEIGHT}, true);
     field_scene_->addToScene(game_state->getFieldReader());
-
     field_scene_->addToScene(field_cursor_.makeReader());
+
+    // Status bar
+    status_bar_scene_ = StatusBar::create(screen_.get(), SDL_Rect{x: 0, y: FIELD_HEIGHT, w: FIELD_WIDTH, h: SCREEN_HEIGHT - FIELD_HEIGHT}, true);
 
     spawnWave();
 }
@@ -63,6 +65,7 @@ void GameManager::gameLoop() {
     removeDeadEnemies();
 
     if (field_scene_->visible_) field_scene_->render(screen_);
+    if (status_bar_scene_->visible_) status_bar_scene_->render(screen_);
 
     screen_->flip();
 }
@@ -83,6 +86,7 @@ void GameManager::processUserInput() {
 
         if (actions & Input::SPAWN_NEXT_WAVE) {
             spawnWave();
+            GameState::getState()->incrementWave();
         }
     }
 }

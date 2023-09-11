@@ -6,8 +6,6 @@
 #include "tile.hpp"
 #include <SDL/SDL_video.h>
 
-class Scene;
-
 
 // Game field. Made up of Tiles.
 class Field : public RendererObject {

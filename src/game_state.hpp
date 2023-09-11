@@ -59,6 +59,13 @@ public:
     /// @param func Condition
     void purgeEnemies(bool (*func)(Enemy& e));
 
+    /// @brief Get Nr. of current wave or wave to be spawned
+    int getWave() { return wave_count_; };
+
+    /// @brief Increment Nr. of wave
+    /// @return New value
+    int incrementWave() { return ++wave_count_; };
+
 private:
 
     GameState();
@@ -71,6 +78,9 @@ private:
 
     /// @brief Game map, bound in lifetime to the game state.
     ROwner<Field> field_ptr_;
+
+    /// @brief Nr. of current wave or wave to be spawned
+    int wave_count_;
 
     static ROwner<GameState> singleton_;
 };

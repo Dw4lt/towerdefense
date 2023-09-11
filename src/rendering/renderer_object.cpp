@@ -4,31 +4,38 @@
 #include "scene.hpp"
 
 
-void DrawUtils::setPixel(SDL_Surface* surface,int x, int y, Uint16 color) {
-    if (x >= 0 && y >= 0 && x < surface->w && y < surface->h) {
-        *((Uint16*)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel) = color;
+namespace DrawUtils {
+    void setPixel(SDL_Surface* surface,int x, int y, Uint16 color) {
+        if (x >= 0 && y >= 0 && x < surface->w && y < surface->h) {
+            *((Uint16*)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel) = color;
+        }
     }
-}
 
-void DrawUtils::fillColor(SDL_Surface* surface,Rect rect, Uint16 color) {
-    SDL_Rect rect2{rect.toSDLRect()};
-    SDL_FillRect(surface, &rect2, color);
-}
+    void fillColor(SDL_Surface* surface,Rect rect, Uint16 color) {
+        SDL_Rect rect2{rect.toSDLRect()};
+        SDL_FillRect(surface, &rect2, color);
+    }
 
-void DrawUtils::drawRect(SDL_Surface* surface, Rect rect, Uint16 color, Uint8 thickness) {
-    Sint16 x = rect.origin_.x_, y = rect.origin_.y_;
-    Uint16 width = rect.width_, height = rect.height_;
+    void drawRect(SDL_Surface* surface, Rect rect, Uint16 color, Uint8 thickness) {
+        Sint16 x = rect.origin_.x_, y = rect.origin_.y_;
+        Uint16 width = rect.width_, height = rect.height_;
 
-    SDL_Rect rect0{(Sint16)(x), (Sint16)(y), thickness, (Uint16)(height - thickness)};                                 // left margin
-    SDL_Rect rect1{(Sint16)(x + thickness), (Sint16)(y), (Uint16)(width - thickness), (Uint16)(thickness)};                      // top margin
-    SDL_Rect rect2{(Sint16)(x + width - thickness), (Sint16)(y + thickness), thickness, (Uint16)(height - thickness)}; // right margin
-    SDL_Rect rect3{(Sint16)(x), (Sint16)(y + height - thickness), (Uint16)(width - thickness), (Uint16)(thickness)};             // bottom margin
+        SDL_Rect rect0{(Sint16)(x), (Sint16)(y), thickness, (Uint16)(height - thickness)};                                 // left margin
+        SDL_Rect rect1{(Sint16)(x + thickness), (Sint16)(y), (Uint16)(width - thickness), (Uint16)(thickness)};                      // top margin
+        SDL_Rect rect2{(Sint16)(x + width - thickness), (Sint16)(y + thickness), thickness, (Uint16)(height - thickness)}; // right margin
+        SDL_Rect rect3{(Sint16)(x), (Sint16)(y + height - thickness), (Uint16)(width - thickness), (Uint16)(thickness)};             // bottom margin
 
-    SDL_FillRect(surface, &rect0, color);
-    SDL_FillRect(surface, &rect1, color);
-    SDL_FillRect(surface, &rect2, color);
-    SDL_FillRect(surface, &rect3, color);
-}
+        SDL_FillRect(surface, &rect0, color);
+        SDL_FillRect(surface, &rect1, color);
+        SDL_FillRect(surface, &rect2, color);
+        SDL_FillRect(surface, &rect3, color);
+    }
+
+    int verticallyCenterFont(nSDL_Font* font, const SDL_Rect& rect) {
+        int font_height = nSDL_GetStringHeight(font, "#");
+        return rect.y - (font_height / 2.0) + (rect.h / 2.0);
+    }
+} // namespace DrawUtils
 
 
 Renderable::Renderable(SCREEN_LAYER layer)
@@ -53,13 +60,6 @@ void Renderable::renderChildren(SDL_Surface* surface) {
     }
 }
 
-SCREEN_LAYER Renderable::getLayer(){
-    return layer_;
-}
-
-void Renderable::setScene(Scene* scene) {
-    scene_ = scene;
-}
 
 
 // ----

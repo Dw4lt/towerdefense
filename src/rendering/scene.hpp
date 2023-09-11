@@ -36,15 +36,46 @@ private:
 };
 
 
+class AbstractScene {
+public:
+
+    AbstractScene(AbstractScene&& other) = default;
+    AbstractScene& operator=(AbstractScene&& other) = default;
+
+    virtual ~AbstractScene();
+
+    /// @brief Render scene to the screen
+    virtual void render(RReader<Screen> screen) = 0;
+
+    bool visible_;
+
+protected:
+    /// @brief Create scene base. Is not automatically added to screen
+    AbstractScene(Screen* screen, SDL_Surface* surface, SDL_Rect rect, bool visible = true);
+
+    /// @brief Ptr to screen this scene is a part of. Valid throughout lifetime.
+    Screen* screen_;
+
+    /// @brief Rect describing where the scene is placed relative to the screen
+    SDL_Rect rect_on_screen_;
+
+    /// @brief Internal scene surface
+    SDL_Surface* background_surface_;
+};
+
+
 /// @brief Effectively a subsurface of a Screen. Lifetime owned by Screen.
-class Scene {
+class Scene : public AbstractScene {
     using RenderablePtr = RReader<Renderable>;
     using SceneRef = std::unique_ptr<Scene>&;
 public:
 
-    Scene(Screen* screen, SDL_Surface* surface, SDL_Rect rect, bool visible = true);
+    Scene(Scene&& other) = default;
+    Scene& operator=(Scene&& other) = default;
 
-    ~Scene();
+    static RReader<Scene> create(Screen* screen, SDL_Rect rect, bool visible = true);
+
+    virtual ~Scene() = default;
 
     /// @brief Add object to the render pipeline of the scene
     void addToScene(RenderablePtr object);
@@ -58,11 +89,12 @@ public:
     void removeFromScene(RenderablePtr object);
 
     /// @brief Render scene to the screen
-    void render(RReader<Screen> screen);
-
-    bool visible_;
+    virtual void render(RReader<Screen> screen) override;
 
 private:
+
+    /// @brief Create scene. Is not automatically added to screen, hence private.
+    Scene(Screen* screen, SDL_Surface* surface, SDL_Rect rect, bool visible = true);
 
     /// @brief Get layer if present
     /// @return Layer or nullptr
@@ -73,15 +105,6 @@ private:
 
     /// @brief Render all objects of layer to surface
     void renderLayer(SceneLayer& layer, SDL_Surface* surface);
-
-    /// @brief Ptr to screen this scene is a part of. Valid throughout lifetime.
-    Screen* screen_;
-
-    /// @brief Rect describing where the scene is placed relative to the screen
-    SDL_Rect rect_on_screen_;
-
-    /// @brief Internal scene surface
-    SDL_Surface* background_surface_;
 
     /// @brief Objects to render stored in layers
     std::map<SCREEN_LAYER, SceneLayer> render_objects_; // int -> Layer, vector -> objects

@@ -4,6 +4,7 @@
 #include "map/cursor.hpp"
 #include "rendering/scene.hpp"
 #include "rendering/screen.hpp"
+#include "ui/status_bar.hpp"
 #include <vector>
 #include "game_state.hpp"
 
@@ -31,6 +32,8 @@ private:
     ROwner<FieldCursor> field_cursor_;
 
     RReader<Scene> field_scene_;
+
+    RReader<StatusBar> status_bar_scene_;
 };
 
 #endif

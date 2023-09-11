@@ -20,12 +20,6 @@ Screen::~Screen() {
     surface_ = nullptr;
 }
 
-auto Screen::createScene(SDL_Rect rect) -> RReader<Scene> {
-    auto scene = new Scene(this, createSurface(rect.w, rect.h), rect, true);
-    scenes_.push_back(ROwner(scene));
-    return scenes_.back().makeReader();
-}
-
 auto Screen::createSurface(Uint16 width, Uint16 height) const -> SDL_Surface* {
     auto surface = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 16, properties_.R_mask, properties_.G_mask, properties_.B_mask, 0);
     if (surface == NULL) {

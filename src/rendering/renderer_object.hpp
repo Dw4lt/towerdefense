@@ -13,6 +13,7 @@ namespace DrawUtils {
     void setPixel(SDL_Surface* surface, int x, int y, Uint16 color);
     void fillColor(SDL_Surface* surface, Rect rect, Uint16 color);
     void drawRect(SDL_Surface* surface, Rect rect, Uint16 color, Uint8 thickness = 1);
+    int verticallyCenterFont(nSDL_Font* font, const SDL_Rect& rect);
 };
 
 class Renderable {
@@ -27,14 +28,17 @@ public:
 
     virtual Rect boundingBox() const = 0;
 
-    SCREEN_LAYER getLayer();
+    SCREEN_LAYER getLayer() { return layer_; };
 
     void addChild(RReader<Renderable> child);
 
-    friend class Scene;
+    Scene* getScene() {return scene_; };
+
+    friend class Scene; // TODO: hacky. But maybe appropriate? Questionmark?
 
 private:
-    void setScene(Scene* scene);
+
+    void setScene(Scene* scene) { scene_ = scene; };
 
     std::weak_ptr<Renderable> parent_;
     std::vector<RReader<Renderable>> children_;

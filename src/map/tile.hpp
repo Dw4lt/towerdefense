@@ -3,7 +3,6 @@
 #include "../rendering/renderer_object.hpp"
 #include <SDL/SDL_video.h>
 
-class Scene;
 
 enum class TileType {
     LAND,
