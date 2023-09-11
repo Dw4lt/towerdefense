@@ -59,12 +59,12 @@ public:
     /// @param func Condition
     void purgeEnemies(bool (*func)(Enemy& e));
 
+private:
+
+    GameState();
 
     /// @brief List of sturctures place on the field
     StructureList structure_list_;
-
-private:
-    GameState();
 
     /// @brief List of enemies on the field
     std::vector<ROwner<Enemy>> enemy_list_;
