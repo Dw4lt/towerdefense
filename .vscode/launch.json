@@ -12,6 +12,7 @@
             "autorun": [
                 "set confirm off",
                 "make",
+                "catch throw",
                 // "set debug remote 1",
             ],
             "remote": true,
