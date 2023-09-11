@@ -1,7 +1,7 @@
 #ifndef STATUS_BAR_H
 #define STATUS_BAR_H
 
-#include "../rendering/scene.hpp"
+#include "../rendering/abstract_scene.hpp"
 #include "../primitives/ownership.hpp"
 
 

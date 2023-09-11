@@ -1,5 +1,4 @@
 #include "status_bar.hpp"
-#include "../rendering/scene.hpp"
 #include "../rendering/screen.hpp"
 #include "../primitives/color_conversion.hpp"
 #include "../game_state.hpp"

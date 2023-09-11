@@ -1,7 +1,7 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include "scene.hpp"
+#include "abstract_scene.hpp"
 #include <SDL/SDL_video.h>
 #include <SDL/SDL_stdinc.h>
 
