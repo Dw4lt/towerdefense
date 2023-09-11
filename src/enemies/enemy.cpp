@@ -1,5 +1,5 @@
 #include "enemy.hpp"
-#include "../rendering/scene.hpp"
+#include "../rendering/composable_scene.hpp"
 #include <assert.h>
 #include <stdio.h>
 

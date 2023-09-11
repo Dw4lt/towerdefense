@@ -1,6 +1,6 @@
 #include "tile.hpp"
 #include "../primitives/color_conversion.hpp"
-#include "../rendering/scene.hpp"
+#include "../rendering/composable_scene.hpp"
 #include <stdio.h>
 
 Tile::Tile(int x, int y, int width, int height, int index_x, int index_y)

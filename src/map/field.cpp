@@ -1,5 +1,5 @@
 #include "field.hpp"
-#include "../rendering/scene.hpp"
+#include "../rendering/composable_scene.hpp"
 
 Field::Field(int x, int y, int width, int height, int tiles_x, int tiles_y)
     : RendererObject(x, y, width, height, SCREEN_LAYER::BACKGROUND)

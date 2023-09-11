@@ -1,5 +1,5 @@
 #include "game_state.hpp"
-#include "rendering/scene.hpp"
+#include "rendering/composable_scene.hpp"
 
 ROwner<GameState> GameState::singleton_{nullptr};
 

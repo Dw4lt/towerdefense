@@ -1,5 +1,5 @@
 #include "tower.hpp"
-#include "../rendering/scene.hpp"
+#include "../rendering/composable_scene.hpp"
 
 double Tower::global_range_multiplier_(1);
 double Tower::global_cooldown_multiplier_(1);

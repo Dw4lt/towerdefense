@@ -36,20 +36,18 @@ private:
 
 
 /// @brief Effectively a subsurface of a Screen. Lifetime owned by Screen.
-class Scene : public AbstractScene {
-    using RenderablePtr = RReader<Renderable>;
-    using SceneRef = std::unique_ptr<Scene>&;
+class ComposableScene : public AbstractScene {
 public:
 
-    Scene(Scene&& other) = default;
-    Scene& operator=(Scene&& other) = default;
+    ComposableScene(ComposableScene&& other) = default;
+    ComposableScene& operator=(ComposableScene&& other) = default;
 
-    static RReader<Scene> create(Screen* screen, SDL_Rect rect, bool visible = true);
+    static RReader<ComposableScene> create(Screen* screen, SDL_Rect rect, bool visible = true);
 
-    virtual ~Scene() = default;
+    virtual ~ComposableScene() = default;
 
     /// @brief Add object to the render pipeline of the scene
-    void addToScene(RenderablePtr object);
+    void addToScene(RReader<Renderable> object);
 
     /// @brief Remove object from the render pipeline of the scene.
     /// @param object Valid object
@@ -57,7 +55,7 @@ public:
 
     /// @brief Remove object from the render pipeline of the scene.
     /// @param object Object with irrelevant validity
-    void removeFromScene(RenderablePtr object);
+    void removeFromScene(RReader<Renderable> object);
 
     /// @brief Render scene to the screen
     virtual void render(RReader<Screen> screen) override;
@@ -65,7 +63,7 @@ public:
 private:
 
     /// @brief Create scene. Is not automatically added to screen, hence private.
-    Scene(Screen* screen, SDL_Surface* surface, SDL_Rect rect, bool visible = true);
+    ComposableScene(Screen* screen, SDL_Surface* surface, SDL_Rect rect, bool visible = true);
 
     /// @brief Get layer if present
     /// @return Layer or nullptr

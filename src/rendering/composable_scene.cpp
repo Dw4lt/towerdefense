@@ -1,4 +1,4 @@
-#include "scene.hpp"
+#include "composable_scene.hpp"
 #include "screen.hpp"
 #include <stdio.h>
 
@@ -9,16 +9,16 @@ SceneLayer::SceneLayer()
 
 // ---
 
-Scene::Scene(Screen* screen, SDL_Surface* surface, SDL_Rect rect, bool visible)
+ComposableScene::ComposableScene(Screen* screen, SDL_Surface* surface, SDL_Rect rect, bool visible)
     : AbstractScene(screen, surface, std::move(rect), visible)
 {
 }
 
-RReader<Scene> Scene::create(Screen* screen, SDL_Rect rect, bool visible) {
-    return screen->initScene(ROwner<Scene>(new Scene(screen, screen->createSurface(rect.w, rect.h), rect, visible)));
+RReader<ComposableScene> ComposableScene::create(Screen* screen, SDL_Rect rect, bool visible) {
+    return screen->initScene(ROwner<ComposableScene>(new ComposableScene(screen, screen->createSurface(rect.w, rect.h), rect, visible)));
 }
 
-void Scene::addToScene(RenderablePtr object) {
+void ComposableScene::addToScene(RReader<Renderable> object) {
     if (object->getScene()) {
         throw std::runtime_error("RendererObject is already part of a scene.");
     }
@@ -32,10 +32,10 @@ void Scene::addToScene(RenderablePtr object) {
     scene_layer.markDirty();
 }
 
-void Scene::removeFromScene(Renderable* object) {
+void ComposableScene::removeFromScene(Renderable* object) {
 }
 
-void Scene::removeFromScene(RenderablePtr object) {
+void ComposableScene::removeFromScene(RReader<Renderable> object) {
     if (object.isValid()) {
         auto layer = getLayer(object->getLayer());
         if (layer) {
@@ -52,7 +52,7 @@ void Scene::removeFromScene(RenderablePtr object) {
     }
 }
 
-auto Scene::getLayer(SCREEN_LAYER layer) -> SceneLayer* {
+auto ComposableScene::getLayer(SCREEN_LAYER layer) -> SceneLayer* {
     auto l = render_objects_.find(layer);
     if (l != render_objects_.end()) {
         return &(*l).second;
@@ -60,7 +60,7 @@ auto Scene::getLayer(SCREEN_LAYER layer) -> SceneLayer* {
     return nullptr;
 }
 
-void Scene::renderBackgroundIfNecessary() {
+void ComposableScene::renderBackgroundIfNecessary() {
     auto bg = getLayer(BACKGROUND);
     if (bg && bg->isDirty()) {
         renderLayer(*bg, background_surface_);
@@ -68,7 +68,7 @@ void Scene::renderBackgroundIfNecessary() {
     }
 }
 
-void Scene::render(RReader<Screen> screen) {
+void ComposableScene::render(RReader<Screen> screen) {
     renderBackgroundIfNecessary();
 
     // Blit static background
@@ -80,7 +80,7 @@ void Scene::render(RReader<Screen> screen) {
     }
 }
 
-void Scene::renderLayer(SceneLayer& layer, SDL_Surface* surface){
+void ComposableScene::renderLayer(SceneLayer& layer, SDL_Surface* surface){
     for (auto iter = layer.begin(); iter != layer.end();) {
         if ((*iter).isValid()) {
             (*iter)->render(surface);

@@ -17,7 +17,7 @@ GameManager::GameManager()
     field_cursor_ = ROwner(new FieldCursor(this));
 
     // Main field
-    field_scene_ = Scene::create(screen_.get(), SDL_Rect{x: 0, y: 0, w: FIELD_WIDTH, h: FIELD_HEIGHT}, true);
+    field_scene_ = ComposableScene::create(screen_.get(), SDL_Rect{x: 0, y: 0, w: FIELD_WIDTH, h: FIELD_HEIGHT}, true);
     field_scene_->addToScene(game_state->getFieldReader());
     field_scene_->addToScene(field_cursor_.makeReader());
 

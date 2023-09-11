@@ -1,5 +1,5 @@
 #include "structure.hpp"
-#include "../rendering/scene.hpp"
+#include "../rendering/composable_scene.hpp"
 
 Structure::Structure(const Tile& tile)
     : RendererObject(tile.boundingBox(), SCREEN_LAYER::STRUCTURE)

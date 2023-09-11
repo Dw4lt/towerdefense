@@ -1,7 +1,7 @@
 #include "renderer_object.hpp"
 
 #include "assert.h"
-#include "scene.hpp"
+#include "composable_scene.hpp"
 
 
 namespace DrawUtils {

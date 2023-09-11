@@ -7,7 +7,7 @@
 #include <memory>
 
 
-class Scene;
+class ComposableScene;
 
 namespace DrawUtils {
     void setPixel(SDL_Surface* surface, int x, int y, Uint16 color);
@@ -32,18 +32,18 @@ public:
 
     void addChild(RReader<Renderable> child);
 
-    Scene* getScene() {return scene_; };
+    ComposableScene* getScene() {return scene_; };
 
-    friend class Scene; // TODO: hacky. But maybe appropriate? Questionmark?
+    friend class ComposableScene; // TODO: hacky. But maybe appropriate? Questionmark?
 
 private:
 
-    void setScene(Scene* scene) { scene_ = scene; };
+    void setScene(ComposableScene* scene) { scene_ = scene; };
 
     std::weak_ptr<Renderable> parent_;
     std::vector<RReader<Renderable>> children_;
 
-    Scene* scene_;
+    ComposableScene* scene_;
     SCREEN_LAYER layer_;
 };
 
