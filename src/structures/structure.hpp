@@ -13,7 +13,7 @@ public:
 
     virtual void tick() = 0;
 
-    virtual void render(Scene* scene) override;
+    virtual void render(SDL_Surface* surface) override;
 
     SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::STRUCTURE; };
 };

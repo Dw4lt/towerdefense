@@ -35,7 +35,7 @@ public:
     void updateTerrain(TileTerrain terrain);
     const TileType& getType() const { return type_; };
     const Direction& getDirectionToNeighbour() const { return next_neighbour_; };
-    virtual void render(Scene* scene) override;
+    virtual void render(SDL_Surface* surface) override;
 
     SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::BACKGROUND; };
 

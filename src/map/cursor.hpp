@@ -17,7 +17,7 @@ class FieldCursor : public RendererObject {
 public:
     FieldCursor(GameManager* manager);
     virtual ~FieldCursor();
-    virtual void render(Scene* scene);
+    virtual void render(SDL_Surface* surface);
 
     void poll();
 

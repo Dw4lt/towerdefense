@@ -14,9 +14,9 @@ Tile::Tile(int x, int y, int width, int height, int index_x, int index_y)
     updateColor();
 }
 
-void Tile::render(Scene* scene) {
-    scene->fillColor(RendererObject::boundingBox(), color_);
-    RendererObject::renderChildren(scene);
+void Tile::render(SDL_Surface* surface) {
+    DrawUtils::fillColor(surface, RendererObject::boundingBox(), color_);
+    RendererObject::renderChildren(surface);
 }
 
 void Tile::updateType(TileType newType) {

@@ -8,7 +8,7 @@ Structure::Structure(const Tile& tile)
 
 Structure::~Structure() {}
 
-void Structure::render(Scene* scene) {
-    scene->fillColor(boundingBox(), RGB_888_TO_565(0xFF00FF));
-    RendererObject::renderChildren(scene);
+void Structure::render(SDL_Surface* surface) {
+    DrawUtils::fillColor(surface, boundingBox(), RGB_888_TO_565(0xFF00FF));
+    RendererObject::renderChildren(surface);
 }

@@ -9,15 +9,21 @@
 
 class Scene;
 
+namespace DrawUtils {
+    void setPixel(SDL_Surface* surface, int x, int y, Uint16 color);
+    void fillColor(SDL_Surface* surface, Rect rect, Uint16 color);
+    void drawRect(SDL_Surface* surface, Rect rect, Uint16 color, Uint8 thickness = 1);
+};
+
 class Renderable {
 public:
     Renderable(SCREEN_LAYER layer);
 
     virtual ~Renderable();
 
-    virtual void render(Scene* scene) = 0;
+    virtual void render(SDL_Surface* surface) = 0;
 
-    virtual void renderChildren(Scene* scene);
+    virtual void renderChildren(SDL_Surface* surface);
 
     virtual Rect boundingBox() const = 0;
 
@@ -48,7 +54,7 @@ public:
     virtual Rect boundingBox() const;
     Uint16 getWidth() const;
     Uint16 getHeight() const;
-    virtual void render(Scene* scene) = 0;
+    virtual void render(SDL_Surface* surface) = 0;
 
     virtual SCREEN_LAYER getDepth() const = 0;
 

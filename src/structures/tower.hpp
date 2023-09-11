@@ -9,7 +9,7 @@ public:
     Tower(int cooldown, int tower_range, double damage, const Tile& tile);
     virtual ~Tower();
 
-    virtual void render(Scene* scene);
+    virtual void render(SDL_Surface* surface);
 
     static double getGlobalRangeMultiplier();
     static void setGlobalRangeMultiplier(double new_multiplier);

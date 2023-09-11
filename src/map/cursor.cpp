@@ -79,7 +79,7 @@ void FieldCursor::updatePosition() {
     rect_ = Rect(rect.left() - 1, rect.top() - 1, rect.width_ + 2, rect.height_ + 2);
 }
 
-void FieldCursor::render(Scene* scene) {
+void FieldCursor::render(SDL_Surface* surface) {
     Uint32 color;
     switch (animation_state_) {
     case ANIMATION_STATE::BLOCKED:
@@ -93,6 +93,6 @@ void FieldCursor::render(Scene* scene) {
         color = (Uint32)0x344ceb;
         break;
     }
-    scene->drawRect(boundingBox(), RGB_888_TO_565(color), 2);
-    RendererObject::renderChildren(scene);
+    DrawUtils::drawRect(surface, boundingBox(), RGB_888_TO_565(color), 2);
+    RendererObject::renderChildren(surface);
 }

@@ -92,8 +92,8 @@ auto Field::generatePath() -> void {
     }
 }
 
-auto Field::render(Scene* scene) -> void {
-    renderChildren(scene);
+auto Field::render(SDL_Surface* surface) -> void {
+    renderChildren(surface);
 }
 
 auto Field::getTile(int x, int y) -> Tile& {

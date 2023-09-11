@@ -35,9 +35,9 @@ Rect Enemy::boundingBox() const {
     return rect_.centeredOn(rect_.origin_);
 }
 
-void Enemy::render(Scene* scene) {
-    scene->fillColor(boundingBox(), color_);
-    RendererObject::renderChildren(scene);
+void Enemy::render(SDL_Surface* surface) {
+    DrawUtils::fillColor(surface, boundingBox(), color_);
+    RendererObject::renderChildren(surface);
 }
 
 void Enemy::setNextTarget(const Field& field) {

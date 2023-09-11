@@ -10,6 +10,31 @@
 
 class Screen;
 
+/// @brief Vector of weakly-held renderable objects with dirty flag
+struct SceneLayer : public std::vector<RReader<Renderable>> {
+
+    SceneLayer();
+
+    /// @brief Avoid accidental copy bugs
+    SceneLayer(const SceneLayer& other) = delete;
+
+    /// @brief Avoid accidental copy bugs
+    SceneLayer& operator=(SceneLayer&& other) = default;
+
+    /// @brief Avoid accidental copy bugs
+    SceneLayer& operator=(const SceneLayer& other) = delete;
+
+    /// @brief Mark layer as is in need of re-rendering
+    void markDirty(bool dirty = true) { dirty_ = dirty; };
+
+    /// @brief Layer is in need of re-rendering
+    bool isDirty() { return dirty_; };
+
+private:
+    /// @brief Layer is in need of re-rendering
+    bool dirty_ = true;
+};
+
 
 /// @brief Effectively a subsurface of a Screen. Lifetime owned by Screen.
 class Scene {
@@ -35,14 +60,19 @@ public:
     /// @brief Render scene to the screen
     void render(RReader<Screen> screen);
 
-    void setPixel(int x, int y, Uint16 color);
-    void fillColor(Rect rect, Uint16 color);
-    void drawRect(Rect rect, Uint16 color, Uint8 thickness = 1, Uint8 alpha = SDL_ALPHA_OPAQUE);
-
-
     bool visible_;
 
 private:
+
+    /// @brief Get layer if present
+    /// @return Layer or nullptr
+    SceneLayer* getLayer(SCREEN_LAYER layer);
+
+    /// @brief Render beckground layer to cached surface if dirty
+    void renderBackgroundIfNecessary();
+
+    /// @brief Render all objects of layer to surface
+    void renderLayer(SceneLayer& layer, SDL_Surface* surface);
 
     /// @brief Ptr to screen this scene is a part of. Valid throughout lifetime.
     Screen* screen_;
@@ -51,10 +81,10 @@ private:
     SDL_Rect rect_on_screen_;
 
     /// @brief Internal scene surface
-    SDL_Surface* surface_;
+    SDL_Surface* background_surface_;
 
     /// @brief Objects to render stored in layers
-    std::map<SCREEN_LAYER, std::vector<RenderablePtr>> render_objects_; // int -> Layer, vector -> objects
+    std::map<SCREEN_LAYER, SceneLayer> render_objects_; // int -> Layer, vector -> objects
 };
 
 #endif

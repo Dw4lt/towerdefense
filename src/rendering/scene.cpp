@@ -2,11 +2,16 @@
 #include "screen.hpp"
 #include <stdio.h>
 
+SceneLayer::SceneLayer()
+    : std::vector<RReader<Renderable>>()
+{
+}
+
 Scene::Scene(Screen* screen, SDL_Surface* surface, SDL_Rect rect, bool visible)
     : visible_(visible)
     , screen_(screen)
     , rect_on_screen_(rect)
-    , surface_(surface)
+    , background_surface_(surface)
 {
 }
 
@@ -16,11 +21,13 @@ void Scene::addToScene(RenderablePtr object) {
     }
     auto layer = object->layer_;
     if (render_objects_.count(layer) == 0) {
-        render_objects_[layer] = std::vector<RenderablePtr>();
+        render_objects_[layer] = SceneLayer();
     }
     object->setScene(this);
     object->scene_ = this;
-    render_objects_[layer].push_back(object);
+    auto& scene_layer = render_objects_[layer];
+    scene_layer.push_back(object);
+    scene_layer.markDirty();
 }
 
 void Scene::removeFromScene(Renderable* object) {
@@ -28,62 +35,60 @@ void Scene::removeFromScene(Renderable* object) {
 
 void Scene::removeFromScene(RenderablePtr object) {
     if (object.isValid()) {
-        auto layer = object->layer_;
-        if (render_objects_.count(layer) > 0) {
-            std::vector<RenderablePtr>& objects = render_objects_[layer];
+        auto layer = getLayer(object->layer_);
+        if (layer) {
+            auto& objects = *layer;
             int size = objects.size();
             for (int i = 0; i < size; i++) {
                 if (objects[i].isValid() && objects[i].get() == object.get()) {
                     objects.erase(objects.begin() + i);
                     size--;
+                    objects.markDirty();
                 }
             }
         }
     }
 }
 
-void Scene::setPixel(int x, int y, Uint16 color) {
-    if (x >= 0 && y >= 0 && x < surface_->w && y < surface_->h) {
-        *((Uint16*)surface_->pixels + y * surface_->pitch + x * surface_->format->BytesPerPixel) = color;
+auto Scene::getLayer(SCREEN_LAYER layer) -> SceneLayer* {
+    auto l = render_objects_.find(layer);
+    if (l != render_objects_.end()) {
+        return &(*l).second;
     }
+    return nullptr;
 }
 
-void Scene::fillColor(Rect rect, Uint16 color) {
-    SDL_Rect rect2{rect.toSDLRect()};
-    SDL_FillRect(surface_, &rect2, color);
-}
-
-void Scene::drawRect(Rect rect, Uint16 color, Uint8 thickness, Uint8 alpha) {
-    Sint16 x = rect.origin_.x_, y = rect.origin_.y_;
-    Uint16 width = rect.width_, height = rect.height_;
-
-    SDL_Rect rect0{(Sint16)(x), (Sint16)(y), thickness, (Uint16)(height - thickness)};                                 // left margin
-    SDL_Rect rect1{(Sint16)(x + thickness), (Sint16)(y), (Uint16)(width - thickness), (Uint16)(thickness)};                      // top margin
-    SDL_Rect rect2{(Sint16)(x + width - thickness), (Sint16)(y + thickness), thickness, (Uint16)(height - thickness)}; // right margin
-    SDL_Rect rect3{(Sint16)(x), (Sint16)(y + height - thickness), (Uint16)(width - thickness), (Uint16)(thickness)};             // bottom margin
-
-    SDL_FillRect(surface_, &rect0, color);
-    SDL_FillRect(surface_, &rect1, color);
-    SDL_FillRect(surface_, &rect2, color);
-    SDL_FillRect(surface_, &rect3, color);
+void Scene::renderBackgroundIfNecessary() {
+    auto bg = getLayer(BACKGROUND);
+    if (bg && bg->isDirty()) {
+        renderLayer(*bg, background_surface_);
+        bg->markDirty(false);
+    }
 }
 
 void Scene::render(RReader<Screen> screen) {
+    renderBackgroundIfNecessary();
+
+    // Blit static background
+    SDL_BlitSurface(background_surface_, NULL, screen->getSurface(), &rect_on_screen_);
+
     std::vector<RendererObject> v;
-    for (auto vect : render_objects_) {
-        auto& vector = vect.second;
-        for (auto iter = vector.begin(); iter != vector.end();) {
-            if ((*iter).isValid()) {
-                (*iter)->render(this);
-                iter++;
-            } else {
-                iter = vector.erase(iter);
-            }
+    for (auto& vect : render_objects_) {
+        if (vect.first != BACKGROUND) renderLayer(vect.second, screen->getSurface()); // Render directly to screen
+    }
+}
+
+void Scene::renderLayer(SceneLayer& layer, SDL_Surface* surface){
+    for (auto iter = layer.begin(); iter != layer.end();) {
+        if ((*iter).isValid()) {
+            (*iter)->render(surface);
+            iter++;
+        } else {
+            iter = layer.erase(iter);
         }
     }
-    SDL_BlitSurface(surface_, NULL, screen->getSurface(), &rect_on_screen_);
 }
 
 Scene::~Scene() {
-    SDL_free(surface_);
+    SDL_free(background_surface_);
 }
