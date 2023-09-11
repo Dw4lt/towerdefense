@@ -2,7 +2,7 @@
 #include "../rendering/scene.hpp"
 
 Field::Field(int x, int y, int width, int height, int tiles_x, int tiles_y)
-    : RendererObject(x, y, width, height)
+    : RendererObject(x, y, width, height, SCREEN_LAYER::BACKGROUND)
     , tiles_x_{tiles_x}
     , tiles_y_{tiles_y}
     , start_tile_(0, 0) {
@@ -48,7 +48,6 @@ auto Field::generatePath() -> void {
     int max_step = 4;
     int distance = 0;
     while (x < tiles_x_) {
-        SDL_Delay(3);
         found = false;
         printf("x:%i y:%i\n", x, y);
         while (!found) {

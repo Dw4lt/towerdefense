@@ -2,7 +2,7 @@
 #include "../rendering/scene.hpp"
 
 Structure::Structure(const Tile& tile)
-    : RendererObject(tile.boundingBox())
+    : RendererObject(tile.boundingBox(), SCREEN_LAYER::STRUCTURE)
 {
 }
 

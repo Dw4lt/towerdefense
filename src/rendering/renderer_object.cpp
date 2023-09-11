@@ -3,18 +3,14 @@
 #include "assert.h"
 #include "scene.hpp"
 
-Renderable::Renderable() {
+Renderable::Renderable(SCREEN_LAYER layer)
+    : scene_{nullptr}
+    , layer_{layer}
+{
 }
 
 auto Renderable::addChild(RReader<Renderable> child) -> void {
     children_.push_back(child);
-    child->part_of_a_scene |= part_of_a_scene; // Inherit scene if assigned
-}
-
-void Renderable::inheritScene() { // TODO: hacky approach. Add proper state management
-    for(auto& child: children_) {
-        child->part_of_a_scene = part_of_a_scene;
-    }
 }
 
 Renderable::~Renderable() {
@@ -29,11 +25,19 @@ void Renderable::renderChildren(Scene* scene) {
     }
 }
 
+SCREEN_LAYER Renderable::getLayer(){
+    return layer_;
+}
+
+void Renderable::setScene(Scene* scene) {
+    scene_ = scene;
+}
+
 
 // ----
 
-RendererObject::RendererObject(int x, int y, int width, int height)
-    : Renderable()
+RendererObject::RendererObject(int x, int y, int width, int height, SCREEN_LAYER layer)
+    : Renderable(layer)
     , rect_(x, y, width, height)
 {
 
@@ -45,15 +49,15 @@ RendererObject::RendererObject(SCREEN_LAYER layer)
 
 }
 
-RendererObject::RendererObject(Rect rect)
-    : Renderable()
+RendererObject::RendererObject(Rect rect, SCREEN_LAYER layer)
+    : Renderable(layer)
     , rect_(std::move(rect))
 {
 
 }
 
-RendererObject::RendererObject(Point pos, int width, int height)
-    : RendererObject(Rect(pos, width, height)) {}
+RendererObject::RendererObject(Point pos, int width, int height, SCREEN_LAYER layer)
+    : RendererObject(Rect(pos, width, height), layer) {}
 
 RendererObject::~RendererObject() {
 }

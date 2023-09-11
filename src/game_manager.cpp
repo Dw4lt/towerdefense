@@ -1,18 +1,25 @@
 #include "game_manager.hpp"
 #include "structures/archer.hpp"
-#include <SDL/SDL.h>
-#include <ctime>
+#include <SDL/SDL_video.h>
+#include <SDL/SDL_timer.h>
+// #include <ctime>
 #include <iostream>
 #include <os.h>
 #include <stdio.h>
 #include <string>
 
 GameManager::GameManager()
+    : screen_(new Screen(320, 240))
 {
-    Scene::Init(320, 240, 16);
-    GameState::getState();
+    auto game_state = GameState::getState();
+
     field_cursor_ = ROwner(new FieldCursor(this));
-    Scene::get()->addToScene(field_cursor_.makeReader());
+
+    field_scene_ = screen_->createScene(SDL_Rect{x: 0, y: 0, w: FIELD_WIDTH, h: FIELD_HEIGHT});
+
+    field_scene_->addToScene(game_state->getFieldReader());
+
+    field_scene_->addToScene(field_cursor_.makeReader());
 
     spawnWave();
 }
@@ -23,7 +30,8 @@ void GameManager::spawnWave() {
     auto& starting_point = field.getStart();
     auto pos = field.getTile(starting_point).getCenter();
     for (int i = 0; i < 10; i ++) {
-        game_state->addEnemy(std::make_shared<Enemy>(pos, 4, 4, Point{starting_point}, 100, 1.2, 0xf00f));
+        auto enemy = game_state->addEnemy(std::make_shared<Enemy>(pos, 4, 4, Point{starting_point}, 100, 1.2, 0xf00f));
+        field_scene_->addToScene(enemy);
         pos.x_ -= 15;
     }
 }
@@ -55,9 +63,10 @@ void GameManager::gameLoop() {
         structure->tick();
     }
     removeDeadEnemies();
-    auto& scene = Scene::get();
-    scene->render();
-    scene->show();
+
+    if (field_scene_->visible_) field_scene_->render(screen_);
+
+    screen_->flip();
 }
 
 void GameManager::removeDeadEnemies() {
@@ -77,7 +86,8 @@ void GameManager::onMapCursorClickOn(int x, int y) {
     auto& tile = game_state->getField().getTile(x, y);
     TileType type = tile.getType();
     if (TileType::LAND == type) {
-        game_state->addStructure(std::make_shared<Archer>(3, 15, 20, tile), tile); // TODO: pick class based on store selection
+        auto structure = game_state->addStructure(std::make_shared<Archer>(3, 15, 20, tile), tile); // TODO: pick class based on store selection
+        field_scene_->addToScene(structure);
     } else if (TileType::PATH == type) {
     }
 }

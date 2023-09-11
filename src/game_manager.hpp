@@ -3,6 +3,7 @@
 #include "enemies/enemy.hpp"
 #include "map/cursor.hpp"
 #include "rendering/scene.hpp"
+#include "rendering/screen.hpp"
 #include <vector>
 #include "game_state.hpp"
 
@@ -21,7 +22,11 @@ private:
     void poll();
     void removeDeadEnemies();
 
+    ROwner<Screen> screen_;
+
     ROwner<FieldCursor> field_cursor_;
+
+    RReader<Scene> field_scene_;
 };
 
 #endif

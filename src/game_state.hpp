@@ -26,7 +26,11 @@ public:
     /// @brief Get global game state singleton
     static GameStatePtr getState();
 
+    /// @brief Get a reference to the field instance for immediate use. Do not store.
     Field& getField();
+
+    /// @brief Get a reference to the field instance with validity chek. Safe to store.
+    RReader<Field> getFieldReader();
 
     /// @brief Get RReader iterable of enemies.
     /// @return Iterator over `RReader<Enemy>` view of owned enemies
@@ -40,9 +44,16 @@ public:
         return makeOwnerToReaderWrapper(structure_list_);
     };
 
-    void addEnemy(std::shared_ptr<Enemy> enemy);
+    /// @brief Add an enemy to the game state
+    /// @param enemy Enemy to take ownership of
+    /// @return Reference to managed enemy. Add this to the scene.
+    RReader<Enemy> addEnemy(std::shared_ptr<Enemy> enemy);
 
-    void addStructure(std::shared_ptr<Structure> structure, Tile& tile);
+    /// @brief Add a structure to the game state
+    /// @param structure Structure to take ownership of
+    /// @param tile Tile the structure should be assigned to
+    /// @return Reference to managed structure. Add this to the scene.
+    RReader<Structure> addStructure(std::shared_ptr<Structure> structure, Tile& tile);
 
     /// @brief Destroy enemy instances according to condition
     /// @param func Condition
@@ -51,7 +62,6 @@ public:
 
     /// @brief List of sturctures place on the field
     StructureList structure_list_;
-
 
 private:
     GameState();

@@ -4,7 +4,7 @@
 #include "../rendering/renderer_object.hpp"
 #include "../primitives/essentials.hpp"
 #include "../map/field.hpp"
-#include <SDL/SDL.h>
+#include <SDL/SDL_video.h>
 
 class Scene;
 

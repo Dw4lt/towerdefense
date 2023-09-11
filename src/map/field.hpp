@@ -4,7 +4,7 @@
 #include "../primitives/essentials.hpp"
 #include "../primitives/ownership.hpp"
 #include "tile.hpp"
-#include <SDL/SDL.h>
+#include <SDL/SDL_video.h>
 
 class Scene;
 

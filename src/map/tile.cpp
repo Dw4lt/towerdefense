@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 Tile::Tile(int x, int y, int width, int height, int index_x, int index_y)
-    : RendererObject(x, y, width, height)
+    : RendererObject(x, y, width, height, SCREEN_LAYER::BACKGROUND)
     , index_x_(index_x)
     , index_y_(index_y)
     , color_(0x0)

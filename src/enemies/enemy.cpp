@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 Enemy::Enemy(Point pos, int width, int height, Point current_field, long int hp, double speed, Uint16 color)
-    : RendererObject(pos, width, height)
+    : RendererObject(pos, width, height, SCREEN_LAYER::ENEMY)
     , current_tile_(current_field)
     , current_target_tile_(current_field)
     , real_x_(pos.x_)

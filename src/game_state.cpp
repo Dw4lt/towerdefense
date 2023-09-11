@@ -5,12 +5,14 @@ ROwner<GameState> GameState::singleton_{nullptr};
 
 GameState::GameState()
     : field_ptr_{new Field(0, 0, FIELD_WIDTH, FIELD_HEIGHT)}
-    {
-    Scene::get()->addToScene(field_ptr_.makeReader());
-}
+{}
 
 auto GameState::getField() -> Field& {
     return *field_ptr_;
+}
+
+auto GameState::getFieldReader() -> RReader<Field> {
+    return field_ptr_;
 }
 
 auto GameState::getState() -> GameStatePtr {
@@ -20,16 +22,17 @@ auto GameState::getState() -> GameStatePtr {
     return GameState::singleton_;
 }
 
-void GameState::addStructure(std::shared_ptr<Structure> structure, Tile& tile){
+auto GameState::addStructure(std::shared_ptr<Structure> structure, Tile& tile) -> RReader<Structure> {
     structure_list_.push_back(ROwner<Structure>(structure));
     tile.addChild(structure_list_.back().makeReader());
     tile.updateType(TileType::STRUCTURE);
+    return structure_list_.back().makeReader();
 }
 
 
-void GameState::addEnemy(std::shared_ptr<Enemy> enemy){
+auto GameState::addEnemy(std::shared_ptr<Enemy> enemy) -> RReader<Enemy> {
     enemy_list_.push_back(ROwner(enemy));
-    Scene::get()->addToScene(enemy_list_.back().makeReader());
+    return enemy_list_.back().makeReader();
 }
 
 void GameState::purgeEnemies(bool (*func)(Enemy& e)) {

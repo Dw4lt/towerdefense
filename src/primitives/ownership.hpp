@@ -82,6 +82,8 @@ private:
 
 public:
 
+    RReader() : resource(std::weak_ptr<T>()) {}
+
     RReader(const ROwner<T>& owner) : resource(std::weak_ptr(owner.resource)) {}
 
     // Moving allowed
@@ -127,7 +129,9 @@ public:
     /// @throws if resource is invalid
     T* operator->() const {
         auto ret = resource.lock().get();
-        if (ret == nullptr) throw std::runtime_error("Attempted to dereference an invalid resource.");
+        if (ret == nullptr) {
+            throw std::runtime_error("Attempted to dereference an invalid resource.");
+        }
         return ret;
     }
 

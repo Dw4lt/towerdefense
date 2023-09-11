@@ -2,14 +2,21 @@
 #include <stdio.h>
 #include <string>
 #include <time.h>
+#include <SDL/SDL.h>
 
 #include "game_manager.hpp"
 
 int main() {
     srand(time(NULL));
     printf("############## Start ##############\n");
-    GameManager manager;
-    manager.start();
+    SDL_Init( SDL_INIT_VIDEO );
+    try {
+        GameManager manager;
+        manager.start();
+    } catch (std::exception& e) {
+        std::cout << e.what() << "\n";
+    }
+    SDL_Quit();
     printf("############## Stop ##############\n");
     return EXIT_SUCCESS;
 }

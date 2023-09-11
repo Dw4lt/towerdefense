@@ -1,6 +1,6 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
-#include <SDL/SDL.h>
+#include <SDL/SDL_video.h>
 #include <string>
 
 class Resource {

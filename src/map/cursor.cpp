@@ -1,10 +1,11 @@
 #include "cursor.hpp"
 #include "../game_manager.hpp"
 #include "../primitives/color_conversion.hpp"
+#include <SDL/SDL_timer.h>
 #include <os.h>
 
 FieldCursor::FieldCursor(GameManager* manager)
-    : RendererObject()
+    : RendererObject(SCREEN_LAYER::CURSOR)
     , game_manager_(manager)
     , line_width_{2}
 {

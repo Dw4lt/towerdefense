@@ -1,7 +1,7 @@
 #ifndef TILE_H
 #define TILE_H
 #include "../rendering/renderer_object.hpp"
-#include <SDL/SDL.h>
+#include <SDL/SDL_video.h>
 
 class Scene;
 
