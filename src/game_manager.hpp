@@ -7,6 +7,7 @@
 #include <vector>
 #include "game_state.hpp"
 
+
 class GameManager {
 public:
     GameManager();
@@ -19,7 +20,10 @@ public:
 private:
     void gameLoop();
     void shopLoop();
-    void poll();
+
+    /// @brief Poll and process user's button presses
+    void processUserInput();
+
     void removeDeadEnemies();
 
     ROwner<Screen> screen_;

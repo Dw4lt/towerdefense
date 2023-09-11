@@ -1,4 +1,5 @@
 #include "game_manager.hpp"
+#include "primitives/input.hpp"
 #include "structures/archer.hpp"
 #include <SDL/SDL_video.h>
 #include <SDL/SDL_timer.h>
@@ -47,14 +48,11 @@ void GameManager::start() {
         if (frame_time < STANDARD_TICK_DURATION) {
             SDL_Delay(STANDARD_TICK_DURATION - frame_time);
         }
-        if (any_key_pressed()) {
-            poll();
-        }
     }
 }
 
 void GameManager::gameLoop() {
-    field_cursor_->poll();
+    processUserInput();
     auto game_state = GameState::getState();
     for (auto enemy : game_state->getEnemies()) {
         enemy->pathfind(game_state->getField());
@@ -78,7 +76,15 @@ void GameManager::removeDeadEnemies() {
 void GameManager::shopLoop() {
 }
 
-void GameManager::poll() {
+void GameManager::processUserInput() {
+    int actions = Input::getActions();
+    if (actions != Input::NONE) {
+        field_cursor_->applyUserActions(actions); // TODO: Only if currently in-game
+
+        if (actions & Input::SPAWN_NEXT_WAVE) {
+            spawnWave();
+        }
+    }
 }
 
 void GameManager::onMapCursorClickOn(int x, int y) {

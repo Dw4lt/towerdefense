@@ -1,7 +1,6 @@
 #ifndef CURSOR_H
 #define CURSOR_H
 
-#include "../rendering/scene.hpp"
 #include "../rendering/renderer_object.hpp"
 #include "field.hpp"
 
@@ -19,7 +18,9 @@ public:
     virtual ~FieldCursor();
     virtual void render(SDL_Surface* surface);
 
-    void poll();
+    /// @brief Process user input
+    /// @param actions Bitwise OR-ed button states
+    void applyUserActions(int actions);
 
     SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::CURSOR; };
 
