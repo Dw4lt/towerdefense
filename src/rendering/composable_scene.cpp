@@ -32,9 +32,6 @@ void ComposableScene::addToScene(RReader<Renderable> object) {
     scene_layer.markDirty();
 }
 
-void ComposableScene::removeFromScene(Renderable* object) {
-}
-
 void ComposableScene::removeFromScene(RReader<Renderable> object) {
     if (object.isValid()) {
         auto layer = getLayer(object->getLayer());

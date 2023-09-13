@@ -50,11 +50,7 @@ public:
     void addToScene(RReader<Renderable> object);
 
     /// @brief Remove object from the render pipeline of the scene.
-    /// @param object Valid object
-    void removeFromScene(Renderable* object);
-
-    /// @brief Remove object from the render pipeline of the scene.
-    /// @param object Object with irrelevant validity
+    /// @param object Object to remove, validity checked.
     void removeFromScene(RReader<Renderable> object);
 
     /// @brief Render scene to the screen
