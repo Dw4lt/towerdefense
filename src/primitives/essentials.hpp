@@ -6,6 +6,8 @@
 class Point {
 public:
     Point(Sint16 x = 0, Sint16 y = 0);
+    bool operator==(const Point& other) const;
+
     Sint16 x_;
     Sint16 y_;
 };
@@ -47,6 +49,9 @@ public:
 
     bool contains(const Point& point) const;
 };
+
+#define sign(x) ((x) > 0) - ((x) < 0)
+
 #define ErrorStream(x) std::cout << "## Exception in " << __func__ << "() ##\n" \
                                  << x << "\n####################\n"
 

@@ -33,7 +33,6 @@ public:
     int getMaxX() const;
     int getMaxY() const;
     const Point& getStart() const;
-    Point findNextCornerNode(Point coord) const;
 
     void populateTrees();
 

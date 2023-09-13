@@ -24,8 +24,8 @@ void Tile::updateType(TileType newType) {
     updateColor();
 }
 
-void Tile::updateNextNeighbour(Direction direction) {
-    next_neighbour_ = direction;
+void Tile::updateNextNeighbour(Point point) {
+    next_neighbour_ = std::move(point);
 }
 
 void Tile::updateTerrain(TileTerrain terrain) {

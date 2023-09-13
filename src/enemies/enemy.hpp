@@ -11,7 +11,7 @@ public:
     Enemy(Point pos, int width, int height, Point current_field, long int hp_, double speed, Uint16 color);
     virtual ~Enemy();
     virtual void render(SDL_Surface* surface) override;
-    virtual void pathfind(Field& field);
+    virtual void pathfind(const Field& field);
     virtual Rect boundingBox() const override;
     virtual bool isImmune(DAMAGE_TYPE type);
     virtual void damage(int damage, DAMAGE_TYPE type);
@@ -20,7 +20,8 @@ public:
     virtual SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::ENEMY; };
 
 private:
-    void setNextTarget(const Field& field);
+    void updateBoundingBox();
+    void walkTowards(const Field& field, const Point& target_tile, double& distance_to_travel);
 
     Point current_tile_;
     Point current_target_tile_;

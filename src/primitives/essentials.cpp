@@ -4,6 +4,10 @@ Point::Point(Sint16 x, Sint16 y)
     : x_(x)
     , y_(y) {}
 
+bool Point::operator==(const Point& other) const {
+    return x_ == other.x_ && y_ == other.y_;
+}
+
 Rect::Rect(Point origin, Uint16 width, Uint16 height)
     : origin_(origin)
     , width_(width)

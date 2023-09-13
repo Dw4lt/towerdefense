@@ -57,7 +57,7 @@ auto Field::generatePath() -> void {
                 if (!(x > 0 && y > 1 && tile_grid_[x - 1][y - 1]->getType() == TileType::PATH)) {
                     distance = rand() % std::min(y + 1, max_step);
                     for (int i = 0; i < distance && tile_grid_[x][y - 1]->getType() == TileType::LAND; i++) {
-                        tile_grid_[x][y]->updateNextNeighbour(Direction::UP);
+                        tile_grid_[x][y]->updateNextNeighbour(Point(x, y - 1));
                         tile_grid_[x][--y]->updateType(TileType::PATH);
                         found = true;
                     }
@@ -67,7 +67,7 @@ auto Field::generatePath() -> void {
                 if (!(x > 0 && y < tiles_y_ - 1 && tile_grid_[x - 1][y + 1]->getType() == TileType::PATH)) {
                     distance = rand() % std::min(tiles_y_ - y, max_step);
                     for (int i = 0; i < distance && tile_grid_[x][y + 1]->getType() == TileType::LAND; i++) {
-                        tile_grid_[x][y]->updateNextNeighbour(Direction::DOWN);
+                        tile_grid_[x][y]->updateNextNeighbour(Point(x, y + 1));
                         tile_grid_[x][++y]->updateType(TileType::PATH);
                         found = true;
                     }
@@ -76,12 +76,12 @@ auto Field::generatePath() -> void {
             case 2: // RIGHT
                 distance = rand() % std::min(tiles_x_ - x, max_step);
                 for (int i = 0; i < distance && tile_grid_[x + 1][y]->getType() == TileType::LAND; i++) {
-                    tile_grid_[x][y]->updateNextNeighbour(Direction::RIGHT);
+                    tile_grid_[x][y]->updateNextNeighbour(Point(x + 1, y));
                     tile_grid_[++x][y]->updateType(TileType::PATH);
                     found = true;
                 }
                 if (x + 1 == tiles_x_) {
-                    tile_grid_[x][y]->updateNextNeighbour(Direction::RIGHT);
+                    tile_grid_[x][y]->updateNextNeighbour(Point(SHRT_MAX, y));
                     x++;
                     found = true;
                 }
@@ -121,7 +121,7 @@ auto Field::getTile(const Point& tile_coords) const -> const Tile& {
 }
 
 auto Field::checkBounds(int x, int y) const -> bool {
-    return x >= 0 && x < tiles_x_ && y >= 0 && y <tiles_y_;
+    return x >= 0 && x < tiles_x_ && y >= 0 && y < tiles_y_;
 }
 
 auto Field::checkBounds(const Point& tile_coords) const -> bool {
@@ -138,34 +138,6 @@ auto Field::getMaxY() const -> int {
 
 auto Field::getStart() const -> const Point& {
     return start_tile_;
-}
-
-auto Field::findNextCornerNode(Point coord) const -> Point {
-    if (checkBounds(coord)) {
-        const Tile* tile = &getTile(coord);
-        Direction dir = tile->getDirectionToNeighbour();
-        do {
-            switch (dir) {
-            case Direction::RIGHT:
-                coord.x_++;
-                break;
-            case Direction::UP:
-                coord.y_--;
-                break;
-            case Direction::DOWN:
-                coord.y_++;
-                break;
-            case Direction::LEFT:
-                coord.x_--;
-                break;
-            case Direction::NONE:
-                break;
-            default:
-                break;
-            }
-        } while (checkBounds(coord) && (tile = &getTile(coord)) && tile->getDirectionToNeighbour() == dir);
-    }
-    return coord;
 }
 
 auto Field::populateTrees() -> void {

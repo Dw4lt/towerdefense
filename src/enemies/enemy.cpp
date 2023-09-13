@@ -3,10 +3,10 @@
 #include <assert.h>
 #include <stdio.h>
 
-Enemy::Enemy(Point pos, int width, int height, Point current_field, long int hp, double speed, Uint16 color)
-    : RendererObject(pos, width, height, SCREEN_LAYER::ENEMY)
-    , current_tile_(current_field)
-    , current_target_tile_(current_field)
+Enemy::Enemy(Point pos, int width, int height, Point current_tile, long int hp, double speed, Uint16 color)
+    : RendererObject(Point(pos.x_ - width / 2, pos.y_ - height / 2), width, height, SCREEN_LAYER::ENEMY) // TODO: rect_really should not be a part of RendererObject
+    , current_tile_(current_tile)
+    , current_target_tile_(current_tile)
     , real_x_(pos.x_)
     , real_y_(pos.y_)
     , color_(color)
@@ -32,7 +32,7 @@ void Enemy::damage(int damage, DAMAGE_TYPE type) {
 }
 
 Rect Enemy::boundingBox() const {
-    return rect_.centeredOn(rect_.origin_);
+    return rect_;
 }
 
 void Enemy::render(SDL_Surface* surface) {
@@ -40,59 +40,69 @@ void Enemy::render(SDL_Surface* surface) {
     RendererObject::renderChildren(surface);
 }
 
-void Enemy::setNextTarget(const Field& field) {
-    current_tile_ = current_target_tile_;
-    current_target_tile_ = field.findNextCornerNode(current_tile_);
+void Enemy::updateBoundingBox() {
+    // TODO: why is rect_ a part of render-object again?
+    rect_.origin_.x_ = ((Sint16) real_x_) - rect_.width_ / 2;
+    rect_.origin_.y_ = ((Sint16) real_y_) - rect_.height_ / 2;
 }
 
-void Enemy::pathfind(Field& field) {
-    try {
-        double distance_to_travel = speed_;
-        double x_travel = 0;
-        double y_travel = 0;
+void Enemy::walkTowards(const Field& field, const Point& target_tile, double& distance_to_travel) {
+    auto center = field.getTile(target_tile).getCenter();
+    auto real_delta_x = center.x_ - real_x_;
+    auto real_delta_y = center.y_ - real_y_;
+    double abs_distance = std::abs(real_delta_x) + std::abs(real_delta_y);
 
-        while (distance_to_travel > 0) {
-            Direction dir = Direction::RIGHT;
-
-            // Apply direction of current tile if entity is on field
-            if (field.checkBounds(current_tile_)) {
-                dir = field.getTile(current_tile_).getDirectionToNeighbour();
-            }
-
-            Point current_destination;
-            if (field.checkBounds(current_target_tile_)) { // Walk toward tile
-                current_destination = field.getTile(current_target_tile_).getCenter();
-            } else { // Walk off-screen
-                current_destination = Point{current_tile_.x_, SHRT_MAX};
-            }
-
-            if (dir == Direction::RIGHT || dir == Direction::LEFT) {
-                x_travel = std::min(std::abs(current_destination.x_ - real_x_), distance_to_travel);
-                real_x_ += (dir == Direction::RIGHT) ? x_travel : -x_travel;
-                rect_.origin_.x_ = std::round(real_x_);
-                distance_to_travel -= x_travel;
-                if (current_destination.x_ <= real_x_) {
-                    setNextTarget(field);
-                }
-            } else {
-                y_travel = std::min(std::abs(current_destination.y_ - real_y_), distance_to_travel);
-                distance_to_travel -= y_travel;
-                real_y_ += (dir == Direction::DOWN) ? y_travel : -y_travel;
-                if (dir == Direction::DOWN) {
-                    if (current_destination.y_ <= real_y_) {
-                        setNextTarget(field);
-                    }
-                } else {
-                    if (current_destination.y_ >= real_y_) {
-                        setNextTarget(field);
-                    }
-                }
-                rect_.origin_.y_ = std::round(real_y_);
-            }
-        }
-    } catch (...) {
-        ErrorStream(" x:" << real_x_ << " y:" << real_y_
-                          << " ct:" << current_tile_.x_ << ";" << current_tile_.y_
-                          << " nt:" << current_target_tile_.x_ << ";" << current_target_tile_.y_);
+    // Short-circuit
+    if (abs_distance <= distance_to_travel) {
+        real_x_ = center.x_;
+        real_y_ = center.y_;
+        distance_to_travel -= abs_distance;
+        current_tile_ = target_tile;
+        return;
     }
+
+    // Partial distance walk necessary
+    if (real_delta_x) { // x
+        double step_size = std::min(std::abs(real_delta_x), distance_to_travel);
+        double signed_step = step_size * sign(real_delta_x);
+        distance_to_travel -= step_size;
+        real_x_ += signed_step;
+    }
+    if (real_delta_y){ // y
+        double step_size = std::min(std::abs(real_delta_y), distance_to_travel);
+        double signed_step = step_size * sign(real_delta_y);
+        distance_to_travel -= step_size;
+        real_y_ += signed_step;
+    }
+}
+
+Point findNextTargetTile(const Field& field, const Point& current_tile) {
+    return field.getTile(current_tile).getNextNeighbour();
+}
+
+void Enemy::pathfind(const Field& field) {
+    double distance_to_travel = speed_;
+
+    // Walk towards screen
+    if (real_x_ < 0) {
+        auto delta = std::min(std::abs(real_x_), distance_to_travel);
+        real_x_ += delta;
+        distance_to_travel -= delta;
+    }
+
+    // Walk on screen
+    while (distance_to_travel > 0 && current_target_tile_.x_ < SHRT_MAX) {
+        walkTowards(field, current_target_tile_, distance_to_travel);
+        if (distance_to_travel > 0) { // Tile reached
+            current_target_tile_ = findNextTargetTile(field, current_target_tile_);
+        }
+    }
+
+    // Walk off screen
+    if (distance_to_travel > 0) {
+        real_x_ += distance_to_travel;
+        distance_to_travel = 0;
+    }
+
+    updateBoundingBox();
 }
