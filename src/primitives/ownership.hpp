@@ -93,7 +93,7 @@ public:
     // Down-casting based on stored type allowed
     template<typename U,
         typename = std::enable_if_t<std::is_base_of<T, U>::value>>
-    RReader<T>(const RReader<U>& other) : resource(other.resource){};
+    RReader<T>(const RReader<U>& other) : resource(other.resource){}
 
     // Copy Constructor and Assignment Operator are default
     RReader(const RReader&) = default;

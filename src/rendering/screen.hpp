@@ -47,7 +47,7 @@ public:
         auto&& reader = owner.makeReader();
         scenes_.push_back((ROwner<AbstractScene>&&) owner);
         return reader;
-    };
+    }
 
     /// @brief Internally used method to create a new surface for a scene, following this instance's scren properties
     /// @return New, unmanaged surface to be used by a scene
