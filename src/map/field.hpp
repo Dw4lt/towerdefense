@@ -38,11 +38,20 @@ public:
 
     SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::BACKGROUND; };
 
+    /// @brief Get the center coordinate of the path-tile with the given index. Used for pathfinding
+    /// @param index Index of tile along path
+    /// @return Pixel-coordinate of the center of the tile
+    Point getPathTileCenter(unsigned int index) const;
+
 private:
+    /// @brief Make the tile at the given index a path
+    void addTileToPath(int x, int y);
+
     int tiles_x_;
     int tiles_y_;
 
     std::vector<std::vector<ROwner<Tile>>> tile_grid_;
+    std::vector<RReader<Tile>> path_;
 
     Point start_tile_;
 };

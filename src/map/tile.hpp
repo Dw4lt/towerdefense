@@ -30,13 +30,17 @@ public:
     virtual ~Tile() = default;
 
     void updateType(TileType newType);
-    void updateNextNeighbour(Point point);
     void updateTerrain(TileTerrain terrain);
-    const TileType& getType() const { return type_; };
-    const Point& getNextNeighbour() const { return next_neighbour_; };
+
+    TileType getType() const { return type_; };
+    TileTerrain getTerrain() const { return terrain_; };
+
     virtual void render(SDL_Surface* surface) override;
 
     SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::BACKGROUND; };
+
+    int getIndexX() const { return index_x_; };
+    int getIndexY() const { return index_y_; };
 
 private:
     void updateColor();
@@ -45,7 +49,6 @@ private:
     int index_y_;
     Uint16 color_;
     TileType type_;
-    Point next_neighbour_;
     TileTerrain terrain_;
     int distance_to_water_;
 };

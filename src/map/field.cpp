@@ -36,16 +36,31 @@ Field::Field(int x, int y, int width, int height, int tiles_x, int tiles_y)
     populateTrees();
 }
 
+auto Field::getPathTileCenter(unsigned int index) const -> Point {
+    if (index < path_.size()) {
+        return path_[index]->getCenter();
+    }
+    return Point(SHRT_MAX, path_.back()->getCenter().y_);
+}
+
+auto Field::addTileToPath(int x, int y) -> void {
+    auto& t = tile_grid_[x][y];
+    t->updateType(TileType::PATH);
+    path_.push_back(t.makeReader());
+}
+
 auto Field::generatePath() -> void {
     // Start Point
-    Sint16 x = 0;
-    Sint16 y = (rand() % (tiles_y_ / 3)) + tiles_y_ / 3;
-    tile_grid_[x][y]->updateType(TileType::PATH);
-    start_tile_ = Point{x, y};
+    Sint16 x{0};
+    Sint16 y{(Sint16)((rand() % (tiles_y_ / 3)) + tiles_y_ / 3)};
+
+    addTileToPath(x, y);
+
+    start_tile_ = Point(x, y);
 
     // Path + finish
     bool found = false;
-    int max_step = 4;
+    int max_step = 5;
     int distance = 0;
     while (x < tiles_x_) {
         found = false;
@@ -57,8 +72,7 @@ auto Field::generatePath() -> void {
                 if (!(x > 0 && y > 1 && tile_grid_[x - 1][y - 1]->getType() == TileType::PATH)) {
                     distance = rand() % std::min(y + 1, max_step);
                     for (int i = 0; i < distance && tile_grid_[x][y - 1]->getType() == TileType::LAND; i++) {
-                        tile_grid_[x][y]->updateNextNeighbour(Point(x, y - 1));
-                        tile_grid_[x][--y]->updateType(TileType::PATH);
+                        addTileToPath(x, --y);
                         found = true;
                     }
                 }
@@ -67,8 +81,7 @@ auto Field::generatePath() -> void {
                 if (!(x > 0 && y < tiles_y_ - 1 && tile_grid_[x - 1][y + 1]->getType() == TileType::PATH)) {
                     distance = rand() % std::min(tiles_y_ - y, max_step);
                     for (int i = 0; i < distance && tile_grid_[x][y + 1]->getType() == TileType::LAND; i++) {
-                        tile_grid_[x][y]->updateNextNeighbour(Point(x, y + 1));
-                        tile_grid_[x][++y]->updateType(TileType::PATH);
+                        addTileToPath(x, ++y);
                         found = true;
                     }
                 }
@@ -76,12 +89,10 @@ auto Field::generatePath() -> void {
             case 2: // RIGHT
                 distance = rand() % std::min(tiles_x_ - x, max_step);
                 for (int i = 0; i < distance && tile_grid_[x + 1][y]->getType() == TileType::LAND; i++) {
-                    tile_grid_[x][y]->updateNextNeighbour(Point(x + 1, y));
-                    tile_grid_[++x][y]->updateType(TileType::PATH);
+                    addTileToPath(++x, y);
                     found = true;
                 }
                 if (x + 1 == tiles_x_) {
-                    tile_grid_[x][y]->updateNextNeighbour(Point(SHRT_MAX, y));
                     x++;
                     found = true;
                 }
@@ -142,15 +153,15 @@ auto Field::getStart() const -> const Point& {
 
 auto Field::populateTrees() -> void {
     const int radius = 5;
-    for (int x = 0; x < tiles_x_; x++) {
-        for (int y = 0; y < tiles_y_; y++) {
-            if (tile_grid_[x][y]->getType() == TileType::PATH) {
-                for (int dx = -radius; dx < radius; dx++) {
-                    for (int dy = -radius; dy < radius; dy++) {
-                        if (!(dx == 0 && dy == 0) && x + dx >= 0 && x + dx < tiles_x_ && y + dy >= 0 && y + dy < tiles_y_ && std::abs(dx * dy) < radius * 1.707) {
-                            tile_grid_[x + dx][y + dy]->updateTerrain(TileTerrain::PLAIN);
-                        }
-                    }
+    for (const auto& tile : path_) {
+        int x = tile->getIndexX();
+        int y = tile->getIndexY();
+
+        for (int dx = -radius; dx < radius; dx++) {
+            for (int dy = -radius; dy < radius; dy++) {
+                if (!(dx == 0 && dy == 0) && x + dx >= 0 && x + dx < tiles_x_ && y + dy >= 0 && y + dy < tiles_y_ && std::abs(dx * dy) < radius * 1.707) {
+                    auto& t = tile_grid_[x + dx][y + dy];
+                    if (t->getTerrain() == TileTerrain::TREE) t->updateTerrain(TileTerrain::PLAIN);
                 }
             }
         }

@@ -33,7 +33,7 @@ void GameManager::spawnWave() {
     auto& starting_point = field.getStart();
     auto pos = field.getTile(starting_point).getCenter();
     for (int i = 0; i < 10; i ++) {
-        auto enemy = game_state->addEnemy(std::make_shared<Enemy>(pos, 4, 4, Point{starting_point}, 100, 1.2, 0xf00f));
+        auto enemy = game_state->addEnemy(std::make_shared<Enemy>(pos, 4, 4, 0, 100, 1.2, 0xf00f));
         field_scene_->addToScene(enemy);
         pos.x_ -= 15;
     }

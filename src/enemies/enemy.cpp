@@ -3,10 +3,9 @@
 #include <assert.h>
 #include <stdio.h>
 
-Enemy::Enemy(Point pos, int width, int height, Point current_tile, long int hp, double speed, Uint16 color)
+Enemy::Enemy(Point pos, int width, int height, unsigned int target_tile_index, long int hp, double speed, Uint16 color)
     : RendererObject(Point(pos.x_ - width / 2, pos.y_ - height / 2), width, height, SCREEN_LAYER::ENEMY) // TODO: rect_really should not be a part of RendererObject
-    , current_tile_(current_tile)
-    , current_target_tile_(current_tile)
+    , target_tile_index_(target_tile_index)
     , real_x_(pos.x_)
     , real_y_(pos.y_)
     , color_(color)
@@ -46,19 +45,17 @@ void Enemy::updateBoundingBox() {
     rect_.origin_.y_ = ((Sint16) real_y_) - rect_.height_ / 2;
 }
 
-void Enemy::walkTowards(const Field& field, const Point& target_tile, double& distance_to_travel) {
-    auto center = field.getTile(target_tile).getCenter();
-    auto real_delta_x = center.x_ - real_x_;
-    auto real_delta_y = center.y_ - real_y_;
+bool Enemy::walkTowards(const Point& target, double& distance_to_travel) {
+    auto real_delta_x = target.x_ - real_x_;
+    auto real_delta_y = target.y_ - real_y_;
     double abs_distance = std::abs(real_delta_x) + std::abs(real_delta_y);
 
     // Short-circuit
     if (abs_distance <= distance_to_travel) {
-        real_x_ = center.x_;
-        real_y_ = center.y_;
+        real_x_ = target.x_;
+        real_y_ = target.y_;
         distance_to_travel -= abs_distance;
-        current_tile_ = target_tile;
-        return;
+        return true;
     }
 
     // Partial distance walk necessary
@@ -74,10 +71,7 @@ void Enemy::walkTowards(const Field& field, const Point& target_tile, double& di
         distance_to_travel -= step_size;
         real_y_ += signed_step;
     }
-}
-
-Point findNextTargetTile(const Field& field, const Point& current_tile) {
-    return field.getTile(current_tile).getNextNeighbour();
+    return false;
 }
 
 void Enemy::pathfind(const Field& field) {
@@ -91,10 +85,12 @@ void Enemy::pathfind(const Field& field) {
     }
 
     // Walk on screen
-    while (distance_to_travel > 0 && current_target_tile_.x_ < SHRT_MAX) {
-        walkTowards(field, current_target_tile_, distance_to_travel);
-        if (distance_to_travel > 0) { // Tile reached
-            current_target_tile_ = findNextTargetTile(field, current_target_tile_);
+    auto target = field.getPathTileCenter(target_tile_index_);
+    while (distance_to_travel > 0 && target.x_ < SHRT_MAX) {
+        if (walkTowards(target, distance_to_travel)) {
+            // Target tile reached
+            target_tile_index_++;
+            target = field.getPathTileCenter(target_tile_index_);
         }
     }
 

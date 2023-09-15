@@ -8,7 +8,7 @@
 
 class Enemy : public RendererObject {
 public:
-    Enemy(Point pos, int width, int height, Point current_field, long int hp_, double speed, Uint16 color);
+    Enemy(Point pos, int width, int height, unsigned int target_tile_index, long int hp_, double speed, Uint16 color);
     virtual ~Enemy();
     virtual void render(SDL_Surface* surface) override;
     virtual void pathfind(const Field& field);
@@ -21,10 +21,14 @@ public:
 
 private:
     void updateBoundingBox();
-    void walkTowards(const Field& field, const Point& target_tile, double& distance_to_travel);
 
-    Point current_tile_;
-    Point current_target_tile_;
+    /// @brief Perform a step towards the given coordinate
+    /// @param target_tile Target coordinate
+    /// @param distance_to_travel Max distance to travel
+    /// @return Target coordinate has been reached within the allowed distance
+    bool walkTowards(const Point& target_tile, double& distance_to_travel);
+
+    unsigned int target_tile_index_;
     double real_x_;
     double real_y_;
     Uint16 color_;

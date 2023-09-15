@@ -9,7 +9,6 @@ Tile::Tile(int x, int y, int width, int height, int index_x, int index_y)
     , index_y_(index_y)
     , color_(0x0)
     , type_(TileType::LAND)
-    , next_neighbour_(Direction::NONE)
     , terrain_(TileTerrain::TREE) {
     updateColor();
 }
@@ -22,10 +21,6 @@ void Tile::render(SDL_Surface* surface) {
 void Tile::updateType(TileType newType) {
     type_ = newType;
     updateColor();
-}
-
-void Tile::updateNextNeighbour(Point point) {
-    next_neighbour_ = std::move(point);
 }
 
 void Tile::updateTerrain(TileTerrain terrain) {
