@@ -1,6 +1,26 @@
 #include "input.hpp"
+#include "SDL/SDL_timer.h"
+#include "essentials.hpp"
 
 namespace Input {
+    int actionRepetitionOnLongPress(Uint32& previous_timestamp, int& previous_button_state, int current_button_state, Uint32 repetition_timer_ms) {
+        if (current_button_state != Actions::NONE) {
+            auto time = SDL_GetTicks();
+            if (time - previous_timestamp > repetition_timer_ms) { // Long press timer elapsed
+                previous_timestamp = time;
+                previous_button_state = current_button_state; // Consume button press
+            } else {
+                auto b = current_button_state;
+                current_button_state = current_button_state & (~previous_button_state); // Filter out previous button presses
+                previous_button_state = b; // Add current buttons to previous buttons
+            }
+        } else {
+            previous_button_state = Actions::NONE;
+            previous_timestamp = SDL_GetTicks();
+        }
+        return current_button_state;
+    }
+
     int getActions() {
         int button_state = Actions::NONE;
         if (any_key_pressed()) {

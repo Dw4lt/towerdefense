@@ -28,39 +28,36 @@ FieldCursor::FieldCursor(GameManager* manager)
 FieldCursor::~FieldCursor() {
 }
 
-void FieldCursor::applyUserActions(int actions) {
-    static bool enable = true;
-    static Uint32 last_pass = SDL_GetTicks();
-    if (enable == false && SDL_GetTicks() - last_pass >= STANDARD_TICK_DURATION * 2) {
-        enable = true;
-    }
-    if (enable) {
-        bool has_moved = false;
-        if ((actions & Input::LEFT) && cursor_x_ > 0) {
-            cursor_x_--;
-            has_moved = true;
-        } else if ((actions & Input::RIGHT) && cursor_x_ < max_x_) {
-            cursor_x_++;
-            has_moved = true;
-        }
-        if ((actions & Input::UP) && cursor_y_ > 0) {
-            cursor_y_--;
-            has_moved = true;
-        } else if ((actions & Input::DOWN) && cursor_y_ < max_y_) {
-            cursor_y_++;
-            has_moved = true;
-        }
-        if (actions & Input::CONFIRM) {
-            game_manager_->onMapCursorClickOn(cursor_x_, cursor_y_);
-            updateAnimationState();
-        }
+void FieldCursor::applyUserActions(int unfiltered_actions) {
+    bool has_moved = false;
 
-        if (has_moved) {
-            updatePosition();
-            updateAnimationState();
-            last_pass = SDL_GetTicks();
-            enable = false;
-        }
+    // Filter long-press actions to repeat upon delay
+    static Uint32 previous_timestamp{0};
+    static int previous_button_state{0};
+    int actions = Input::actionRepetitionOnLongPress(previous_timestamp, previous_button_state, unfiltered_actions, 3 * STANDARD_TICK_DURATION);
+
+    if ((actions & Input::LEFT) && cursor_x_ > 0) {
+        cursor_x_--;
+        has_moved = true;
+    } else if ((actions & Input::RIGHT) && cursor_x_ < max_x_) {
+        cursor_x_++;
+        has_moved = true;
+    }
+    if ((actions & Input::UP) && cursor_y_ > 0) {
+        cursor_y_--;
+        has_moved = true;
+    } else if ((actions & Input::DOWN) && cursor_y_ < max_y_) {
+        cursor_y_++;
+        has_moved = true;
+    }
+    if (actions & Input::CONFIRM) {
+        game_manager_->onMapCursorClickOn(cursor_x_, cursor_y_);
+        updateAnimationState();
+    }
+
+    if (has_moved) {
+        updatePosition();
+        updateAnimationState();
     }
 }
 

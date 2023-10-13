@@ -19,8 +19,8 @@ public:
     virtual void render(SDL_Surface* surface);
 
     /// @brief Process user input
-    /// @param actions Bitwise OR-ed button states
-    void applyUserActions(int actions);
+    /// @param unfiltered_actions Bitwise OR-ed button states. Long button presses handled internally
+    void applyUserActions(int unfiltered_actions);
 
     SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::CURSOR; };
 
