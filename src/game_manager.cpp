@@ -51,6 +51,12 @@ void GameManager::start() {
 
         gameLoop();
 
+        if (isKeyPressed(KEY_NSPIRE_F)) { // TODO: Not the right place
+            gameLoop();
+            gameLoop();
+            gameLoop();
+        }
+
         Uint32 stop = SDL_GetTicks();
         Uint32 frame_time = stop - start;
         if (frame_time < STANDARD_TICK_DURATION) {
