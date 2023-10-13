@@ -8,7 +8,8 @@ StatusBar::StatusBar(Screen* screen, SDL_Rect rect, bool visible)
     : AbstractScene(screen, screen->createSurface(rect.w, rect.h), std::move(rect), visible)
     , font_{nSDL_LoadFont(NSDL_FONT_VGA, 0, 0, 0)}
 {
-    DrawUtils::fillColor(background_surface_, Rect(0, 0, rect_on_screen_.w, rect_on_screen_.h), RGB_888_TO_565(0xFFD8AB));
+    DrawUtils::fillColor(background_surface_, Rect(0, 0, rect_on_screen_.w, rect_on_screen_.h), RGB_888_TO_565(0xFFD8AB)); // Main background
+    DrawUtils::fillColor(background_surface_, Rect(0, 0, rect_on_screen_.w, 1), RGB_888_TO_565(0x572b0b)); // TOP separation bar
 }
 
 StatusBar::~StatusBar() {
