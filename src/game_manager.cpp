@@ -1,6 +1,7 @@
 #include "game_manager.hpp"
 #include "primitives/input.hpp"
 #include "structures/archer.hpp"
+#include "enemies/enemy_factory.hpp"
 #include <SDL/SDL_video.h>
 #include <SDL/SDL_timer.h>
 // #include <ctime>
@@ -27,13 +28,20 @@ GameManager::GameManager()
 
 void GameManager::spawnWave() {
     auto game_state = GameState::getState();
+    unsigned int wave = game_state->getWave();
     auto& field = game_state->getField();
     auto& starting_point = field.getStart();
     auto pos = field.getTile(starting_point).getCenter();
-    for (int i = 0; i < 10; i ++) {
-        auto enemy = game_state->addEnemy(std::make_shared<Enemy>(pos, 4, 4, 0, 100, 1.2, 0xf00f));
-        field_scene_->addToScene(enemy);
-        pos.x_ -= 15;
+
+    if (wave < EnemyFactory::waves.size()) {
+        auto& w = EnemyFactory::waves.at(wave);
+        for (auto& count : w) {
+            for (unsigned int i = 0; i < count.count; i++) {
+                auto enemy = game_state->addEnemy(EnemyFactory::makeEnemy(count.type, pos, 0));
+                field_scene_->addToScene(enemy);
+                pos.x_ -= 12;
+            }
+        }
     }
 }
 
@@ -94,7 +102,7 @@ void GameManager::onMapCursorClickOn(int x, int y) {
     auto& tile = game_state->getField().getTile(x, y);
     TileType type = tile.getType();
     if (TileType::LAND == type) {
-        auto structure = game_state->addStructure(std::make_shared<Archer>(3, 15, 20, tile), tile); // TODO: pick class based on store selection
+        auto structure = game_state->addStructure(std::make_shared<Archer>(24, 15, 1, tile), tile); // TODO: pick class based on store selection
         field_scene_->addToScene(structure);
     } else if (TileType::PATH == type) {
     }

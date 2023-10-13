@@ -47,7 +47,7 @@ void Tile::updateColor() {
         }
         break;
     case TileType::PATH:
-        effective_color = 0x0000ff;
+        effective_color = 0x8B4513;
         break;
     default:
         break;
