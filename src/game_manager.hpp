@@ -27,6 +27,9 @@ private:
 
     void removeDeadEnemies();
 
+    /// @brief Kill enemies that reach the end of the path. Subtract the remaining HP from the lives.
+    void handleEnemiesReachingTarget();
+
     ROwner<Screen> screen_;
 
     ROwner<FieldCursor> field_cursor_;

@@ -68,12 +68,27 @@ void GameManager::gameLoop() {
     for (auto structure : game_state->getStructures()) {
         structure->tick();
     }
+    handleEnemiesReachingTarget();
     removeDeadEnemies();
 
     if (field_scene_->visible_) field_scene_->render(screen_);
     if (status_bar_scene_->visible_) status_bar_scene_->render(screen_);
 
     screen_->flip();
+}
+
+void GameManager::handleEnemiesReachingTarget() {
+    const auto& state = GameState::getState();
+
+    state->purgeEnemies(
+        [&state] (Enemy& e){
+            bool target_reached = e.getCenter().x_ > FIELD_WIDTH + 20; // Magic grace number
+            if (target_reached) {
+                state->takeLives(e.getHP());
+            }
+            return target_reached;
+        }
+    );
 }
 
 void GameManager::removeDeadEnemies() {

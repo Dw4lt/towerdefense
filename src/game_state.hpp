@@ -71,6 +71,14 @@ public:
     /// @return New value
     int incrementWave() { return ++wave_count_; };
 
+    /// @brief Get Nr. of current wave or wave to be spawned
+    int getLives() { return lives_; };
+
+    /// @brief Subtract an amount of damage from the current number of lives
+    /// @param damage Amount of lives to subtract
+    /// @return Remaining lives
+    int takeLives(int damage) { lives_ -= damage; return lives_; };
+
 private:
 
     GameState();
@@ -86,6 +94,9 @@ private:
 
     /// @brief Nr. of current wave or wave to be spawned
     unsigned int wave_count_;
+
+    /// @brief Nr. of lives left
+    int lives_;
 
     static ROwner<GameState> singleton_;
 };

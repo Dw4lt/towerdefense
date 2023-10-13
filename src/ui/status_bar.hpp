@@ -26,6 +26,9 @@ private:
 
     // Main font
     nSDL_Font* font_;
+
+    // Re-usable buffer to temporarily store HP string. Required due to right-alignment, width measurement
+    char lives_string_[16];
 };
 
 #endif // STATUS_BAR_H

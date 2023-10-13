@@ -23,6 +23,13 @@ void StatusBar::render(RReader<Screen> screen) {
     auto surface = screen->getSurface();
     SDL_BlitSurface(background_surface_, NULL, surface, &rect_on_screen_);
 
-    int y = DrawUtils::verticallyCenterFont(font_, rect_on_screen_);
-    nSDL_DrawString(surface, font_, rect_on_screen_.x + 10, y, "%i", GameState::getState()->getWave());
+    int center_aligned_y = DrawUtils::verticallyCenterFont(font_, rect_on_screen_);
+
+    // Wave counter
+    nSDL_DrawString(surface, font_, rect_on_screen_.x + 10, center_aligned_y, "Wave: %i", GameState::getState()->getWave());
+
+    // Lives
+    snprintf(lives_string_, sizeof(lives_string_),  "HP: %i", GameState::getState()->getLives());
+    auto string_width = nSDL_GetStringWidth(font_, lives_string_);
+    nSDL_DrawString(surface, font_, rect_on_screen_.x + rect_on_screen_.w - 10 - string_width, center_aligned_y, lives_string_);
 }
