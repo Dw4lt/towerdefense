@@ -23,8 +23,6 @@ GameManager::GameManager()
 
     // Status bar
     status_bar_scene_ = StatusBar::create(screen_.get(), SDL_Rect{x: 0, y: FIELD_HEIGHT, w: FIELD_WIDTH, h: SCREEN_HEIGHT - FIELD_HEIGHT}, true);
-
-    spawnWave();
 }
 
 void GameManager::spawnWave() {
@@ -84,7 +82,7 @@ void GameManager::processUserInput() {
     if (actions != Input::NONE) {
         field_cursor_->applyUserActions(actions); // TODO: Only if currently in-game
 
-        if (actions & Input::SPAWN_NEXT_WAVE) {
+        if ((actions & Input::SPAWN_NEXT_WAVE) && !GameState::getState()->anyEnemiesPresent()) {
             spawnWave();
             GameState::getState()->incrementWave();
         }

@@ -49,6 +49,9 @@ public:
     /// @return Reference to managed enemy. Add this to the scene.
     RReader<Enemy> addEnemy(std::shared_ptr<Enemy> enemy);
 
+    /// @brief Check if enemies are present
+    bool anyEnemiesPresent() { return enemy_list_.size() > 0; };
+
     /// @brief Add a structure to the game state
     /// @param structure Structure to take ownership of
     /// @param tile Tile the structure should be assigned to
