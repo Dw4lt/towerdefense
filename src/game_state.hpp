@@ -1,7 +1,9 @@
 #ifndef GAME_STATE_H
 #define GAME_STATE_H
 
+#include <functional>
 #include <vector>
+
 #include "enemies/enemy.hpp"
 #include "structures/structure.hpp"
 #include "primitives/essentials.hpp"
@@ -60,7 +62,7 @@ public:
 
     /// @brief Destroy enemy instances according to condition
     /// @param func Condition
-    void purgeEnemies(bool (*func)(Enemy& e));
+    void purgeEnemies(std::function<bool(Enemy&)> func);
 
     /// @brief Get Nr. of current wave or wave to be spawned
     unsigned int getWave() { return wave_count_; };

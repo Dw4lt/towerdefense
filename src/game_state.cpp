@@ -36,7 +36,7 @@ auto GameState::addEnemy(std::shared_ptr<Enemy> enemy) -> RReader<Enemy> {
     return enemy_list_.back().makeReader();
 }
 
-void GameState::purgeEnemies(bool (*func)(Enemy& e)) {
+void GameState::purgeEnemies(std::function<bool(Enemy&)> func) {
     for(auto e = enemy_list_.begin(); e != enemy_list_.end(); ) {
         auto& enemy = *e;
         if (func(*enemy)) {
