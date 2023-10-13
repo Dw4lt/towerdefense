@@ -24,12 +24,6 @@ long int Enemy::getHP() const {
     return hp_;
 }
 
-void Enemy::damage(int damage, DAMAGE_TYPE type) {
-    if (!isImmune(type)) {
-        hp_ -= damage;
-    }
-}
-
 Rect Enemy::boundingBox() const {
     return rect_;
 }

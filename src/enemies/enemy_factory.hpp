@@ -2,15 +2,10 @@
 #define ENEMY_FACTORY_H
 
 #include "enemy.hpp"
+#include "basic_baloon.hpp"
 #include "../primitives/color_conversion.hpp"
 
 namespace EnemyFactory {
-    enum class EnemyType {
-        RED,
-        BLUE,
-        GREEN,
-    };
-
     // TODO: Better name
     struct EnemyCount {
         EnemyCount(unsigned int count_, EnemyType type_) : count{count_}, type{type_} {};
@@ -35,9 +30,13 @@ namespace EnemyFactory {
         { EnemyCount(30, EnemyType::GREEN) },
         // 10
         { EnemyCount(102, EnemyType::BLUE) },
+        { EnemyCount(10, EnemyType::RED), EnemyCount(10, EnemyType::BLUE), EnemyCount(12, EnemyType::GREEN), EnemyCount(2, EnemyType:: YELLOW) },
+        { EnemyCount(15, EnemyType::BLUE), EnemyCount(10, EnemyType::GREEN), EnemyCount(5, EnemyType:: YELLOW) },
+        { EnemyCount(100, EnemyType::RED), EnemyCount(23, EnemyType::GREEN), EnemyCount(4, EnemyType:: YELLOW) },
+        { EnemyCount(50, EnemyType::RED), EnemyCount(15, EnemyType::BLUE), EnemyCount(10, EnemyType::GREEN), EnemyCount(9, EnemyType:: YELLOW) },
+        // 15
+        { EnemyCount(20, EnemyType::RED), EnemyCount(12, EnemyType::GREEN), EnemyCount(5, EnemyType::YELLOW), EnemyCount(3, EnemyType:: PINK) },
     };
-
-    const float BASE_SPEED = 1.5;
 
     /// @brief Create an enemy of a given type
     /// @param type Type
@@ -48,11 +47,14 @@ namespace EnemyFactory {
         switch (type)
         {
         case EnemyType::RED:
-            return std::make_shared<Enemy>(pos, 4, 4, target_tile_index, 1, 1 * BASE_SPEED, RGB_888_TO_565(0xFF'03'03));
         case EnemyType::BLUE:
-            return std::make_shared<Enemy>(pos, 4, 4, target_tile_index, 2, 1.4 * BASE_SPEED, RGB_888_TO_565(0x03'03'FF));
         case EnemyType::GREEN:
-            return std::make_shared<Enemy>(pos, 4, 4, target_tile_index, 2, 1.8 * BASE_SPEED, RGB_888_TO_565(0x03'FF'03));
+        case EnemyType::YELLOW:
+        case EnemyType::PINK:
+            return std::make_shared<BasicBaloon>(pos, 4, 4, target_tile_index, type);
+            /* code */
+            break;
+
         default:
             throw "Unmatched enemy type";
         }

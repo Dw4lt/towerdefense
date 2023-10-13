@@ -6,6 +6,14 @@
 #include "../map/field.hpp"
 #include <SDL/SDL_video.h>
 
+enum class EnemyType {
+    RED = 1,
+    BLUE = 2,
+    GREEN = 3,
+    YELLOW = 4,
+    PINK = 5,
+};
+
 class Enemy : public RendererObject {
 public:
     Enemy(Point pos, int width, int height, unsigned int target_tile_index, long int hp_, double speed, Uint16 color);
@@ -14,12 +22,12 @@ public:
     virtual void pathfind(const Field& field);
     virtual Rect boundingBox() const override;
     virtual bool isImmune(DAMAGE_TYPE type);
-    virtual void damage(int damage, DAMAGE_TYPE type);
+    virtual void damage(int damage, DAMAGE_TYPE type) = 0;
 
     virtual long int getHP() const;
     virtual SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::ENEMY; };
 
-private:
+protected:
     void updateBoundingBox();
 
     /// @brief Perform a step towards the given coordinate

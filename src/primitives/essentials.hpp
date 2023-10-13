@@ -29,6 +29,8 @@ static const int FIELD_WIDTH = 320;
 static const int FIELD_TILE_COUNT_X = 40;
 static const int FIELD_TILE_COUNT_Y = 30;
 
+static const float BASE_BALOON_SPEED = 1.5;
+
 class Rect {
 public:
     Rect(Point origin, Uint16 width, Uint16 height);
