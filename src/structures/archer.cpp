@@ -8,6 +8,16 @@ Archer::Archer(int cooldown, int tower_range, double damage, const Tile& tile)
 
 Archer::~Archer() {}
 
+void Archer::render(SDL_Surface* surface) {
+    if (just_fired_){
+        DrawUtils::fillColor(surface, boundingBox(), RGB_888_TO_565(0x5197FF));
+        just_fired_ = false;
+    } else {
+        DrawUtils::fillColor(surface, boundingBox(), RGB_888_TO_565(0x137BF0));
+    }
+    renderChildren(surface);
+}
+
 bool Archer::fire(RReaderIterable<Enemy> enemy_list) {
     for (auto enemy : enemy_list) {
         if (enemy.isValid() && withinRange(enemy.get())) {

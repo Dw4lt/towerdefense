@@ -52,16 +52,6 @@ void Tower::setGlobalDamageMultiplier(double new_multiplier) {
     global_damage_multiplier_ = new_multiplier;
 }
 
-void Tower::render(SDL_Surface* surface) {
-    if (just_fired_){
-        DrawUtils::fillColor(surface, boundingBox(), RGB_888_TO_565(0xFFAAFF));
-        just_fired_ = false;
-    } else {
-        DrawUtils::fillColor(surface, boundingBox(), RGB_888_TO_565(0xFF00FF));
-    }
-    renderChildren(surface);
-}
-
 void Tower::tick() {
     cooldown_timer_ --;
     if (cooldown_timer_ <= 0){

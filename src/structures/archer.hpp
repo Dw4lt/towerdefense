@@ -11,6 +11,8 @@ public:
     Archer(int cooldown, int tower_range, double damage, const Tile& tile);
     virtual ~Archer();
 
+    virtual void render(SDL_Surface* surface) override;
+
     /// @brief Attempts to fire at an enemy within range
     /// @param enemy_list Enemies to look through
     /// @return Whether or not an enemy was found
