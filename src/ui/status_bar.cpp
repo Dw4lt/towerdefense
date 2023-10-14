@@ -2,14 +2,18 @@
 #include "../rendering/screen.hpp"
 #include "../primitives/color_conversion.hpp"
 #include "../game_state.hpp"
+#include "../textures/status_bar_background.h"
 
 
 StatusBar::StatusBar(Screen* screen, SDL_Rect rect, bool visible)
-    : AbstractScene(screen, screen->createSurface(rect.w, rect.h), std::move(rect), visible)
-    , font_{nSDL_LoadFont(NSDL_FONT_VGA, 0, 0, 0)}
+    : AbstractScene(screen, screen->createSurface(rect.w, rect.h), rect, visible)
+    , font_{nSDL_LoadFont(NSDL_FONT_VGA, 0xFF, 0xFF, 0xFF)}
 {
-    DrawUtils::fillColor(background_surface_, Rect(0, 0, rect_on_screen_.w, rect_on_screen_.h), RGB_888_TO_565(0xFFD8AB)); // Main background
-    DrawUtils::fillColor(background_surface_, Rect(0, 0, rect_on_screen_.w, 1), RGB_888_TO_565(0x572b0b)); // TOP separation bar
+    // Draw background
+    auto background = nSDL_LoadImage(status_bar_background);
+    auto r = SDL_Rect{x: 0, y:0, w: rect.w, h: rect.h};
+    SDL_BlitSurface(background, NULL, background_surface_, &r);
+    SDL_FreeSurface(background);
 }
 
 StatusBar::~StatusBar() {
