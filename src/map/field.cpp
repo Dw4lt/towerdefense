@@ -62,6 +62,7 @@ auto Field::generatePath() -> void {
     bool found = false;
     int max_step = 5;
     int distance = 0;
+    const int top_bot_margin = 1; // Margin at the top and at the bottom of the map to avoid paths along the field border
     while (x < tiles_x_) {
         found = false;
         printf("x:%i y:%i\n", x, y);
@@ -69,8 +70,8 @@ auto Field::generatePath() -> void {
             int direction = rand() % 3;
             switch (direction) {
             case 0: // UP
-                if (!(x > 0 && y > 1 && tile_grid_[x - 1][y - 1]->getType() == TileType::PATH)) {
-                    distance = rand() % std::min(y + 1, max_step);
+                if (!(x > 0 && y > top_bot_margin && tile_grid_[x - 1][y - 1]->getType() == TileType::PATH)) {
+                    distance = rand() % std::min(y + 1 - top_bot_margin, max_step);
                     for (int i = 0; i < distance && tile_grid_[x][y - 1]->getType() == TileType::LAND; i++) {
                         addTileToPath(x, --y);
                         found = true;
@@ -78,8 +79,8 @@ auto Field::generatePath() -> void {
                 }
                 break;
             case 1: // DOWN
-                if (!(x > 0 && y < tiles_y_ - 1 && tile_grid_[x - 1][y + 1]->getType() == TileType::PATH)) {
-                    distance = rand() % std::min(tiles_y_ - y, max_step);
+                if (!(x > 0 && y < tiles_y_ - 1 - top_bot_margin && tile_grid_[x - 1][y + 1]->getType() == TileType::PATH)) {
+                    distance = rand() % std::min(tiles_y_ - y - top_bot_margin, max_step);
                     for (int i = 0; i < distance && tile_grid_[x][y + 1]->getType() == TileType::LAND; i++) {
                         addTileToPath(x, ++y);
                         found = true;
