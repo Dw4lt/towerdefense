@@ -2,7 +2,7 @@
 #include "../rendering/screen.hpp"
 #include "../primitives/color_conversion.hpp"
 #include "../game_state.hpp"
-#include "../textures/status_bar_background.h"
+#include "../textures/status_bar_background.hpp"
 
 
 StatusBar::StatusBar(Screen* screen, SDL_Rect rect, bool visible)
