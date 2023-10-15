@@ -24,7 +24,7 @@ public:
     virtual bool isImmune(DAMAGE_TYPE type);
     virtual void damage(int damage, DAMAGE_TYPE type) = 0;
 
-    virtual long int getHP() const;
+    virtual int getHP() const;
     virtual SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::ENEMY; };
 
 protected:
@@ -40,7 +40,7 @@ protected:
     double real_x_;
     double real_y_;
     Uint16 color_;
-    long int hp_;
+    int hp_;
     double speed_;
 };
 

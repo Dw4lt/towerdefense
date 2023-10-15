@@ -20,7 +20,7 @@ bool Enemy::isImmune(DAMAGE_TYPE type) {
     return false;
 }
 
-long int Enemy::getHP() const {
+int Enemy::getHP() const {
     return hp_;
 }
 
