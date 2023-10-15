@@ -12,6 +12,7 @@ class ComposableScene;
 namespace DrawUtils {
     void setPixel(SDL_Surface* surface, int x, int y, Uint16 color);
     void fillColor(SDL_Surface* surface, Rect rect, Uint16 color);
+    void drawLine(SDL_Surface* surface, float x1, float y1, float x2, float y2, const Uint16 color);
     void drawRect(SDL_Surface* surface, Rect rect, Uint16 color, Uint8 thickness = 1);
     int verticallyCenterFont(nSDL_Font* font, const SDL_Rect& rect);
 };
