@@ -27,8 +27,16 @@ private:
     // Main font
     nSDL_Font* font_;
 
-    // Re-usable buffer to temporarily store HP string. Required due to right-alignment, width measurement
+    // Re-usable buffers to temporarily store display strings. Required due to right-alignment, width measurement
     char lives_string_[16];
+    char money_string_[16];
+
+    // Left edge of icons for icon and text alignment
+    Sint16 money_x;
+    Sint16 hearts_x;
+
+    // Top edge of text to align with the respective icons
+    const int text_y;
 };
 
 #endif // STATUS_BAR_H

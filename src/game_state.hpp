@@ -79,6 +79,19 @@ public:
     /// @return Remaining lives
     int takeLives(int damage) { lives_ -= damage; return lives_; };
 
+    /// @brief Get amount of money owned by the player
+    int getMoney() { return money_; };
+
+    /// @brief Subtract an amount amount of money from the player balance
+    /// @param amount Amount of money to subtract
+    /// @return Resulting balance
+    int takeMoney(int amount) { money_ -= amount; return money_; };
+
+    /// @brief Add an amount amount of money from the player balance
+    /// @param amount Amount of money to add
+    /// @return Resulting balance
+    int addMoney(int amount) { money_ += amount; return money_; };
+
 private:
 
     GameState();
@@ -97,6 +110,9 @@ private:
 
     /// @brief Nr. of lives left
     int lives_;
+
+    /// @brief Amount of money the player currently holds
+    unsigned int money_;
 
     static ROwner<GameState> singleton_;
 };

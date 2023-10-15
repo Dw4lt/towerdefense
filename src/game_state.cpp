@@ -5,8 +5,9 @@ ROwner<GameState> GameState::singleton_{nullptr};
 
 GameState::GameState()
     : field_ptr_{new Field(0, 0, FIELD_WIDTH, FIELD_HEIGHT)}
-    , wave_count_{0}
+    , wave_count_{11}
     , lives_{100}
+    , money_{400}
 {}
 
 auto GameState::getField() -> Field& {
