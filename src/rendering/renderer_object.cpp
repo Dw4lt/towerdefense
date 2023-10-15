@@ -5,13 +5,17 @@
 
 
 namespace DrawUtils {
-    void setPixel(SDL_Surface* surface,int x, int y, Uint16 color) {
+    void setPixel(SDL_Surface* surface, int x, int y, Uint16 color) {
         if (x >= 0 && y >= 0 && x < surface->w && y < surface->h) {
-            *((Uint16*)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel) = color;
+            *(
+                (Uint16*)(
+                    (char*) surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel
+                )
+            ) = color;
         }
     }
 
-    void fillColor(SDL_Surface* surface,Rect rect, Uint16 color) {
+    void fillColor(SDL_Surface* surface, Rect rect, Uint16 color) {
         SDL_Rect rect2{rect.toSDLRect()};
         SDL_FillRect(surface, &rect2, color);
     }
@@ -21,9 +25,9 @@ namespace DrawUtils {
         Uint16 width = rect.width_, height = rect.height_;
 
         SDL_Rect rect0{(Sint16)(x), (Sint16)(y), thickness, (Uint16)(height - thickness)};                                 // left margin
-        SDL_Rect rect1{(Sint16)(x + thickness), (Sint16)(y), (Uint16)(width - thickness), (Uint16)(thickness)};                      // top margin
+        SDL_Rect rect1{(Sint16)(x + thickness), (Sint16)(y), (Uint16)(width - thickness), (Uint16)(thickness)};            // top margin
         SDL_Rect rect2{(Sint16)(x + width - thickness), (Sint16)(y + thickness), thickness, (Uint16)(height - thickness)}; // right margin
-        SDL_Rect rect3{(Sint16)(x), (Sint16)(y + height - thickness), (Uint16)(width - thickness), (Uint16)(thickness)};             // bottom margin
+        SDL_Rect rect3{(Sint16)(x), (Sint16)(y + height - thickness), (Uint16)(width - thickness), (Uint16)(thickness)};   // bottom margin
 
         SDL_FillRect(surface, &rect0, color);
         SDL_FillRect(surface, &rect1, color);
