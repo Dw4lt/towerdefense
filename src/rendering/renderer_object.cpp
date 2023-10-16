@@ -93,6 +93,55 @@ namespace DrawUtils {
             }
         }
     }
+
+    void drawCircleSegments(SDL_Surface* surface, int xc, int yc, float start_x, float start_y, float end_x, float end_y, float x_scale, float y_scale, Uint16 color) {
+        float sxx = std::round(start_x * x_scale);
+        float syy = std::round(start_y * y_scale);
+        float exx = std::round(end_x * x_scale);
+        float eyy = std::round(end_y * y_scale);
+        float syx = std::round(start_y * x_scale);
+        float sxy = std::round(start_x * y_scale);
+        float eyx = std::round(end_y * x_scale);
+        float exy = std::round(end_x * y_scale);
+
+        drawLine(surface, xc + sxx, yc + syy, xc + exx, yc + eyy, color);
+        drawLine(surface, xc - sxx, yc + syy, xc - exx, yc + eyy, color);
+        drawLine(surface, xc + sxx, yc - syy, xc + exx, yc - eyy, color);
+        drawLine(surface, xc - sxx, yc - syy, xc - exx, yc - eyy, color);
+        drawLine(surface, xc + syx, yc + sxy, xc + eyx, yc + exy, color);
+        drawLine(surface, xc - syx, yc + sxy, xc - eyx, yc + exy, color);
+        drawLine(surface, xc + syx, yc - sxy, xc + eyx, yc - exy, color);
+        drawLine(surface, xc - syx, yc - sxy, xc - eyx, yc - exy, color);
+    }
+
+    void drawPixelatedCircleOutline(SDL_Surface* surface, int x_center, int y_center, float radius, float x_scale, float y_scale, Uint16 color, Uint8 thickness) {
+        radius += 0.5;
+        float x = -0.5;
+        float y = radius;
+
+        float old_x = 0;
+        float old_y = y;
+
+        // Midpoint circle algorithm
+        float d = 1.25 - radius;
+        auto rec = SDL_Rect{0, 0, 2, 2};
+        do {
+            x += 1;
+            if (x <= y) drawCircleSegments(surface, x_center, y_center, old_x, y, x, y, x_scale, y_scale, color);
+            if (d < 0) {
+                d += 2 * x + 1;
+            } else {
+                y -= 1;
+                d += 2 * (x - y) + 1;
+                if (x <= y) {
+                    drawCircleSegments(surface, x_center, y_center, x, y, x, old_y, x_scale, y_scale, color);
+                }
+            }
+
+            old_x = x;
+            old_y = y;
+        } while (x <= y);
+    }
 } // namespace DrawUtils
 
 
