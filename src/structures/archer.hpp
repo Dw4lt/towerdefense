@@ -16,7 +16,7 @@ public:
     /// @brief Attempts to fire at an enemy within range
     /// @param enemy_list Enemies to look through
     /// @return Whether or not an enemy was found
-    virtual bool fire(RReaderIterable<Enemy> enemy_list) override;
+    virtual bool fire(IIterable<RReader<Enemy>> enemy_list) override;
 
 private:
     static double global_range_multiplier_;

@@ -2,6 +2,7 @@
 #define GAME_STATE_H
 
 #include <functional>
+#include <map>
 #include <vector>
 
 #include "enemies/enemy.hpp"
@@ -11,7 +12,7 @@
 #include "primitives/ownership.hpp"
 
 using EnemyReadList = std::vector<RReader<Enemy>>;
-using StructureList = std::vector<ROwner<Structure>>;
+using StructuresContainer = std::map<unsigned int, ROwner<Structure>>;
 
 
 /// @brief Shared game state singleton class
@@ -36,15 +37,21 @@ public:
 
     /// @brief Get RReader iterable of enemies.
     /// @return Iterator over `RReader<Enemy>` view of owned enemies
-    RReaderIterable<Enemy> getEnemies() {
+    IIterable<RReader<Enemy>> getEnemies() {
         return makeOwnerToReaderWrapper(enemy_list_);
     };
 
     /// @brief Get RReader iterable of structures.
     /// @return Iterator over `RReader<Structure>` view of owned structures
-    RReaderIterable<Structure> getStructures() {
-        return makeOwnerToReaderWrapper(structure_list_);
+    IIterable<RReader<Structure>> getStructures() {
+        return makeOwnerToReaderWrapper(structures_);
     };
+
+    /// @brief Get structure at given coordinate, if any
+    /// @param index_x Tile X coordinate
+    /// @param index_y Tile y coordinate
+    /// @return Structure or empty
+    RReader<Structure> getStructure(int index_x, int index_y);
 
     /// @brief Add an enemy to the game state
     /// @param enemy Enemy to take ownership of
@@ -97,7 +104,7 @@ private:
     GameState();
 
     /// @brief List of sturctures place on the field
-    StructureList structure_list_;
+    StructuresContainer structures_;
 
     /// @brief List of enemies on the field
     std::vector<ROwner<Enemy>> enemy_list_;

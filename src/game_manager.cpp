@@ -68,10 +68,12 @@ void GameManager::start() {
 void GameManager::gameLoop() {
     processUserInput();
     auto game_state = GameState::getState();
-    for (auto enemy : game_state->getEnemies()) {
+    IIterable<RReader<Enemy>> enemies = game_state->getEnemies();
+    for (auto& enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
         enemy->pathfind(game_state->getField());
     }
-    for (auto structure : game_state->getStructures()) {
+    IIterable<RReader<Structure>> structures = game_state->getStructures();
+    for (auto& structure = structures.begin(); structure != structures.end(); ++structure) {
         structure->tick();
     }
     handleEnemiesReachingTarget();

@@ -18,9 +18,9 @@ void Archer::render(SDL_Surface* surface) {
     renderChildren(surface);
 }
 
-bool Archer::fire(RReaderIterable<Enemy> enemy_list) {
-    for (auto enemy : enemy_list) {
-        if (enemy.isValid() && withinRange(enemy.get())) {
+bool Archer::fire(IIterable<RReader<Enemy>> enemy_list) {
+    for (auto& enemy = enemy_list.begin(); enemy != enemy_list.end(); ++enemy) {
+        if (withinRange(**enemy)) {
             enemy->damage(damage_ * getGlobalDamageMultiplier(), DAMAGE_TYPE::PROJECTILE);
             return true;
         }

@@ -4,7 +4,9 @@
 ROwner<GameState> GameState::singleton_{nullptr};
 
 GameState::GameState()
-    : field_ptr_{new Field(0, 0, FIELD_WIDTH, FIELD_HEIGHT)}
+    : structures_{}
+    , enemy_list_{}
+    , field_ptr_{new Field(0, 0, FIELD_WIDTH, FIELD_HEIGHT)}
     , wave_count_{11}
     , lives_{100}
     , money_{400}
@@ -26,12 +28,18 @@ auto GameState::getState() -> GameStatePtr {
 }
 
 auto GameState::addStructure(std::shared_ptr<Structure> structure, Tile& tile) -> RReader<Structure> {
-    structure_list_.push_back(ROwner<Structure>(structure));
-    tile.addChild(structure_list_.back().makeReader());
+    auto r = ROwner<Structure>(structure);
+
+    tile.addChild(r.makeReader());
     tile.updateType(TileType::STRUCTURE);
-    return structure_list_.back().makeReader();
+    auto reader = r.makeReader();
+    structures_[tile.getIndexY() * FIELD_TILE_COUNT_X + tile.getIndexX()] = std::move(r);
+    return reader;
 }
 
+auto GameState::getStructure(int index_x, int index_y) -> RReader<Structure> {
+    return structures_[index_y * FIELD_TILE_COUNT_X + index_x].makeReader();
+}
 
 auto GameState::addEnemy(std::shared_ptr<Enemy> enemy) -> RReader<Enemy> {
     enemy_list_.push_back(ROwner(enemy));

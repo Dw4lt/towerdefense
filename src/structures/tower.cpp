@@ -16,11 +16,11 @@ Tower::Tower(int cooldown, int tower_range, double damage, const Tile& tile)
 Tower::~Tower() {
 }
 
-bool Tower::withinRange(const Enemy* enemy) const {
-    if (enemy->getHP() <= 0) return false;
+bool Tower::withinRange(const Enemy& enemy) const {
+    if (enemy.getHP() <= 0) return false;
     if (range_ < 0) return true;
 
-    auto epos = enemy->getCenter();
+    auto epos = enemy.getCenter();
     auto pos = getCenter();
     auto delta_x = epos.x_ - pos.x_;
     auto delta_y = epos.y_ - pos.y_;

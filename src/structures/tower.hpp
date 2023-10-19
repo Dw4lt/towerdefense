@@ -20,12 +20,12 @@ public:
 
     virtual void tick() override;
 
-    bool withinRange(const Enemy* enemy) const;
+    bool withinRange(const Enemy& enemy) const;
 
     /// @brief Attempts to fire at an enemy within range
     /// @param enemy_list Enemies to look through
     /// @return Whether or not an enemy was found
-    virtual bool fire(RReaderIterable<Enemy> enemy_list) = 0;
+    virtual bool fire(IIterable<RReader<Enemy>> enemy_list) = 0;
 
 private:
     static double global_range_multiplier_;
