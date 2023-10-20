@@ -41,14 +41,13 @@ namespace DrawUtils {
     }
 
     void drawLineFast(SDL_Surface* surface, float x1, float y1, float x2, float y2, const Uint16 color) {
-        if (x2 < x1) std::swap(x1, x2);
-        for (int x = x1; x <= x2; x++){
-            setPixel(surface, x, y1, color);
-        }
-        if (y2 < y1) std::swap(y1, y2);
-        for (int y = y1; y <= y2; y++){
-            setPixel(surface, x1, y, color);
-        }
+        if (x1 > x2) std::swap(x1, x2);
+        if (y1 > y2) std::swap(y1, y2);
+        // Note on +1: ensures rect is at least 1 pixel and both x2 and y2 are colored
+        float w = x2 - x1 + 1;
+        float h = y2 - y1 + 1;
+        auto rect = SDL_Rect{x: (Sint16) x1, y: (Sint16)y1, w: (Uint16) w, h: (Uint16)h};
+        SDL_FillRect(surface, &rect, color);
     }
 
     void drawLine(SDL_Surface* surface, float x1, float y1, float x2, float y2, const Uint16 color) {
@@ -124,7 +123,6 @@ namespace DrawUtils {
 
         // Midpoint circle algorithm
         float d = 1.25 - radius;
-        auto rec = SDL_Rect{0, 0, 2, 2};
         do {
             x += 1;
             if (x <= y) drawCircleSegments(surface, x_center, y_center, old_x, y, x, y, x_scale, y_scale, color);
