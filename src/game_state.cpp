@@ -45,7 +45,7 @@ auto GameState::getStructure(int index_x, int index_y) -> RReader<Structure> {
 }
 
 auto GameState::addEnemy(std::shared_ptr<Enemy> enemy) -> RReader<Enemy> {
-    enemy_list_.push_back(ROwner(enemy));
+    enemy_list_.emplace_back(enemy);
     return enemy_list_.back().makeReader();
 }
 

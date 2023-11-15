@@ -10,22 +10,12 @@ Tower::Tower(int cooldown, int tower_range, double damage, const Tile& tile)
     , cooldown_(cooldown)
     , damage_(damage)
     , range_(tower_range)
-    , cooldown_timer_(0) {
+    , cooldown_timer_(0)
+    , sorted_path_tile_indexes_in_range_(GameState::getState()->getField().getSortedPathTilesWithinRange(tile.getIndexX(), tile.getIndexY(), (int)(range_ * getGlobalRangeMultiplier()))) // TODO: Allow for runtime range changes. Decouple from gamestate?
+    {
 }
 
 Tower::~Tower() {
-}
-
-bool Tower::withinRange(const Enemy& enemy) const {
-    if (enemy.getHP() <= 0) return false;
-    if (range_ < 0) return true;
-
-    auto epos = enemy.getCenter();
-    auto pos = getCenter();
-    auto delta_x = epos.x_ - pos.x_;
-    auto delta_y = epos.y_ - pos.y_;
-    auto tot_range = range_ * getGlobalRangeMultiplier();
-    return delta_x * delta_x + delta_y * delta_y <= tot_range * tot_range;
 }
 
 double Tower::getGlobalRangeMultiplier() {
@@ -55,7 +45,7 @@ void Tower::setGlobalDamageMultiplier(double new_multiplier) {
 void Tower::tick() {
     cooldown_timer_ --;
     if (cooldown_timer_ <= 0){
-        just_fired_ |= fire(GameState::getState()->getEnemies());
+        just_fired_ |= fire();
         cooldown_timer_ += cooldown_ * global_cooldown_multiplier_;
     }
 }

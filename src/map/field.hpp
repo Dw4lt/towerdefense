@@ -47,6 +47,9 @@ public:
     /// @brief Get tile of path at index, or empty RReader if out of bounds.
     RReader<Tile> getPathTile(unsigned int index) const;
 
+    /// @brief Get indexes of all tiles within a certain range of a tile in index coordinates. Furthes tile appears first.
+    std::vector<int> getSortedPathTilesWithinRange(int x, int y, int radius) const;
+
 private:
     /// @brief Make the tile at the given index a path
     void addTileToPath(int x, int y);

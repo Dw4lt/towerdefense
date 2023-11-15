@@ -139,6 +139,22 @@ auto Field::getTile(const Point& tile_coords) const -> const Tile& {
     return getTile(tile_coords.x_, tile_coords.y_);
 }
 
+auto Field::getSortedPathTilesWithinRange(int x, int y, int radius) const -> std::vector<int> {
+    std::vector<int> filteredTiles;
+    int r2 = radius * radius + 1;
+    for (int i = path_.size() - 1; i >= 0; i--) {
+        const RReader<Tile> tile = path_[i];
+        int dx = tile->getIndexX() - x;
+        int dy = tile->getIndexY() - y;
+        int distance = dx * dx + dy * dy;
+
+        if (distance <= r2) {
+            filteredTiles.push_back(i);
+        }
+    }
+    return filteredTiles;
+}
+
 auto Field::checkBounds(int x, int y) const -> bool {
     return x >= 0 && x < tiles_x_ && y >= 0 && y < tiles_y_;
 }
