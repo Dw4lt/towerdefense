@@ -15,6 +15,8 @@ int main() {
         manager.start();
     } catch (std::exception& e) {
         std::cout << e.what() << "\n";
+    } catch (char const* e) {
+        std::cout << e << "\n";
     }
     SDL_Quit();
     printf("############## Stop ##############\n");
