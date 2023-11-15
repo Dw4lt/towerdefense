@@ -36,6 +36,13 @@ Field::Field(int x, int y, int width, int height, int tiles_x, int tiles_y)
     populateTrees();
 }
 
+auto Field::getPathTile(unsigned int index) const -> RReader<Tile> {
+    if (index < path_.size()) {
+        return path_[index];
+    }
+    return RReader<Tile>();
+}
+
 auto Field::getPathTileCenter(unsigned int index) const -> Point {
     if (index < path_.size()) {
         return path_[index]->getCenter();

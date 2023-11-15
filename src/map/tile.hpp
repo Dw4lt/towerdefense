@@ -39,10 +39,10 @@ public:
 
     SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::BACKGROUND; };
 
-    int getIndexX() const { return index_x_; };
-    int getIndexY() const { return index_y_; };
+    inline int getIndexX() const noexcept { return index_x_; };
+    inline int getIndexY() const noexcept { return index_y_; };
 
-private:
+protected:
     void updateColor();
 
     int index_x_;

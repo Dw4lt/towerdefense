@@ -5,7 +5,8 @@
 
 Enemy::Enemy(Point pos, int width, int height, unsigned int target_tile_index, long int hp, double speed, Uint16 color)
     : RendererObject(Point(pos.x_ - width / 2, pos.y_ - height / 2), width, height, SCREEN_LAYER::ENEMY) // TODO: rect_really should not be a part of RendererObject
-    , target_tile_index_(target_tile_index)
+    , target_path_tile_index_(target_tile_index)
+    , current_path_tile_index_(-1)
     , real_x_(pos.x_)
     , real_y_(pos.y_)
     , color_(color)
@@ -68,7 +69,13 @@ bool Enemy::walkTowards(const Point& target, double& distance_to_travel) {
     return false;
 }
 
-void Enemy::pathfind(const Field& field) {
+bool aCloserThanB(double x, double y, Point a, Point b) {
+    auto delta_a = (a.x_ - x) * (a.x_ - x) + (a.y_ - y) * (a.y_ - y);
+    auto delta_b = (b.x_ - x) * (b.x_ - x) + (b.y_ - y) * (b.y_ - y);
+    return delta_a < delta_b;
+}
+
+int Enemy::pathfind(const Field& field) {
     double distance_to_travel = speed_;
 
     // Walk towards screen
@@ -78,14 +85,26 @@ void Enemy::pathfind(const Field& field) {
         distance_to_travel -= delta;
     }
 
-    // Walk on screen
-    auto target = field.getPathTileCenter(target_tile_index_);
-    while (distance_to_travel > 0 && target.x_ < SHRT_MAX) {
-        if (walkTowards(target, distance_to_travel)) {
-            // Target tile reached
-            target_tile_index_++;
-            target = field.getPathTileCenter(target_tile_index_);
+    auto target_center = field.getPathTileCenter(target_path_tile_index_);
+
+    // Walk on path
+    while (distance_to_travel > 0 && target_center.x_ < SHRT_MAX) {
+        bool target_path_tile_reached = walkTowards(target_center, distance_to_travel);
+        if (target_path_tile_reached) {
+            target_path_tile_index_++;
+            target_center = field.getPathTileCenter(target_path_tile_index_);
         }
+    }
+
+    // Find tile enemy sits on (target or target-1)
+    if (target_path_tile_index_ > 0) {
+        target_center = field.getPathTileCenter(target_path_tile_index_);
+        auto current_path_tile_center = field.getPathTileCenter(current_path_tile_index_);
+        if (aCloserThanB(real_x_, real_y_, target_center, current_path_tile_center)) {
+            current_path_tile_index_ = target_path_tile_index_;
+        }
+    } else if (real_x_ > 0) {
+        current_path_tile_index_ = 0;
     }
 
     // Walk off screen
@@ -95,4 +114,5 @@ void Enemy::pathfind(const Field& field) {
     }
 
     updateBoundingBox();
+    return current_path_tile_index_;
 }

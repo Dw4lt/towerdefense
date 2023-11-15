@@ -1,13 +1,16 @@
 #include "game_state.hpp"
 #include "rendering/composable_scene.hpp"
 
+#include <algorithm>
+
 ROwner<GameState> GameState::singleton_{nullptr};
 
 GameState::GameState()
     : structures_{}
     , enemy_list_{}
     , field_ptr_{new Field(0, 0, FIELD_WIDTH, FIELD_HEIGHT)}
-    , wave_count_{11}
+    , tile_enemy_mapping_(field_ptr_->getPathLength())
+    , wave_count_{0}
     , lives_{100}
     , money_{400}
 {}
@@ -50,9 +53,27 @@ void GameState::purgeEnemies(std::function<bool(Enemy&)> func) {
     for(auto e = enemy_list_.begin(); e != enemy_list_.end(); ) {
         auto& enemy = *e;
         if (func(*enemy)) {
+            removeEnemyFromField(enemy);
             e = enemy_list_.erase(e);
         } else {
             e++;
         }
     }
 }
+
+void GameState::updateEnemyTile(const RReader<Enemy>& enemy, int previous_tile_index, int current_tile_index) {
+    if (previous_tile_index >= 0){
+        auto& vec = tile_enemy_mapping_[previous_tile_index];
+        auto i = std::find(vec.begin(), vec.end(), enemy);
+        if (i == vec.end()) throw "Enemy not in mapping.";
+        vec.erase(i);
+    }
+    if (current_tile_index >= 0) {
+        tile_enemy_mapping_[current_tile_index].push_back(enemy);
+    }
+};
+
+void GameState::removeEnemyFromField(const RReader<Enemy>& enemy) {
+    updateEnemyTile(enemy, enemy->getCurrentPathTileIndex(), -1);
+}
+

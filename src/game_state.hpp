@@ -4,6 +4,7 @@
 #include <functional>
 #include <map>
 #include <vector>
+#include <deque>
 
 #include "enemies/enemy.hpp"
 #include "structures/structure.hpp"
@@ -61,6 +62,19 @@ public:
     /// @brief Check if enemies are present
     bool anyEnemiesPresent() { return enemy_list_.size() > 0; };
 
+    /// @brief Get all enemies currently located on the tile behind the given index
+    /// @param path_tile_index Index of tile to query
+    /// @return Reference to enemies container
+    const std::deque<RReader<Enemy>>& getEnemiesOnTile(int path_tile_index) {
+        return tile_enemy_mapping_[path_tile_index]; // Creates if not found.
+    };
+
+    /// @brief Transfer enemy from one tile to another, with bounds check.
+    /// @param enemy Enemy to move
+    /// @param previous_tile_index Previous tile index or -1 if not already on a tile
+    /// @param current_tile_index New tile to move to, or -1 to remove from field
+    void updateEnemyTile(const RReader<Enemy>& enemy, int previous_tile_index, int current_tile_index);
+
     /// @brief Add a structure to the game state
     /// @param structure Structure to take ownership of
     /// @param tile Tile the structure should be assigned to
@@ -101,7 +115,11 @@ public:
 
 private:
 
+    /// @brief Singleton constructor
     GameState();
+
+    /// @brief Remove enemy from its current tile, thereby removing it from the field.
+    void removeEnemyFromField(const RReader<Enemy>& enemy);
 
     /// @brief List of sturctures place on the field
     StructuresContainer structures_;
@@ -111,6 +129,9 @@ private:
 
     /// @brief Game map, bound in lifetime to the game state.
     ROwner<Field> field_ptr_;
+
+    /// @brief Index of path tile mapped to enemies on said tile.
+    std::vector<std::deque<RReader<Enemy>>> tile_enemy_mapping_;
 
     /// @brief Nr. of current wave or wave to be spawned
     unsigned int wave_count_;
