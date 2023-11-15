@@ -43,7 +43,6 @@ public:
         return *this;
     }
 
-
     // Copying sole owner is meaningless
     ROwner(const ROwner&) = delete;
     ROwner& operator=(const ROwner&) = delete;
@@ -52,7 +51,7 @@ public:
         return (bool)resource;
     }
 
-    operator bool() const noexcept {
+    explicit operator bool() const noexcept {
         return (bool) resource;
     }
 
@@ -123,11 +122,12 @@ public:
         return (bool)resource.lock();
     }
 
-    operator bool() const {
+    explicit operator bool() const {
         return (bool) resource.lock();
     }
 
-    bool operator==(const RReader& other) {
+    template <typename U>
+    bool operator==(const RReader<U>& other) const noexcept {
         return resource.lock() == other.resource.lock();
     }
 
