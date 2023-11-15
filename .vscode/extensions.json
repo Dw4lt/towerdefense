@@ -4,5 +4,6 @@
         "ms-vscode.cpptools",
         "notskm.clang-tidy",
         "webfreak.debug",
+        "cschlosser.doxdocgen"
     ]
 }
