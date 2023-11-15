@@ -10,14 +10,16 @@
             "windows":{
                 "command": [
                     "clear & ",
-                    "make remake -j16 & ",
+                    "make clean & ",
+                    "make -j16 & ",
                     "echo \"ln s L:\\work\\ndless\\towerdefense\\build\\TowerDefense.tns\" | nc -w 0 -v host.docker.internal 3334"
                 ]
             },
             "linux": {
                 "command":[
                     "clear && ",
-                    "make remake -j16 && ",
+                    "make clean && ",
+                    "make -j16 && ",
                     "echo \"ln s L:\\work\\ndless\\towerdefense\\build\\TowerDefense.tns\" | nc -w 0 -v host.docker.internal 3334"
                 ]
             }
