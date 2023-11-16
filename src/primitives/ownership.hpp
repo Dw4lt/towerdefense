@@ -181,7 +181,7 @@ struct IIterator {
     virtual T operator->() const { return operator*(); };
 
     virtual IIterator& operator++() = 0;
-    virtual IIterator& operator++(int) = delete;
+    IIterator& operator++(int) = delete;
 
     virtual bool operator==(const IIterator&) const = 0;
     virtual bool operator!=(const IIterator&) const = 0;

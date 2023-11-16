@@ -65,7 +65,7 @@ public:
     /// @brief Get all enemies currently located on the tile behind the given index
     /// @param path_tile_index Index of tile to query
     /// @return Reference to enemies container
-    const std::deque<RReader<Enemy>>& getEnemiesOnTile(int path_tile_index) {
+    const std::deque<RReader<Enemy>>& getEnemiesOnTile(unsigned int path_tile_index) {
         return tile_enemy_mapping_[path_tile_index]; // Creates if not found.
     };
 
@@ -90,7 +90,7 @@ public:
 
     /// @brief Increment Nr. of wave
     /// @return New value
-    int incrementWave() { return ++wave_count_; };
+    unsigned int incrementWave() { return ++wave_count_; };
 
     /// @brief Get Nr. of current wave or wave to be spawned
     int getLives() { return lives_; };
@@ -140,7 +140,7 @@ private:
     int lives_;
 
     /// @brief Amount of money the player currently holds
-    unsigned int money_;
+    int money_;
 
     static ROwner<GameState> singleton_;
 };
