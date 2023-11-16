@@ -4,6 +4,8 @@
 #include "../game_state.hpp"
 #include "structure.hpp"
 
+#include <vector>
+
 class Tower : public Structure {
 public:
     Tower(int cooldown, int tower_range, double damage, const Tile& tile);
@@ -20,12 +22,13 @@ public:
 
     virtual void tick() override;
 
-    bool withinRange(const Enemy* enemy) const;
-
-    /// @brief Attempts to fire at an enemy within range
-    /// @param enemy_list Enemies to look through
+    /// @brief Attempts to fire at an enemy within range.
+    /// @note Enemies should be searched for via the tiles within range and the tile-to-enemies mapping.
     /// @return Whether or not an enemy was found
-    virtual bool fire(RReaderIterable<Enemy> enemy_list) = 0;
+    virtual bool fire() = 0;
+
+    /// @brief Get range of tower in tiles
+    int getRange() const { return range_; };
 
 private:
     static double global_range_multiplier_;
@@ -38,6 +41,9 @@ protected:
     int range_;
 
     int cooldown_timer_;
+
+    /// @brief Path tiles within turret range, along with index on path. Furthest tile appears first.
+    std::vector<int> sorted_path_tile_indexes_in_range_;
 
     /// @brief Flag set when a tower has succesfully fired. Resets upon render.
     bool just_fired_;

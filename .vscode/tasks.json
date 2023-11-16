@@ -1,0 +1,28 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "send and debug",
+            "type": "shell",
+            "problemMatcher":[],
+            "windows":{
+                "command": [
+                    "clear & ",
+                    "make clean & ",
+                    "make -j16 & ",
+                    "echo \"ln s L:\\work\\ndless\\towerdefense\\build\\TowerDefense.tns\" | nc -w 0 -v host.docker.internal 3334"
+                ]
+            },
+            "linux": {
+                "command":[
+                    "clear && ",
+                    "make clean && ",
+                    "make -j16 && ",
+                    "echo \"ln s L:\\work\\ndless\\towerdefense\\build\\TowerDefense.tns\" | nc -w 0 -v host.docker.internal 3334"
+                ]
+            }
+        }
+    ]
+}

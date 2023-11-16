@@ -5,6 +5,8 @@
 #include <memory>
 #include <stdexcept>
 #include <vector>
+#include <map>
+#include <functional>
 
 // Forward declarations
 template <typename T> class RReader;
@@ -15,14 +17,31 @@ template <typename T> class RReader;
 template <typename T>
 class ROwner {
 public:
+    template <typename U>
+    friend class ROwner;
+
     // Constructors from heap-allocated types
     explicit ROwner(T* ptr = nullptr) : resource(ptr) {}
     explicit ROwner(std::shared_ptr<T>& ptr) : resource(ptr) {}
     explicit ROwner(std::shared_ptr<T>&& ptr) : resource(std::move(ptr)) {}
 
     // Moving required in lieu of copying
-    explicit ROwner(ROwner&& other) noexcept = default;
-    ROwner& operator=(ROwner&& other) noexcept = default;
+    template <typename U>
+    explicit ROwner(ROwner<U>&& other) noexcept {
+        static_assert(std::is_base_of_v<T, U> || std::is_convertible_v<U*, T*>,
+                    "Cannot convert ROwner<U> to ROwner<T>");
+        resource = std::static_pointer_cast<T>(other.resource);
+        other.resource.reset();
+    };
+
+    template <typename U>
+    ROwner<T>& operator=(ROwner<U>&& other) noexcept {
+        static_assert(std::is_base_of_v<T, U> || std::is_convertible_v<U*, T*>,
+                    "Cannot convert ROwner<U> to ROwner<T>");
+        resource = std::static_pointer_cast<T>(other.resource);
+        other.resource.reset();
+        return *this;
+    }
 
     // Copying sole owner is meaningless
     ROwner(const ROwner&) = delete;
@@ -32,7 +51,7 @@ public:
         return (bool)resource;
     }
 
-    operator bool() const noexcept {
+    explicit operator bool() const noexcept {
         return (bool) resource;
     }
 
@@ -103,16 +122,17 @@ public:
         return (bool)resource.lock();
     }
 
-    operator bool() const {
+    explicit operator bool() const {
         return (bool) resource.lock();
     }
 
-    bool operator==(const RReader& other) {
+    template <typename U>
+    bool operator==(const RReader<U>& other) const noexcept {
         return resource.lock() == other.resource.lock();
     }
 
     T& operator*() const {
-                auto shared_resource = resource.lock().get();
+        auto shared_resource = resource.lock().get();
         if (!shared_resource) {
             throw std::runtime_error("Attempted to access an invalid resource.");
         }
@@ -142,71 +162,158 @@ private:
 }; // RReader
 
 
-/// @brief Wrapper used to iterate over a datastructure with a lambda-in-the-loop
-/// @tparam Container Datastructure to iterate over
-/// @tparam Func Function processing the underlying items while iterating
-template <typename Container, typename Func>
-class ContainerWrapper {
-public:
-    ContainerWrapper(Container& c, Func f) : original_container(c), func(f) {}
+template<typename T, typename = void>
+struct is_iterable : std::false_type {};
 
-    class Iterator {
-    public:
-        Iterator(typename Container::iterator it, Func f) : original_it(it), func(f) {}
+template<typename T>
+struct is_iterable<T, std::void_t<decltype(std::begin(std::declval<T>())), decltype(std::end(std::declval<T>()))>> : std::true_type {};
 
-        // Prefix increment
-        Iterator& operator++() {
-            ++original_it;
-            return *this;
-        }
+// Template interface to simplify return type of subsequent iterator wrappers
+template<typename T>
+struct IIterator {
+    IIterator() = default;
 
-        // Dereferencing
-        auto operator*() {
-            return func(*original_it);
-        }
+    // Disable copy to avoid accidentally losing type information
+    IIterator(const IIterator& other) = delete;
+    IIterator operator=(const IIterator& other) = delete;
 
-        // Comparison
-        bool operator!=(const Iterator& other) const {
-            return original_it != other.original_it;
-        }
+    // Leave iterator logic to derived class
+    virtual T operator*() const = 0;
+    virtual T operator->() const { return operator*(); };
 
-    private:
-        typename Container::iterator original_it;
-        Func func;
+    virtual IIterator& operator++() = 0;
+    virtual IIterator& operator++(int) = delete;
+
+    virtual bool operator==(const IIterator&) const = 0;
+    virtual bool operator!=(const IIterator&) const = 0;
+};
+
+template<typename IteratorType>
+struct IIterable {
+    using iter = IIterator<IteratorType>;
+    static_assert(std::is_invocable_v<decltype(&iter::operator*), iter>, "Template type passed to IIterable is not dereferenceable");
+
+    explicit IIterable(std::unique_ptr<iter>&& s, std::unique_ptr<iter> && e) : s_{std::move(s)}, e_{std::move(e)} {};
+    virtual ~IIterable() = default;
+    virtual iter& begin() {
+        auto& a = *s_;
+        return a;
     };
+    virtual iter& end() { return *e_; };
 
-    Iterator begin() {
-        return Iterator(original_container.begin(), func);
+private:
+    std::unique_ptr<iter> s_;
+    std::unique_ptr<iter> e_;
+};
+
+
+
+/// @brief Wrapper used to iterate over a datastructure with a lambda-in-the-loop
+/// @tparam ContainerIterator Datastructure to iterate over
+/// @tparam Func Function processing the underlying items while iterating
+template <typename ContainerIterator, typename Callable>
+class MethodApplyingIterator : public IIterator<typename std::invoke_result_t<Callable, typename ContainerIterator::reference>> {
+public:
+
+    // Allow access to other template instantiations
+    template <typename U, typename R>
+    friend class MethodApplyingIterator;
+
+    using input_type = typename ContainerIterator::reference;
+    using value_type = typename std::invoke_result_t<Callable, input_type>;
+    using returned_iterator = IIterator<value_type>;
+    using iterator_category = typename std::iterator_traits<ContainerIterator>::iterator_category;
+    //using value_type = typename std::invoke_result_t<Callable, decltype(*std::declval<BaseIterator>())>;
+
+    //using Callable = std::function<value_type(typename ContainerIterator::value_type)>;
+
+    // using difference_type = typename std::iterator_traits<ContainerIterator>::difference_type;
+    using reference = value_type&;
+    using pointer = value_type*;
+
+
+    explicit MethodApplyingIterator(ContainerIterator it, Callable callable)
+        : it_(std::move(it)), callable_(std::move(callable)) {}
+
+    virtual value_type operator*() const override {
+        return std::invoke(callable_, *it_);
     }
 
-    Iterator end() {
-        return Iterator(original_container.end(), func);
+    virtual MethodApplyingIterator<ContainerIterator, Callable>& operator++() override {
+        ++it_;
+        return *this;
+    }
+
+    virtual bool operator==(const MethodApplyingIterator& other) const {
+        return it_ == other.it_;
+    }
+
+    virtual bool operator!=(const MethodApplyingIterator& other) const {
+        return !(*this == other);
+    }
+
+    virtual bool operator==(const returned_iterator& other) const override {
+        auto& o = dynamic_cast<const MethodApplyingIterator&>(other);
+        return it_ == o.it_;
+    }
+
+    virtual bool operator!=(const returned_iterator& other) const override {
+        auto& o = dynamic_cast<const MethodApplyingIterator&>(other);
+        return it_ != o.it_;
     }
 
 private:
-    Container& original_container;
-    Func func;
-}; // ContainerWrapper
+    ContainerIterator it_;
+    Callable callable_;
+}; // MethodApplyingIterator
 
-// TODO find neater way of doing this
-// Functor needed to instantiate template in subsequent code
-template <typename T>
+template <typename K, typename T = K>
 struct MakeReader {
-    RReader<T> operator()(ROwner<T>& e) const {
-        return e.makeReader();
+    auto operator()(ROwner<T>& e) const -> RReader<T> {
+        if (e.isValid()) return e.makeReader();
+        return RReader<T>();
+    }
+
+    template <typename Key = K, typename std::enable_if<!std::is_abstract<Key>::value, int>::type = 0>
+    auto operator()(std::pair<const K, ROwner<T>>& e) const -> RReader<T>
+    {
+        if (e.second.isValid()) return e.second.makeReader();
+        return RReader<T>();
     }
 };
 
-// Type alias using the functor
-template <typename T>
-using RReaderIterable = ContainerWrapper<std::vector<ROwner<T>>, MakeReader<T>>;
+template <
+    typename OriginalIterable,
+    typename Callable,
+    typename value_type = typename std::invoke_result<Callable, typename OriginalIterable::reference>::type
+> auto make(OriginalIterable& iterable, Callable callable) -> IIterable<value_type> {
+    static_assert(std::is_invocable_v<Callable, typename OriginalIterable::reference>,
+            "Callable cannot be invoked on the type that BaseIterator points to");
+
+    using iter_type = MethodApplyingIterator<decltype(iterable.begin()), Callable>;
+    static_assert(std::is_base_of<IIterator<value_type>, iter_type>::value, "Cast attempt is not valid."); // Regression test
+    return IIterable<value_type>(
+        std::unique_ptr<IIterator<value_type>>(new iter_type(iterable.begin(), callable)),
+        std::unique_ptr<IIterator<value_type>>(new iter_type(iterable.end(), callable))
+    );
+};
 
 /// @brief Wrap iterator of vector of owners to behave like an iterator of vector of readers
 template <typename T>
-auto makeOwnerToReaderWrapper(std::vector<ROwner<T>>& container) -> RReaderIterable<T> {
-    return ContainerWrapper(
+auto makeOwnerToReaderWrapper(std::vector<ROwner<T>>& container) -> IIterable<RReader<T>> {
+    return make(
         container,
-        MakeReader<T>()
+        MakeReader<T, T>()
+    );
+}
+
+
+/// @brief Wrap iterator of map of owners to behave like an iterator of vector of readers
+template <typename K, typename T>
+auto makeOwnerToReaderWrapper(std::map<K, ROwner<T>>& container) -> IIterable<RReader<T>> {
+    return make(
+        container,
+        MakeReader<K, T>()
     );
 }
 

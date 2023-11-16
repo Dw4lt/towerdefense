@@ -2,7 +2,9 @@
 #define GAME_STATE_H
 
 #include <functional>
+#include <map>
 #include <vector>
+#include <deque>
 
 #include "enemies/enemy.hpp"
 #include "structures/structure.hpp"
@@ -11,7 +13,7 @@
 #include "primitives/ownership.hpp"
 
 using EnemyReadList = std::vector<RReader<Enemy>>;
-using StructureList = std::vector<ROwner<Structure>>;
+using StructuresContainer = std::map<unsigned int, ROwner<Structure>>;
 
 
 /// @brief Shared game state singleton class
@@ -36,15 +38,21 @@ public:
 
     /// @brief Get RReader iterable of enemies.
     /// @return Iterator over `RReader<Enemy>` view of owned enemies
-    RReaderIterable<Enemy> getEnemies() {
+    IIterable<RReader<Enemy>> getEnemies() {
         return makeOwnerToReaderWrapper(enemy_list_);
     };
 
     /// @brief Get RReader iterable of structures.
     /// @return Iterator over `RReader<Structure>` view of owned structures
-    RReaderIterable<Structure> getStructures() {
-        return makeOwnerToReaderWrapper(structure_list_);
+    IIterable<RReader<Structure>> getStructures() {
+        return makeOwnerToReaderWrapper(structures_);
     };
+
+    /// @brief Get structure at given coordinate, if any
+    /// @param index_x Tile X coordinate
+    /// @param index_y Tile y coordinate
+    /// @return Structure or empty
+    RReader<Structure> getStructure(int index_x, int index_y);
 
     /// @brief Add an enemy to the game state
     /// @param enemy Enemy to take ownership of
@@ -53,6 +61,19 @@ public:
 
     /// @brief Check if enemies are present
     bool anyEnemiesPresent() { return enemy_list_.size() > 0; };
+
+    /// @brief Get all enemies currently located on the tile behind the given index
+    /// @param path_tile_index Index of tile to query
+    /// @return Reference to enemies container
+    const std::deque<RReader<Enemy>>& getEnemiesOnTile(int path_tile_index) {
+        return tile_enemy_mapping_[path_tile_index]; // Creates if not found.
+    };
+
+    /// @brief Transfer enemy from one tile to another, with bounds check.
+    /// @param enemy Enemy to move
+    /// @param previous_tile_index Previous tile index or -1 if not already on a tile
+    /// @param current_tile_index New tile to move to, or -1 to remove from field
+    void updateEnemyTile(const RReader<Enemy>& enemy, int previous_tile_index, int current_tile_index);
 
     /// @brief Add a structure to the game state
     /// @param structure Structure to take ownership of
@@ -79,12 +100,29 @@ public:
     /// @return Remaining lives
     int takeLives(int damage) { lives_ -= damage; return lives_; };
 
+    /// @brief Get amount of money owned by the player
+    int getMoney() { return money_; };
+
+    /// @brief Subtract an amount amount of money from the player balance
+    /// @param amount Amount of money to subtract
+    /// @return Resulting balance
+    int takeMoney(int amount) { money_ -= amount; return money_; };
+
+    /// @brief Add an amount amount of money from the player balance
+    /// @param amount Amount of money to add
+    /// @return Resulting balance
+    int addMoney(int amount) { money_ += amount; return money_; };
+
 private:
 
+    /// @brief Singleton constructor
     GameState();
 
+    /// @brief Remove enemy from its current tile, thereby removing it from the field.
+    void removeEnemyFromField(const RReader<Enemy>& enemy);
+
     /// @brief List of sturctures place on the field
-    StructureList structure_list_;
+    StructuresContainer structures_;
 
     /// @brief List of enemies on the field
     std::vector<ROwner<Enemy>> enemy_list_;
@@ -92,11 +130,17 @@ private:
     /// @brief Game map, bound in lifetime to the game state.
     ROwner<Field> field_ptr_;
 
+    /// @brief Index of path tile mapped to enemies on said tile.
+    std::vector<std::deque<RReader<Enemy>>> tile_enemy_mapping_;
+
     /// @brief Nr. of current wave or wave to be spawned
     unsigned int wave_count_;
 
     /// @brief Nr. of lives left
     int lives_;
+
+    /// @brief Amount of money the player currently holds
+    unsigned int money_;
 
     static ROwner<GameState> singleton_;
 };

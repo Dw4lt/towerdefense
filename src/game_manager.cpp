@@ -32,6 +32,9 @@ void GameManager::spawnWave() {
     auto& field = game_state->getField();
     auto& starting_point = field.getStart();
     auto pos = field.getTile(starting_point).getCenter();
+    pos.x_ -= 20; // TODO: If enemy spawns *on* the first tile, he's not part of list of entities on said tile, leading to an attempt to remove it from an empty list during pathfinding. Possible solutions:
+    // Get start coordinate from field, since it has all the knowledge necessary to yield a coordinate.
+    // Simply subtract the width of a tile. (not very clean as it requires a left-hand start of the path)
 
     if (wave < EnemyFactory::waves.size()) {
         auto& w = EnemyFactory::waves.at(wave);
@@ -68,10 +71,17 @@ void GameManager::start() {
 void GameManager::gameLoop() {
     processUserInput();
     auto game_state = GameState::getState();
-    for (auto enemy : game_state->getEnemies()) {
-        enemy->pathfind(game_state->getField());
+    IIterable<RReader<Enemy>> enemies = game_state->getEnemies();
+    Field& field = game_state->getField();
+    for (auto& enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
+        int path_index = enemy->getCurrentPathTileIndex();
+        int new_path_index = enemy->pathfind(field);
+        if (path_index != new_path_index) {
+            game_state->updateEnemyTile(*enemy, path_index, new_path_index);
+        }
     }
-    for (auto structure : game_state->getStructures()) {
+    IIterable<RReader<Structure>> structures = game_state->getStructures();
+    for (auto& structure = structures.begin(); structure != structures.end(); ++structure) {
         structure->tick();
     }
     handleEnemiesReachingTarget();
@@ -123,7 +133,7 @@ void GameManager::onMapCursorClickOn(int x, int y) {
     auto& tile = game_state->getField().getTile(x, y);
     TileType type = tile.getType();
     if (TileType::LAND == type) {
-        auto structure = game_state->addStructure(std::make_shared<Archer>(24, 15, 1, tile), tile); // TODO: pick class based on store selection
+        auto structure = game_state->addStructure(std::make_shared<Archer>(24, 4, 1, tile), tile); // TODO: pick class based on store selection
         field_scene_->addToScene(structure);
     } else if (TileType::PATH == type) {
     }

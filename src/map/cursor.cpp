@@ -2,6 +2,8 @@
 #include "../game_manager.hpp"
 #include "../primitives/color_conversion.hpp"
 #include "../primitives/input.hpp"
+#include "../primitives/essentials.hpp"
+#include "../structures/tower.hpp"
 #include <SDL/SDL_timer.h>
 #include <os.h>
 
@@ -85,6 +87,19 @@ void FieldCursor::render(SDL_Surface* surface) {
         break;
     case ANIMATION_STATE::SELECT:
         color = (Uint32)0xebd234;
+        {
+            // Show tower range on hover
+            auto structure = GameState::getState()->getStructure(cursor_x_, cursor_y_).get();
+            if (auto v = dynamic_cast<Tower*>(structure)) {
+                int range = (v)->getRange();
+                if (range > 0) {
+                    // TODO: surely this math can be done once globally?
+                    float x_scale = (float) FIELD_WIDTH / FIELD_TILE_COUNT_X;
+                    float y_scale = (float) FIELD_HEIGHT / FIELD_TILE_COUNT_Y;
+                    DrawUtils::drawPixelatedCircleOutline(surface, rect_.center().x_, rect_.center().y_, range, x_scale, y_scale, RGB_888_TO_565(0xFF0000), 1);
+                }
+            }
+        }
         break;
     case ANIMATION_STATE::ON_EMTPY_FIELD:
     default:

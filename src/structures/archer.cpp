@@ -18,11 +18,15 @@ void Archer::render(SDL_Surface* surface) {
     renderChildren(surface);
 }
 
-bool Archer::fire(RReaderIterable<Enemy> enemy_list) {
-    for (auto enemy : enemy_list) {
-        if (enemy.isValid() && withinRange(enemy.get())) {
-            enemy->damage(damage_ * getGlobalDamageMultiplier(), DAMAGE_TYPE::PROJECTILE);
-            return true;
+bool Archer::fire() {
+    auto game_state = GameState::getState();
+    for (int tile_index : sorted_path_tile_indexes_in_range_) {
+        const auto& enemies = game_state->getEnemiesOnTile(tile_index);
+        for (auto& enemy : enemies) {
+            if (enemy.isValid() && enemy->getHP() > 0) {
+                enemy->damage(damage_ * getGlobalDamageMultiplier(), DAMAGE_TYPE::PROJECTILE);
+                return true;
+            }
         }
     }
     return false;

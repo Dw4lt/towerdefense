@@ -1,12 +1,15 @@
 #include "basic_baloon.hpp"
 #include "../primitives/color_conversion.hpp"
+#include "../game_state.hpp"
 
 BasicBaloon::BasicBaloon(Point pos, int width, int height, unsigned int target_tile_index, EnemyType color)
     : Enemy(pos, width, height, target_tile_index, (int) color, getSpeed((int) color), getColor((int) color)) {
 }
 
 void BasicBaloon::damage(int damage, DAMAGE_TYPE type) {
+    damage = std::min(damage, hp_);
     hp_ -= damage;
+    GameState::getState()->addMoney(damage);
     color_ = getColor(hp_);
     speed_ = getSpeed(hp_);
 }

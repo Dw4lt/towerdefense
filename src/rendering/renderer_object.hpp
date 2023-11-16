@@ -12,8 +12,18 @@ class ComposableScene;
 namespace DrawUtils {
     void setPixel(SDL_Surface* surface, int x, int y, Uint16 color);
     void fillColor(SDL_Surface* surface, Rect rect, Uint16 color);
+    void drawLine(SDL_Surface* surface, float x1, float y1, float x2, float y2, const Uint16 color);
     void drawRect(SDL_Surface* surface, Rect rect, Uint16 color, Uint8 thickness = 1);
     int verticallyCenterFont(nSDL_Font* font, const SDL_Rect& rect);
+
+    /// @brief Draw the outline of a pixelart-style circle.
+    /// @param surface
+    /// @param radius Radius of circle. This determines
+    /// @param x_scale
+    /// @param y_scale
+    /// @param color
+    /// @param thickness
+    void drawPixelatedCircleOutline(SDL_Surface* surface, int x, int y, float radius, float x_scale, float y_scale, Uint16 color, Uint8 thickness = 1);
 };
 
 class Renderable {

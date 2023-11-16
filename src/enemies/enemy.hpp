@@ -19,13 +19,21 @@ public:
     Enemy(Point pos, int width, int height, unsigned int target_tile_index, long int hp_, double speed, Uint16 color);
     virtual ~Enemy();
     virtual void render(SDL_Surface* surface) override;
-    virtual void pathfind(const Field& field);
+
+    /// @brief Run pathfinding logic on the given field
+    /// @param field Field to interact with
+    /// @return The index of the Tile the enemy stands on after pathfinding
+    virtual int pathfind(const Field& field);
+
     virtual Rect boundingBox() const override;
     virtual bool isImmune(DAMAGE_TYPE type);
     virtual void damage(int damage, DAMAGE_TYPE type) = 0;
 
-    virtual long int getHP() const;
+    virtual int getHP() const;
     virtual SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::ENEMY; };
+
+    /// @brief Return index of the tile the enemy is currently standing on. Or -1 if off-screen.
+    virtual int getCurrentPathTileIndex() const { return current_path_tile_index_; };
 
 protected:
     void updateBoundingBox();
@@ -36,11 +44,12 @@ protected:
     /// @return Target coordinate has been reached within the allowed distance
     bool walkTowards(const Point& target_tile, double& distance_to_travel);
 
-    unsigned int target_tile_index_;
+    unsigned int target_path_tile_index_;
+    int current_path_tile_index_;
     double real_x_;
     double real_y_;
     Uint16 color_;
-    long int hp_;
+    int hp_;
     double speed_;
 };
 

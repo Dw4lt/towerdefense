@@ -3,7 +3,6 @@
 #include "../enemies/enemy.hpp"
 #include "../primitives/damage.hpp"
 #include "../primitives/ownership.hpp"
-#include "../game_state.hpp"
 #include "tower.hpp"
 
 class Archer : public Tower {
@@ -14,9 +13,8 @@ public:
     virtual void render(SDL_Surface* surface) override;
 
     /// @brief Attempts to fire at an enemy within range
-    /// @param enemy_list Enemies to look through
     /// @return Whether or not an enemy was found
-    virtual bool fire(RReaderIterable<Enemy> enemy_list) override;
+    virtual bool fire() override;
 
 private:
     static double global_range_multiplier_;

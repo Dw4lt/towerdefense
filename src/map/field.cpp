@@ -36,6 +36,13 @@ Field::Field(int x, int y, int width, int height, int tiles_x, int tiles_y)
     populateTrees();
 }
 
+auto Field::getPathTile(unsigned int index) const -> RReader<Tile> {
+    if (index < path_.size()) {
+        return path_[index];
+    }
+    return RReader<Tile>();
+}
+
 auto Field::getPathTileCenter(unsigned int index) const -> Point {
     if (index < path_.size()) {
         return path_[index]->getCenter();
@@ -130,6 +137,22 @@ auto Field::getTile(int x, int y) const -> const Tile& {
 
 auto Field::getTile(const Point& tile_coords) const -> const Tile& {
     return getTile(tile_coords.x_, tile_coords.y_);
+}
+
+auto Field::getSortedPathTilesWithinRange(int x, int y, int radius) const -> std::vector<int> {
+    std::vector<int> filteredTiles;
+    int r2 = radius * radius + 1;
+    for (int i = path_.size() - 1; i >= 0; i--) {
+        const RReader<Tile> tile = path_[i];
+        int dx = tile->getIndexX() - x;
+        int dy = tile->getIndexY() - y;
+        int distance = dx * dx + dy * dy;
+
+        if (distance <= r2) {
+            filteredTiles.push_back(i);
+        }
+    }
+    return filteredTiles;
 }
 
 auto Field::checkBounds(int x, int y) const -> bool {

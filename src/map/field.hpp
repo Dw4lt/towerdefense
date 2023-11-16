@@ -33,6 +33,7 @@ public:
     int getMaxX() const;
     int getMaxY() const;
     const Point& getStart() const;
+    inline size_t getPathLength() const noexcept { return path_.size(); };
 
     void populateTrees();
 
@@ -42,6 +43,12 @@ public:
     /// @param index Index of tile along path
     /// @return Pixel-coordinate of the center of the tile
     Point getPathTileCenter(unsigned int index) const;
+
+    /// @brief Get tile of path at index, or empty RReader if out of bounds.
+    RReader<Tile> getPathTile(unsigned int index) const;
+
+    /// @brief Get indexes of all tiles within a certain range of a tile in index coordinates. Furthes tile appears first.
+    std::vector<int> getSortedPathTilesWithinRange(int x, int y, int radius) const;
 
 private:
     /// @brief Make the tile at the given index a path

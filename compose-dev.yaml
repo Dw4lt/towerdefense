@@ -1,9 +1,11 @@
-version: '3.3'
+version: '3.8'
 services:
   project:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - PROJECT_DEPENDENCIES=netcat
     volumes:
       - type: bind
         source: /var/run/docker.sock
