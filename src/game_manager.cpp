@@ -132,7 +132,7 @@ void GameManager::onMapCursorClickOn(int x, int y) {
     auto& tile = game_state->getField().getTile(x, y);
     TileType type = tile.getType();
     if (TileType::LAND == type) {
-        auto structure = game_state->addStructure(std::make_shared<Archer>(24, 4, 1, tile), tile); // TODO: pick class based on store selection
+        auto structure = game_state->addStructure(std::make_shared<Archer>(24, 4, 1, x, y), tile); // TODO: pick class based on store selection
         field_scene_->addToScene(structure);
     } else if (TileType::PATH == type) {
     }

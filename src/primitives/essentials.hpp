@@ -18,5 +18,7 @@ static const int FIELD_HEIGHT = 210;
 static const int FIELD_WIDTH = 320;
 static const int FIELD_TILE_COUNT_X = 40;
 static const int FIELD_TILE_COUNT_Y = 30;
+static const float FIELD_TILE_WIDTH = (float) FIELD_WIDTH / FIELD_TILE_COUNT_X;
+static const float FIELD_TILE_HEIGHT = (float) FIELD_HEIGHT / FIELD_TILE_COUNT_Y;
 
 static const float BASE_BALOON_SPEED = 1.5;

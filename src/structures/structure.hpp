@@ -7,7 +7,7 @@
 
 class Structure : public RendererObject {
 public:
-    Structure(const Tile& tile);
+    Structure(const Rect& bounding_box);
 
     virtual ~Structure();
 

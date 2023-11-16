@@ -14,7 +14,15 @@ public:
         : origin_{x, y}, width_{width}, height_{height} {};
 
     RectTemplate<T, U> centeredOn(const PointTemplate<T>& point) const {
-        return RectTemplate<T, U>(point.x_ - width_ / 2, point.y_ - height_/2, width_, height_);
+        return centeredOn(point, width_, height_);
+    };
+
+    static RectTemplate<T, U> centeredOn(const PointTemplate<T>& point, int width, int height) {
+        return centeredOn(point.x_, point.y_, width, height);
+    };
+
+    static RectTemplate<T, U> centeredOn(T x, T y, int width, int height) {
+        return RectTemplate<T, U>(x - width / 2, y - height / 2, width, height);
     };
 
     SDL_Rect toSDLRect() const {

@@ -5,17 +5,25 @@ double Tower::global_range_multiplier_(1);
 double Tower::global_cooldown_multiplier_(1);
 double Tower::global_damage_multiplier_(1);
 
-Tower::Tower(int cooldown, int tower_range, double damage, const Tile& tile)
-    : Structure(tile)
+Tower::Tower(int cooldown, int tower_range, double damage, unsigned int index_x, unsigned int index_y)
+    : Structure(Rect::centeredOn((index_x + 0.5) * FIELD_TILE_WIDTH, (index_y + 0.5) * FIELD_TILE_HEIGHT, FIELD_TILE_WIDTH *0.8, FIELD_TILE_HEIGHT * 0.8))
+    , index_x_(index_x)
+    , index_y_(index_y)
     , cooldown_(cooldown)
     , damage_(damage)
     , range_(tower_range)
     , cooldown_timer_(0)
-    , sorted_path_tile_indexes_in_range_(GameState::getState()->getField().getSortedPathTilesWithinRange(tile.getIndexX(), tile.getIndexY(), (int)(range_ * getGlobalRangeMultiplier()))) // TODO: Allow for runtime range changes. Decouple from gamestate?
-    {
+    , sorted_path_tile_indexes_in_range_()
+{
+        setRange(tower_range);
 }
 
 Tower::~Tower() {
+}
+
+void Tower::setRange(int range) {
+    range_ = range;
+    sorted_path_tile_indexes_in_range_ = GameState::getState()->getField().getSortedPathTilesWithinRange(index_x_, index_y_, (int)(range_ * getGlobalRangeMultiplier()));
 }
 
 double Tower::getGlobalRangeMultiplier() {

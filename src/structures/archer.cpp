@@ -1,8 +1,8 @@
 #include "archer.hpp"
 #include "../rendering/composable_scene.hpp"
 
-Archer::Archer(int cooldown, int tower_range, double damage, const Tile& tile)
-    : Tower(cooldown, tower_range, damage, tile)
+Archer::Archer(int cooldown, int tower_range, double damage, unsigned int index_x, unsigned int index_y)
+    : Tower(cooldown, tower_range, damage, index_x, index_y)
     {
 }
 
