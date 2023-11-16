@@ -2,6 +2,7 @@
 #include "../game_manager.hpp"
 #include "../primitives/color_conversion.hpp"
 #include "../primitives/input.hpp"
+#include "../primitives/rect.hpp"
 #include "../primitives/essentials.hpp"
 #include "../structures/tower.hpp"
 #include <SDL/SDL_timer.h>

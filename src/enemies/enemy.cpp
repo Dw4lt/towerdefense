@@ -1,5 +1,6 @@
 #include "enemy.hpp"
 #include "../rendering/composable_scene.hpp"
+#include "../primitives/essentials.hpp"
 #include <assert.h>
 #include <stdio.h>
 

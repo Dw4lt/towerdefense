@@ -1,9 +1,8 @@
 include .env
 
 ifndef DEBUG
-override DEBUG=FALSE
+	override DEBUG=FALSE
 endif
-
 
 GCC = nspire-gcc
 AS  = nspire-as
@@ -16,9 +15,9 @@ LDFLAGS =
 ZEHNFLAGS = --name "$(PROJECT_NAME)"
 
 ifeq ($(DEBUG),FALSE)
-	GCCFLAGS += -Os
+	GCCFLAGS += -Os -DNDEBUG
 else
-	GCCFLAGS += -O0 -g
+	GCCFLAGS += -O0 -g -DDEBUG
 endif
 
 OBJS = $(patsubst %.c, %.o, $(shell find . -name \*.c))

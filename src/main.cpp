@@ -5,20 +5,22 @@
 #include <SDL/SDL.h>
 
 #include "game_manager.hpp"
+#include "primitives/util.hpp"
 
 int main() {
     srand(time(NULL));
-    printf("############## Start ##############\n");
+    LOG("Start\n");
     SDL_Init( SDL_INIT_VIDEO );
+
     try {
         GameManager manager;
         manager.start();
     } catch (std::exception& e) {
-        std::cout << e.what() << "\n";
+        LOG("%s\n", e.what());
     } catch (char const* e) {
-        std::cout << e << "\n";
+        LOG("%s\n", e);
     }
     SDL_Quit();
-    printf("############## Stop ##############\n");
+    LOG("Exited gracefully\n");
     return EXIT_SUCCESS;
 }

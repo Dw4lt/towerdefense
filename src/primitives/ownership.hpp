@@ -1,7 +1,6 @@
 #ifndef OWNERSHIP_HPP
 #define OWNERSHIP_HPP
 
-#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <vector>

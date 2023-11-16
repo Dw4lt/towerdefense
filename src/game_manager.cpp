@@ -5,7 +5,6 @@
 #include <SDL/SDL_video.h>
 #include <SDL/SDL_timer.h>
 // #include <ctime>
-#include <iostream>
 #include <os.h>
 #include <stdio.h>
 #include <string>

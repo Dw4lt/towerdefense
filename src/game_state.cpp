@@ -1,5 +1,6 @@
 #include "game_state.hpp"
 #include "rendering/composable_scene.hpp"
+#include "primitives/util.hpp"
 
 #include <algorithm>
 
@@ -37,6 +38,7 @@ auto GameState::addStructure(std::shared_ptr<Structure> structure, Tile& tile) -
     tile.updateType(TileType::STRUCTURE);
     auto reader = r.makeReader();
     structures_[tile.getIndexY() * FIELD_TILE_COUNT_X + tile.getIndexX()] = std::move(r);
+    LOG("Structure added at %i:%i\n", tile.getIndexX(), tile.getIndexY());
     return reader;
 }
 

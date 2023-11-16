@@ -72,7 +72,7 @@ auto Field::generatePath() -> void {
     const int top_bot_margin = 1; // Margin at the top and at the bottom of the map to avoid paths along the field border
     while (x < tiles_x_) {
         found = false;
-        printf("x:%i y:%i\n", x, y);
+        LOG("Path node: x: %i y: %i\n", x, y);
         while (!found) {
             int direction = rand() % 3;
             switch (direction) {
