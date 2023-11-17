@@ -29,18 +29,19 @@ public:
         return SDL_Rect{(Sint16)origin_.x_, (Sint16)origin_.y_, (Uint16)width_, (Uint16)height_};
     };
 
-    int right() const { return origin_.x_ + width_; };
+    int right() const { return origin_.x_ + width_ - 1; }; // -1 because a rect of size 1 equates to 1 pixel, the origin pixel
     int top() const { return origin_.y_; };
     int left() const { return origin_.x_; };
-    int bottom() const { return origin_.y_ + height_; };
+    int bottom() const { return origin_.y_ + height_ - 1; }; // -1 because a rect of size 1 equates to 1 pixel, the origin pixel
 
     PointTemplate<T> center() const {
         return PointTemplate<T>(
-            origin_.x_ + (T)std::floor(width_ / 2.0),
-            origin_.y_ + (T)std::floor(height_ / 2.0)
+            origin_.x_ + (T)std::floor((width_ - 1) / 2.0), // -1 because a rect of size 1 equates to 1 pixel, the origin pixel
+            origin_.y_ + (T)std::floor((height_ - 1) / 2.0) // -1 because a rect of size 1 equates to 1 pixel, the origin pixel
         );
     };
 
+    /// @brief Origin of rectangle, top-left corner
     PointTemplate<T> origin_;
     U width_;
     U height_;

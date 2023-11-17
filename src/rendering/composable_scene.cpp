@@ -68,6 +68,9 @@ void ComposableScene::renderBackgroundIfNecessary() {
 void ComposableScene::render(RReader<Screen> screen) {
     renderBackgroundIfNecessary();
 
+    auto surface = screen->getSurface();
+    SDL_SetClipRect(surface, &rect_on_screen_);
+
     // Blit static background
     SDL_BlitSurface(background_surface_, NULL, screen->getSurface(), &rect_on_screen_);
 
@@ -75,6 +78,7 @@ void ComposableScene::render(RReader<Screen> screen) {
     for (auto& vect : render_objects_) {
         if (vect.first != BACKGROUND) renderLayer(vect.second, screen->getSurface()); // Render directly to screen
     }
+    SDL_SetClipRect(surface, NULL);
 }
 
 void ComposableScene::renderLayer(SceneLayer& layer, SDL_Surface* surface){

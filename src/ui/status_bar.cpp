@@ -60,6 +60,7 @@ RReader<StatusBar> StatusBar::create(Screen* screen, SDL_Rect rect, bool visible
 
 void StatusBar::render(RReader<Screen> screen) {
     auto surface = screen->getSurface();
+    SDL_SetClipRect(surface, &rect_on_screen_);
     SDL_BlitSurface(background_surface_, NULL, surface, &rect_on_screen_);
 
     // Wave counter
@@ -78,4 +79,5 @@ void StatusBar::render(RReader<Screen> screen) {
         auto string_width = nSDL_GetStringWidth(font_, money_string_);
         nSDL_DrawString(surface, font_, money_x - 5 - string_width, text_y, money_string_);
     }
+    SDL_SetClipRect(surface, NULL);
 }
