@@ -15,7 +15,7 @@ Tower::Tower(int cooldown, int tower_range, double damage, unsigned int index_x,
     , cooldown_timer_(0)
     , sorted_path_tile_indexes_in_range_()
 {
-        setRange(tower_range);
+    setRange(tower_range);
 }
 
 Tower::~Tower() {
@@ -50,10 +50,15 @@ void Tower::setGlobalDamageMultiplier(double new_multiplier) {
     global_damage_multiplier_ = new_multiplier;
 }
 
+void Tower::resetCooldown() { // TODO: call once between waves
+    cooldown_timer_ = 0;
+    just_fired_ = 0;
+}
+
 void Tower::tick() {
-    cooldown_timer_ --;
     if (cooldown_timer_ <= 0){
         just_fired_ |= fire();
-        cooldown_timer_ += cooldown_ * global_cooldown_multiplier_;
+        if (just_fired_) cooldown_timer_ += cooldown_ * global_cooldown_multiplier_;
     }
+    if (cooldown_timer_ > 0) cooldown_timer_--;
 }

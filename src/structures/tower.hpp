@@ -33,6 +33,9 @@ public:
     /// @brief Change the range of the tower. Requires fied to be fully initialized
     void setRange(int range);
 
+    /// @brief Reset tower's cooldown, making it ready to fire instantly
+    void resetCooldown();
+
 private:
     static double global_range_multiplier_;
     static double global_cooldown_multiplier_;
