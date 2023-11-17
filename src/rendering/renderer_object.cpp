@@ -103,14 +103,14 @@ namespace DrawUtils {
         float eyx = std::round(end_y * x_scale);
         float exy = std::round(end_x * y_scale);
 
-        drawLine(surface, xc + sxx, yc + syy, xc + exx, yc + eyy, color);
-        drawLine(surface, xc - sxx, yc + syy, xc - exx, yc + eyy, color);
-        drawLine(surface, xc + sxx, yc - syy, xc + exx, yc - eyy, color);
-        drawLine(surface, xc - sxx, yc - syy, xc - exx, yc - eyy, color);
-        drawLine(surface, xc + syx, yc + sxy, xc + eyx, yc + exy, color);
-        drawLine(surface, xc - syx, yc + sxy, xc - eyx, yc + exy, color);
-        drawLine(surface, xc + syx, yc - sxy, xc + eyx, yc - exy, color);
-        drawLine(surface, xc - syx, yc - sxy, xc - eyx, yc - exy, color);
+        drawLine(surface, xc + sxx - 1, yc + syy - 1, xc + exx - 1, yc + eyy - 1, color);
+        drawLine(surface, xc - sxx, yc + syy - 1, xc - exx, yc + eyy - 1, color);
+        drawLine(surface, xc + sxx - 1, yc - syy + 1, xc + exx - 1, yc - eyy + 1, color);
+        drawLine(surface, xc - sxx, yc - syy + 1, xc - exx, yc - eyy + 1, color);
+        drawLine(surface, xc + syx - 1, yc + sxy - 1, xc + eyx - 1, yc + exy - 1, color);
+        drawLine(surface, xc - syx, yc + sxy - 1, xc - eyx, yc + exy - 1, color);
+        drawLine(surface, xc + syx - 1, yc - sxy + 1, xc + eyx - 1, yc - exy + 1, color);
+        drawLine(surface, xc - syx, yc - sxy + 1, xc - eyx, yc - exy + 1, color);
     }
 
     void drawPixelatedCircleOutline(SDL_Surface* surface, int x_center, int y_center, float radius, float x_scale, float y_scale, Uint16 color, Uint8 thickness) {
