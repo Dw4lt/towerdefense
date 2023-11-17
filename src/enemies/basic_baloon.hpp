@@ -11,9 +11,11 @@ public:
 
     virtual void damage(int damage, DAMAGE_TYPE type) override;
 
-    int getColor(int hp);
+protected:
 
-    int getSpeed(int hp);
+    static int getColor(int hp);
+
+    static int getSpeed(int hp);
 };
 
 #endif

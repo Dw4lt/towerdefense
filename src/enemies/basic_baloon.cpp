@@ -6,7 +6,7 @@ BasicBaloon::BasicBaloon(Point pos, int width, int height, unsigned int target_t
     : Enemy(pos, width, height, target_tile_index, (int) color, getSpeed((int) color), getColor((int) color)) {
 }
 
-void BasicBaloon::damage(int damage, DAMAGE_TYPE type) {
+void BasicBaloon::damage(int damage, DAMAGE_TYPE) {
     damage = std::min(damage, hp_);
     hp_ -= damage;
     GameState::getState()->addMoney(damage);
@@ -34,7 +34,7 @@ int BasicBaloon::getColor(int hp) {
 int BasicBaloon::getSpeed(int hp) {
     switch (hp) {
         case (int)EnemyType::RED:
-            return BASE_BALOON_SPEED * 1;
+            return 1.0 * BASE_BALOON_SPEED;
         case (int)EnemyType::BLUE:
             return 1.4 * BASE_BALOON_SPEED;
         case (int)EnemyType::GREEN:

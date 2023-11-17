@@ -12,7 +12,8 @@ enum SCREEN_LAYER {
     SHOP,
 };
 
-static const int STANDARD_TICK_DURATION(41);
+static const int TICKS_PER_SECOND(24);
+static const int STANDARD_TICK_DURATION((int)std::round(1000.0 / TICKS_PER_SECOND));
 
 static const int FIELD_HEIGHT = 210;
 static const int FIELD_WIDTH = 320;

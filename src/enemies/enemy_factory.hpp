@@ -3,6 +3,7 @@
 
 #include "enemy.hpp"
 #include "basic_baloon.hpp"
+#include "regrow_baloon.hpp"
 #include "../primitives/color_conversion.hpp"
 
 namespace EnemyFactory {
@@ -36,6 +37,10 @@ namespace EnemyFactory {
         { EnemyCount(50, EnemyType::RED), EnemyCount(15, EnemyType::BLUE), EnemyCount(10, EnemyType::GREEN), EnemyCount(9, EnemyType:: YELLOW) },
         // 15
         { EnemyCount(20, EnemyType::RED), EnemyCount(12, EnemyType::GREEN), EnemyCount(5, EnemyType::YELLOW), EnemyCount(3, EnemyType:: PINK) },
+        { EnemyCount(20, EnemyType::GREEN), EnemyCount(8, EnemyType::YELLOW), EnemyCount(4, EnemyType:: PINK) },
+        { EnemyCount(8, EnemyType::REGROW_YELLOW) },
+        { EnemyCount(80, EnemyType::GREEN) },
+        { EnemyCount(10, EnemyType::GREEN), EnemyCount(4, EnemyType::YELLOW), EnemyCount(5, EnemyType::REGROW_YELLOW), EnemyCount(7, EnemyType:: PINK) },
     };
 
     /// @brief Create an enemy of a given type
@@ -51,10 +56,15 @@ namespace EnemyFactory {
         case EnemyType::GREEN:
         case EnemyType::YELLOW:
         case EnemyType::PINK:
-            return std::make_shared<BasicBaloon>(pos, 4, 4, target_tile_index, type);
+            return std::make_shared<BasicBaloon>(pos, 5, 5, target_tile_index, type);
             /* code */
             break;
-
+        case EnemyType::REGROW_RED:
+        case EnemyType::REGROW_BLUE:
+        case EnemyType::REGROW_GREEN:
+        case EnemyType::REGROW_YELLOW:
+        case EnemyType::REGROW_PINK:
+            return std::make_shared<RegrowBaloon>(pos, 5, 5, target_tile_index, type);
         default:
             throw "Unmatched enemy type";
         }

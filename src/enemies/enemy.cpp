@@ -18,7 +18,7 @@ Enemy::Enemy(Point pos, int width, int height, unsigned int target_tile_index, l
 Enemy::~Enemy() {
 }
 
-bool Enemy::isImmune(DAMAGE_TYPE type) {
+bool Enemy::isImmune(DAMAGE_TYPE) {
     return false;
 }
 
@@ -76,7 +76,11 @@ bool aCloserThanB(double x, double y, Point a, Point b) {
     return delta_a < delta_b;
 }
 
-int Enemy::pathfind(const Field& field) {
+void Enemy::tick(const Field& field) {
+    pathfind(field);
+}
+
+void Enemy::pathfind(const Field& field) {
     double distance_to_travel = speed_;
 
     // Walk towards screen
@@ -115,5 +119,4 @@ int Enemy::pathfind(const Field& field) {
     }
 
     updateBoundingBox();
-    return current_path_tile_index_;
 }

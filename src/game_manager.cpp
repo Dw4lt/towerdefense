@@ -78,7 +78,8 @@ void GameManager::gameLoop() {
         Field& field = game_state->getField();
         for (auto& enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
             int path_index = enemy->getCurrentPathTileIndex();
-            int new_path_index = enemy->pathfind(field);
+            enemy->tick(field);
+            int new_path_index = enemy->getCurrentPathTileIndex();
             if (path_index != new_path_index) {
                 game_state->updateEnemyTile(*enemy, path_index, new_path_index);
             }

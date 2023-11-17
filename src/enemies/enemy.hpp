@@ -12,6 +12,11 @@ enum class EnemyType {
     GREEN = 3,
     YELLOW = 4,
     PINK = 5,
+    REGROW_RED = 11,
+    REGROW_BLUE = 12,
+    REGROW_GREEN = 13,
+    REGROW_YELLOW = 14,
+    REGROW_PINK = 15,
 };
 
 class Enemy : public RendererObject {
@@ -20,10 +25,7 @@ public:
     virtual ~Enemy();
     virtual void render(SDL_Surface* surface) override;
 
-    /// @brief Run pathfinding logic on the given field
-    /// @param field Field to interact with
-    /// @return The index of the Tile the enemy stands on after pathfinding
-    virtual int pathfind(const Field& field);
+    virtual void tick(const Field& field);
 
     virtual Rect boundingBox() const override;
     virtual bool isImmune(DAMAGE_TYPE type);
@@ -36,6 +38,10 @@ public:
     virtual int getCurrentPathTileIndex() const { return current_path_tile_index_; };
 
 protected:
+    /// @brief Run pathfinding logic on the given field
+    /// @param field Field to interact with
+    virtual void pathfind(const Field& field);
+
     void updateBoundingBox();
 
     /// @brief Perform a step towards the given coordinate
