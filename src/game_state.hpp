@@ -15,6 +15,12 @@
 using EnemyReadList = std::vector<RReader<Enemy>>;
 using StructuresContainer = std::map<unsigned int, ROwner<Structure>>;
 
+enum class WaveState {
+    BETWEEN_WAVES,
+    ACTIVE_WAVE,
+    PAUSED // TODO: implement or handle externally
+};
+
 
 /// @brief Shared game state singleton class
 class GameState {
@@ -85,12 +91,18 @@ public:
     /// @param func Condition
     void purgeEnemies(std::function<bool(Enemy&)> func);
 
-    /// @brief Get Nr. of current wave or wave to be spawned
+    /// @brief Get Nr. of currently active wave or recently completed wave
     unsigned int getWave() { return wave_count_; };
 
-    /// @brief Increment Nr. of wave
-    /// @return New value
-    unsigned int incrementWave() { return ++wave_count_; };
+    /// @brief Get the current state of the wave
+    WaveState getWaveState();
+
+    /// @brief Increment Nr. of wave, declare wave as started
+    /// @return Nr. of new wave
+    unsigned int startNextWave();
+
+    /// @brief Pay out end-of-wave bonus, declare wave as completed
+    void endWave();
 
     /// @brief Get Nr. of current wave or wave to be spawned
     int getLives() { return lives_; };
@@ -143,6 +155,8 @@ private:
     int money_;
 
     static ROwner<GameState> singleton_;
+
+    WaveState wave_state_;
 };
 
 #endif

@@ -68,24 +68,34 @@ void GameManager::start() {
 }
 
 void GameManager::gameLoop() {
+    // User input
     processUserInput();
     auto game_state = GameState::getState();
-    IIterable<RReader<Enemy>> enemies = game_state->getEnemies();
-    Field& field = game_state->getField();
-    for (auto& enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
-        int path_index = enemy->getCurrentPathTileIndex();
-        int new_path_index = enemy->pathfind(field);
-        if (path_index != new_path_index) {
-            game_state->updateEnemyTile(*enemy, path_index, new_path_index);
-        }
-    }
-    IIterable<RReader<Structure>> structures = game_state->getStructures();
-    for (auto& structure = structures.begin(); structure != structures.end(); ++structure) {
-        structure->tick();
-    }
-    handleEnemiesReachingTarget();
-    removeDeadEnemies();
 
+    // Active wave game loop
+    if (game_state->getWaveState() ==  WaveState::ACTIVE_WAVE) {
+        IIterable<RReader<Enemy>> enemies = game_state->getEnemies();
+        Field& field = game_state->getField();
+        for (auto& enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
+            int path_index = enemy->getCurrentPathTileIndex();
+            int new_path_index = enemy->pathfind(field);
+            if (path_index != new_path_index) {
+                game_state->updateEnemyTile(*enemy, path_index, new_path_index);
+            }
+        }
+
+        IIterable<RReader<Structure>> structures = game_state->getStructures();
+        for (auto& structure = structures.begin(); structure != structures.end(); ++structure) {
+            structure->tick();
+        }
+
+        handleEnemiesReachingTarget();
+        removeDeadEnemies();
+
+        if (!game_state->anyEnemiesPresent()) game_state->endWave();
+    }
+
+    // Rendering
     if (field_scene_->visible_) field_scene_->render(screen_);
     if (status_bar_scene_->visible_) status_bar_scene_->render(screen_);
 
@@ -118,11 +128,11 @@ void GameManager::shopLoop() {
 void GameManager::processUserInput() {
     int actions = Input::getActions();
     if (actions != Input::NONE) {
-        field_cursor_->applyUserActions(actions); // TODO: Only if currently in-game
+        field_cursor_->applyUserActions(actions); // TODO: Only if currently on field screen
 
-        if ((actions & Input::SPAWN_NEXT_WAVE) && !GameState::getState()->anyEnemiesPresent()) {
+        if ((actions & Input::SPAWN_NEXT_WAVE) && GameState::getState()->getWaveState() == WaveState::BETWEEN_WAVES) {
             spawnWave();
-            GameState::getState()->incrementWave();
+            GameState::getState()->startNextWave();
         }
     }
 }

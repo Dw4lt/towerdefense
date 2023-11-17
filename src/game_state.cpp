@@ -14,6 +14,7 @@ GameState::GameState()
     , wave_count_{0}
     , lives_{100}
     , money_{650}
+    , wave_state_{WaveState::BETWEEN_WAVES}
 {}
 
 auto GameState::getField() -> Field& {
@@ -49,6 +50,20 @@ auto GameState::getStructure(int index_x, int index_y) -> RReader<Structure> {
 auto GameState::addEnemy(std::shared_ptr<Enemy> enemy) -> RReader<Enemy> {
     enemy_list_.emplace_back(enemy);
     return enemy_list_.back().makeReader();
+}
+
+auto GameState::getWaveState() -> WaveState {
+    return wave_state_;
+}
+
+auto GameState::startNextWave() -> unsigned int {
+    wave_state_ = WaveState::ACTIVE_WAVE;
+    return ++wave_count_;
+}
+
+void GameState::endWave() {
+    wave_state_ = WaveState::BETWEEN_WAVES;
+    money_ += 99 + wave_count_;
 }
 
 auto GameState::tryTakeMoney(int amount) -> bool {
