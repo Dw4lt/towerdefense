@@ -103,10 +103,10 @@ public:
     /// @brief Get amount of money owned by the player
     int getMoney() { return money_; };
 
-    /// @brief Subtract an amount amount of money from the player balance
+    /// @brief Subtract an amount amount of money from the player balance if they have enough
     /// @param amount Amount of money to subtract
-    /// @return Resulting balance
-    int takeMoney(int amount) { money_ -= amount; return money_; };
+    /// @return Whether the transaction was successful
+    bool tryTakeMoney(int amount);
 
     /// @brief Add an amount amount of money from the player balance
     /// @param amount Amount of money to add

@@ -13,7 +13,7 @@ GameState::GameState()
     , tile_enemy_mapping_(field_ptr_->getPathLength())
     , wave_count_{0}
     , lives_{100}
-    , money_{400}
+    , money_{650}
 {}
 
 auto GameState::getField() -> Field& {
@@ -49,6 +49,12 @@ auto GameState::getStructure(int index_x, int index_y) -> RReader<Structure> {
 auto GameState::addEnemy(std::shared_ptr<Enemy> enemy) -> RReader<Enemy> {
     enemy_list_.emplace_back(enemy);
     return enemy_list_.back().makeReader();
+}
+
+auto GameState::tryTakeMoney(int amount) -> bool {
+    bool enough_money = money_ > amount;
+    if (enough_money) money_ -= amount;
+    return enough_money;
 }
 
 void GameState::purgeEnemies(std::function<bool(Enemy&)> func) {
