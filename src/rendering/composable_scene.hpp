@@ -1,5 +1,4 @@
-#ifndef RENDERER_H
-#define RENDERER_H
+#pragma once
 #include "../primitives/ownership.hpp"
 #include "abstract_scene.hpp"
 #include "renderer_object.hpp"
@@ -74,5 +73,3 @@ private:
     /// @brief Objects to render stored in layers
     std::map<SCREEN_LAYER, SceneLayer> render_objects_; // int -> Layer, vector -> objects
 };
-
-#endif

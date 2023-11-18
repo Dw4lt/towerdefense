@@ -1,6 +1,4 @@
-#ifndef STATUS_BAR_H
-#define STATUS_BAR_H
-
+#pragma once
 #include "../rendering/abstract_scene.hpp"
 #include "../primitives/ownership.hpp"
 
@@ -38,5 +36,3 @@ private:
     // Top edge of text to align with the respective icons
     const int text_y;
 };
-
-#endif // STATUS_BAR_H

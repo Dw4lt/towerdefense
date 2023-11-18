@@ -1,5 +1,4 @@
-#ifndef WOOD_H
-#define WOOD_H
+#pragma once
 #include "resource.hpp"
 
 class Wood : public Resource {
@@ -13,5 +12,3 @@ private:
     static bool initialized_;
     static Wood instance_;
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef GAME_MANAGER_H
-#define GAME_MANAGER_H
+#pragma once
 #include "enemies/enemy.hpp"
 #include "map/cursor.hpp"
 #include "rendering/composable_scene.hpp"
@@ -38,5 +37,3 @@ private:
 
     RReader<StatusBar> status_bar_scene_;
 };
-
-#endif

@@ -1,6 +1,4 @@
-#ifndef ABSTRACT_SCENE_H
-#define ABSTRACT_SCENE_H
-
+#pragma once
 #include <SDL/SDL_video.h>
 #include "../primitives/ownership.hpp"
 
@@ -32,5 +30,3 @@ protected:
     /// @brief Internal scene surface
     SDL_Surface* background_surface_;
 };
-
-#endif // ABSTRACT_SCENE_H

@@ -1,6 +1,4 @@
-#ifndef ENEMY_FACTORY_H
-#define ENEMY_FACTORY_H
-
+#pragma once
 #include "enemy.hpp"
 #include "basic_baloon.hpp"
 #include "regrow_baloon.hpp"
@@ -71,5 +69,3 @@ namespace EnemyFactory {
     }
 
 };
-
-#endif

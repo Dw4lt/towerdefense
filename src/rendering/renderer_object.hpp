@@ -1,5 +1,4 @@
-#ifndef RENDERER_OBJECT_H
-#define RENDERER_OBJECT_H
+#pragma once
 #include "../primitives/essentials.hpp"
 #include "../primitives/ownership.hpp"
 #include <SDL/SDL_video.h>
@@ -77,5 +76,3 @@ public:
 protected:
     Rect rect_;
 };
-
-#endif

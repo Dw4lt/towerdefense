@@ -1,5 +1,4 @@
-#ifndef MAP_H
-#define MAP_H
+#pragma once
 #include "../rendering/renderer_object.hpp"
 #include "../primitives/essentials.hpp"
 #include "../primitives/ownership.hpp"
@@ -62,5 +61,3 @@ private:
 
     Point start_tile_;
 };
-
-#endif

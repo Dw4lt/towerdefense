@@ -1,5 +1,4 @@
-#ifndef TOWER_H
-#define TOWER_H
+#pragma once
 #include "../enemies/enemy.hpp"
 #include "../game_state.hpp"
 #include "structure.hpp"
@@ -57,5 +56,3 @@ protected:
     /// @brief Flag set when a tower has succesfully fired. Resets upon render.
     bool just_fired_;
 };
-
-#endif

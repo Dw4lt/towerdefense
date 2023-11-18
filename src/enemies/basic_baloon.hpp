@@ -1,5 +1,4 @@
-#ifndef BASIC_BALOON_H
-#define BASIC_BALOON_H
+#pragma once
 #include "enemy.hpp"
 
 
@@ -17,5 +16,3 @@ protected:
 
     static int getSpeed(int hp);
 };
-
-#endif

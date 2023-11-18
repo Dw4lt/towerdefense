@@ -1,5 +1,4 @@
-#ifndef STRUCTURE_H
-#define STRUCTURE_H
+#pragma once
 #include "../map/field.hpp"
 #include "../primitives/color_conversion.hpp"
 #include "../primitives/essentials.hpp"
@@ -17,5 +16,3 @@ public:
 
     SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::STRUCTURE; };
 };
-
-#endif

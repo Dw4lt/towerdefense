@@ -1,6 +1,4 @@
-#ifndef INPUT_H
-#define INPUT_H
-
+#pragma once
 #include <libndls.h>
 #include <SDL/SDL_stdinc.h>
 
@@ -29,5 +27,3 @@ namespace Input
     int actionRepetitionOnLongPress(Uint32& previous_timestamp, int& previous_button_state, int current_button_state, Uint32 repetition_timer_ms);
 
 } // namespace Input
-
-#endif // INPUT_H

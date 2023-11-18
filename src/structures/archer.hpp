@@ -1,5 +1,4 @@
-#ifndef ARCHER_H
-#define ARCHER_H
+#pragma once
 #include "../enemies/enemy.hpp"
 #include "../primitives/damage.hpp"
 #include "../primitives/ownership.hpp"
@@ -21,5 +20,3 @@ private:
     static double global_cooldown_multiplier_;
     static double global_damage_multiplier_;
 };
-
-#endif

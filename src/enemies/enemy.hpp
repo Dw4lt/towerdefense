@@ -1,5 +1,4 @@
-#ifndef ENEMY_H
-#define ENEMY_H
+#pragma once
 #include "../primitives/damage.hpp"
 #include "../rendering/renderer_object.hpp"
 #include "../primitives/essentials.hpp"
@@ -58,5 +57,3 @@ protected:
     int hp_;
     double speed_;
 };
-
-#endif

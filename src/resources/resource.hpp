@@ -1,5 +1,4 @@
-#ifndef RESOURCE_H
-#define RESOURCE_H
+#pragma once
 #include <SDL/SDL_video.h>
 #include <string>
 
@@ -30,5 +29,3 @@ protected:
     std::string name_symbol_;
     std::string description_;
 };
-
-#endif

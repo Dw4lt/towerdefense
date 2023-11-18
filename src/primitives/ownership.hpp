@@ -1,6 +1,4 @@
-#ifndef OWNERSHIP_HPP
-#define OWNERSHIP_HPP
-
+#pragma once
 #include <memory>
 #include <stdexcept>
 #include <vector>
@@ -315,5 +313,3 @@ auto makeOwnerToReaderWrapper(std::map<K, ROwner<T>>& container) -> IIterable<RR
         MakeReader<K, T>()
     );
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef TILE_H
-#define TILE_H
+#pragma once
 #include "../rendering/renderer_object.hpp"
 #include <SDL/SDL_video.h>
 
@@ -52,5 +51,3 @@ protected:
     TileTerrain terrain_;
     int distance_to_water_;
 };
-
-#endif

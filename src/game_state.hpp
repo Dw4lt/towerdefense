@@ -1,6 +1,4 @@
-#ifndef GAME_STATE_H
-#define GAME_STATE_H
-
+#pragma once
 #include <functional>
 #include <map>
 #include <vector>
@@ -158,5 +156,3 @@ private:
 
     WaveState wave_state_;
 };
-
-#endif

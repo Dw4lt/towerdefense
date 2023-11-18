@@ -1,6 +1,4 @@
-#ifndef CURSOR_H
-#define CURSOR_H
-
+#pragma once
 #include "../rendering/renderer_object.hpp"
 #include "field.hpp"
 
@@ -37,5 +35,3 @@ private:
     int cursor_x_;
     int cursor_y_;
 };
-
-#endif
