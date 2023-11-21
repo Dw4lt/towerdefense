@@ -127,13 +127,23 @@ void GameManager::shopLoop() {
 }
 
 void GameManager::processUserInput() {
-    int actions = Input::getActions();
-    if (actions != Input::NONE) {
-        field_cursor_->applyUserActions(actions); // TODO: Only if currently on field screen
+    auto game_sate = GameState::getState();
+    int raw_actions = Input::getActions();
+    WaveState wave_state = game_sate->getWaveState();
 
-        if ((actions & Input::SPAWN_NEXT_WAVE) && GameState::getState()->getWaveState() == WaveState::BETWEEN_WAVES) {
-            spawnWave();
-            GameState::getState()->startNextWave();
+    static int previous_state{0};
+    int single_trigger_actions = Input::singleTriggerActions(previous_state, raw_actions);
+    if (raw_actions != Input::NONE) {
+        field_cursor_->applyUserActions(raw_actions); // TODO: Only if currently on field screen
+    }
+    if (single_trigger_actions != Input::NONE) {
+        if (wave_state == WaveState::BETWEEN_WAVES){
+            if (single_trigger_actions & Input::SPAWN_NEXT_WAVE) {
+                spawnWave();
+                game_sate->startNextWave();
+            }
+        } else {
+            if (single_trigger_actions & Input::PAUSE) game_sate->togglePause();
         }
     }
 }

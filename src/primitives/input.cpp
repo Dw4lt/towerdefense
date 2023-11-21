@@ -21,6 +21,12 @@ namespace Input {
         return current_button_state;
     }
 
+    int singleTriggerActions(int& previous_button_state, int current_button_state) {
+        auto ret = current_button_state & ~previous_button_state;
+        previous_button_state = current_button_state;
+        return ret;
+    }
+
     int getActions() {
         int button_state = Actions::NONE;
         if (any_key_pressed()) {
@@ -31,6 +37,7 @@ namespace Input {
             if (isKeyPressed(KEY_NSPIRE_UP) || isKeyPressed(KEY_NSPIRE_8)) button_state |= Actions::UP;
             if (isKeyPressed(KEY_NSPIRE_DOWN) || isKeyPressed(KEY_NSPIRE_2)) button_state |= Actions::DOWN;
             if (isKeyPressed(KEY_NSPIRE_ENTER) || isKeyPressed(KEY_NSPIRE_SPACE) || isKeyPressed(KEY_NSPIRE_5)) button_state |= Actions::CONFIRM;
+            if (isKeyPressed(KEY_NSPIRE_P)) button_state |= Actions::PAUSE;
         }
         return button_state;
     }

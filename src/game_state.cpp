@@ -72,6 +72,14 @@ auto GameState::tryTakeMoney(int amount) -> bool {
     return enough_money;
 }
 
+void GameState::togglePause() {
+    if (WaveState::ACTIVE_WAVE == wave_state_) {
+        wave_state_ = WaveState::ACTIVE_WAVE_PAUSED;
+    } else if (WaveState::ACTIVE_WAVE_PAUSED == wave_state_) {
+        wave_state_ = WaveState::ACTIVE_WAVE;
+    }
+};
+
 void GameState::purgeEnemies(std::function<bool(Enemy&)> func) {
     for(auto e = enemy_list_.begin(); e != enemy_list_.end(); ) {
         auto& enemy = *e;

@@ -16,7 +16,7 @@ using StructuresContainer = std::map<unsigned int, ROwner<Structure>>;
 enum class WaveState {
     BETWEEN_WAVES,
     ACTIVE_WAVE,
-    PAUSED // TODO: implement or handle externally
+    ACTIVE_WAVE_PAUSED,
 };
 
 
@@ -122,6 +122,9 @@ public:
     /// @param amount Amount of money to add
     /// @return Resulting balance
     int addMoney(int amount) { money_ += amount; return money_; };
+
+    /// @brief Toggle pause state on active wave
+    void togglePause();
 
 private:
 
