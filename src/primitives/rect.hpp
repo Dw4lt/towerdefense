@@ -36,8 +36,8 @@ public:
 
     PointTemplate<T> center() const {
         return PointTemplate<T>(
-            origin_.x_ + (T)std::floor((width_ - 1) / 2.0), // -1 because a rect of size 1 equates to 1 pixel, the origin pixel
-            origin_.y_ + (T)std::floor((height_ - 1) / 2.0) // -1 because a rect of size 1 equates to 1 pixel, the origin pixel
+            origin_.x_ + (T)std::round((width_ - 1) / 2.0), // -1 because a rect of size 1 equates to 1 pixel, the origin pixel
+            origin_.y_ + (T)std::round((height_ - 1) / 2.0) // -1 because a rect of size 1 equates to 1 pixel, the origin pixel
         );
     };
 
