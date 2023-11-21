@@ -1,5 +1,5 @@
 #include "basic_baloon.hpp"
-#include "../primitives/color_conversion.hpp"
+#include "../primitives/color.hpp"
 #include "../game_state.hpp"
 
 BasicBaloon::BasicBaloon(Point pos, int width, int height, unsigned int target_tile_index, EnemyType color)
@@ -17,17 +17,17 @@ void BasicBaloon::damage(int damage, DAMAGE_TYPE) {
 int BasicBaloon::getColor(int hp) {
     switch (hp) {
         case (int)EnemyType::RED:
-            return RGB_888_TO_565(0xFF'03'03);
+            return Colors::BALOON_RED;
         case (int)EnemyType::BLUE:
-            return RGB_888_TO_565(0x03'03'FF);
+            return Colors::BALOON_BLUE;
         case (int)EnemyType::GREEN:
-            return RGB_888_TO_565(0x03'FF'03);
+            return Colors::BALOON_GREEN;
         case (int)EnemyType::YELLOW:
-            return RGB_888_TO_565(0xE0'DA'19);
+            return Colors::BALOON_YELLOW;
         case (int)EnemyType::PINK:
-            return RGB_888_TO_565(0xFF'14'93);
+            return Colors::BALOON_PINK;
         default:
-            return RGB_888_TO_565(0xFF'8C'00); // Orange = Invalid
+            return Colors::UNKNOWN;
     };
 }
 

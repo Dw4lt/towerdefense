@@ -1,5 +1,5 @@
 #include "tile.hpp"
-#include "../primitives/color_conversion.hpp"
+#include "../primitives/color.hpp"
 #include "../rendering/composable_scene.hpp"
 #include <stdio.h>
 
@@ -47,8 +47,8 @@ void Tile::updateColor() {
         }
         break;
     case TileType::PATH:
-        effective_color = 0x8B4513;
-        break;
+        color_ = Colors::PATH_COLOR;
+        return;
     default:
         break;
     }

@@ -1,6 +1,6 @@
 #include "cursor.hpp"
 #include "../game_manager.hpp"
-#include "../primitives/color_conversion.hpp"
+#include "../primitives/color.hpp"
 #include "../primitives/input.hpp"
 #include "../primitives/rect.hpp"
 #include "../primitives/essentials.hpp"
@@ -69,9 +69,9 @@ void FieldCursor::updateAnimationState() {
     if (TileType::LAND == current_tile_type) {
         animation_state_ = ANIMATION_STATE::ON_EMTPY_FIELD;
     } else if (TileType::PATH == current_tile_type) {
-        animation_state_ = ANIMATION_STATE::BLOCKED;
+        animation_state_ = ANIMATION_STATE::ON_PATH;
     } else if (TileType::STRUCTURE == current_tile_type) {
-        animation_state_ = ANIMATION_STATE::SELECT;
+        animation_state_ = ANIMATION_STATE::ON_STRUCTURE;
     }
 }
 
@@ -83,27 +83,27 @@ void FieldCursor::updatePosition() {
 void FieldCursor::render(SDL_Surface* surface) {
     Uint32 color;
     switch (animation_state_) {
-    case ANIMATION_STATE::BLOCKED:
-        color = (Uint32)0xff5900;
+    case ANIMATION_STATE::ON_PATH:
+        color = Colors::CURSOR_ON_PATH;
         break;
-    case ANIMATION_STATE::SELECT:
-        color = (Uint32)0xebd234;
+    case ANIMATION_STATE::ON_STRUCTURE:
+        color = Colors::CURSOR_ON_BUILDING;
         {
             // Show tower range on hover
             auto structure = GameState::getState()->getStructure(cursor_x_, cursor_y_).get();
             if (auto v = dynamic_cast<Tower*>(structure)) {
                 int range = (v)->getRange();
                 if (range > 0) {
-                    DrawUtils::drawPixelatedCircleOutline(surface, rect_.center().x_, rect_.center().y_, range, FIELD_TILE_WIDTH, FIELD_TILE_HEIGHT, RGB_888_TO_565(0xFF0000), 1);
+                    DrawUtils::drawPixelatedCircleOutline(surface, rect_.center().x_, rect_.center().y_, range, FIELD_TILE_WIDTH, FIELD_TILE_HEIGHT, Colors::RED, 1);
                 }
             }
         }
         break;
     case ANIMATION_STATE::ON_EMTPY_FIELD:
     default:
-        color = (Uint32)0x344ceb;
+        color = Colors::CURSOR_ON_EMPTY_FIELD_TILE;
         break;
     }
-    DrawUtils::drawRect(surface, boundingBox(), RGB_888_TO_565(color), 2);
+    DrawUtils::drawRect(surface, boundingBox(), color, 2);
     RendererObject::renderChildren(surface);
 }

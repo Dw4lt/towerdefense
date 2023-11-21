@@ -1,5 +1,6 @@
 #include "archer.hpp"
 #include "../rendering/composable_scene.hpp"
+#include "../primitives/color.hpp"
 
 Archer::Archer(int cooldown, int tower_range, double damage, unsigned int index_x, unsigned int index_y)
     : Tower(cooldown, tower_range, damage, index_x, index_y)
@@ -10,10 +11,10 @@ Archer::~Archer() {}
 
 void Archer::render(SDL_Surface* surface) {
     if (just_fired_){
-        DrawUtils::fillColor(surface, boundingBox(), RGB_888_TO_565(0x5197FF));
+        DrawUtils::fillColor(surface, boundingBox(), Colors::ARCHER_FIRING);
         just_fired_ = false;
     } else {
-        DrawUtils::fillColor(surface, boundingBox(), RGB_888_TO_565(0x137BF0));
+        DrawUtils::fillColor(surface, boundingBox(), Colors::ARCHER_IDLE);
     }
     renderChildren(surface);
 }

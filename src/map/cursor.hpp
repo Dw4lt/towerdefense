@@ -6,8 +6,8 @@ class GameManager;
 
 typedef enum {
     ON_EMTPY_FIELD,
-    SELECT,
-    BLOCKED
+    ON_STRUCTURE,
+    ON_PATH
 } ANIMATION_STATE;
 
 class FieldCursor : public RendererObject {

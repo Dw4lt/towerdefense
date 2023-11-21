@@ -1,5 +1,5 @@
 #include "regrow_baloon.hpp"
-#include "../primitives/color_conversion.hpp"
+#include "../primitives/color.hpp"
 #include "../game_state.hpp"
 
 const unsigned int RegrowBaloon::DELAY_BETWEEN_HEALS{TICKS_PER_SECOND * 3};
@@ -68,17 +68,17 @@ int RegrowBaloon::getHP(EnemyType type) {
 int RegrowBaloon::getColor(EnemyType type) {
     switch (type) {
         case EnemyType::REGROW_RED:
-            return RGB_888_TO_565(0xFF'03'03);  // TODO: global color palette?
+            return Colors::BALOON_RED;
         case EnemyType::REGROW_BLUE:
-            return RGB_888_TO_565(0x03'03'FF);
+            return Colors::BALOON_BLUE;
         case EnemyType::REGROW_GREEN:
-            return RGB_888_TO_565(0x03'FF'03);
+            return Colors::BALOON_GREEN;
         case EnemyType::REGROW_YELLOW:
-            return RGB_888_TO_565(0xE0'DA'19);
+            return Colors::BALOON_YELLOW;
         case EnemyType::REGROW_PINK:
-            return RGB_888_TO_565(0xFF'14'93);
+            return Colors::BALOON_PINK;
         default:
-            return RGB_888_TO_565(0xFF'8C'00); // Orange = Invalid
+            return Colors::UNKNOWN;
     };
 }
 
