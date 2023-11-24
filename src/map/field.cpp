@@ -47,9 +47,9 @@ auto Field::getPathTile(unsigned int index) const -> RReader<Tile> {
 
 auto Field::getPathTileCenter(unsigned int index) const -> Point {
     if (index < path_.size()) {
-        return path_[index]->getCenter();
+        return path_[index]->center();
     }
-    return Point(SHRT_MAX, path_.back()->getCenter().y_);
+    return Point(SHRT_MAX, path_.back()->center().y_);
 }
 
 auto Field::addTileToPath(int x, int y) -> void {

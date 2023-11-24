@@ -64,16 +64,24 @@ public:
     RendererObject(int x, int y, int width, int height, SCREEN_LAYER layer);
     RendererObject(Rect rect, SCREEN_LAYER layer);
     RendererObject(Point pos, int width, int height, SCREEN_LAYER layer);
+
     virtual ~RendererObject();
+
     virtual Rect boundingBox() const;
+
     Uint16 getWidth() const;
     Uint16 getHeight() const;
+    void setWidth(Uint16 width);
+    void setHeight(Uint16 height);
+
+    void centerOn(int x, int y);
+
     virtual void render(SDL_Surface* surface) = 0;
 
     virtual SCREEN_LAYER getDepth() const = 0;
 
-    Point getCenter() const;
+    Point center() const;
 
-protected:
+private:
     Rect rect_;
 };

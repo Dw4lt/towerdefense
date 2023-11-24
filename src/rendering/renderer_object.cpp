@@ -195,6 +195,11 @@ RendererObject::RendererObject(Point pos, int width, int height, SCREEN_LAYER la
 RendererObject::~RendererObject() {
 }
 
+void RendererObject::centerOn(int x, int y) {
+    rect_.origin_.x_ = x - rect_.width_ / 2;
+    rect_.origin_.y_ = y - rect_.height_ / 2;
+}
+
 Rect RendererObject::boundingBox() const {
     return rect_;
 }
@@ -207,6 +212,14 @@ Uint16 RendererObject::getHeight() const {
     return rect_.height_;
 }
 
-Point RendererObject::getCenter() const {
+void RendererObject::setWidth(Uint16 width) {
+    rect_.width_ = width;
+}
+
+void RendererObject::setHeight(Uint16 height) {
+    rect_.height_ = height;
+}
+
+Point RendererObject::center() const {
     return rect_.center();
 }

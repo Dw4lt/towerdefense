@@ -20,8 +20,8 @@ FieldCursor::FieldCursor(GameManager* manager)
     cursor_x_ = max_x_ / 2;
     cursor_y_ = max_y_ / 2;
 
-    rect_.width_ = field.getWidth() / field.getMaxX() + 2;
-    rect_.height_ = field.getHeight() / field.getMaxY() + 2;
+    RendererObject::setWidth(field.getWidth() / field.getMaxX() + 2);
+    RendererObject::setHeight(field.getHeight() / field.getMaxY() + 2);
 
     updatePosition();
     updateAnimationState();
@@ -75,8 +75,8 @@ void FieldCursor::updateAnimationState() {
 }
 
 void FieldCursor::updatePosition() {
-    Rect rect = GameState::getState()->getField().getTile(cursor_x_, cursor_y_).boundingBox();
-    rect_ = Rect(rect.left() - 1, rect.top() - 1, rect.width_ + 2, rect.height_ + 2);
+    Point center = GameState::getState()->getField().getTile(cursor_x_, cursor_y_).boundingBox().center();
+    RendererObject::centerOn(center.x_, center.y_);
 }
 
 void FieldCursor::render(SDL_Surface* surface) {
@@ -93,7 +93,8 @@ void FieldCursor::render(SDL_Surface* surface) {
             if (auto v = dynamic_cast<Tower*>(structure)) {
                 int range = (v)->getRange();
                 if (range > 0) {
-                    DrawUtils::drawPixelatedCircleOutline(surface, rect_.center().x_, rect_.center().y_, range, FIELD_TILE_WIDTH, FIELD_TILE_HEIGHT, Colors::RED, 1);
+                    Point center = RendererObject::center();
+                    DrawUtils::drawPixelatedCircleOutline(surface, center.x_, center.y_, range, FIELD_TILE_WIDTH, FIELD_TILE_HEIGHT, Colors::RED, 1);
                 }
             }
         }

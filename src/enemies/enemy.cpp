@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 Enemy::Enemy(Point pos, int width, int height, unsigned int target_tile_index, long int hp, double speed, Uint16 color)
-    : RendererObject(Point(pos.x_ - width / 2, pos.y_ - height / 2), width, height, SCREEN_LAYER::ENEMY) // TODO: rect_really should not be a part of RendererObject
+    : RendererObject(Rect::centeredOn(pos, width, height), SCREEN_LAYER::ENEMY)
     , target_path_tile_index_(target_tile_index)
     , current_path_tile_index_(-1)
     , real_x_(pos.x_)
@@ -31,7 +31,7 @@ void Enemy::heal(int) {
 }
 
 Rect Enemy::boundingBox() const {
-    return rect_;
+    return RendererObject::boundingBox();
 }
 
 void Enemy::render(SDL_Surface* surface) {
@@ -40,9 +40,7 @@ void Enemy::render(SDL_Surface* surface) {
 }
 
 void Enemy::updateBoundingBox() {
-    // TODO: why is rect_ a part of render-object again?
-    rect_.origin_.x_ = ((Sint16) real_x_) - rect_.width_ / 2;
-    rect_.origin_.y_ = ((Sint16) real_y_) - rect_.height_ / 2;
+    centerOn((Sint16) real_x_, (Sint16) real_y_);
 }
 
 bool Enemy::walkTowards(const Point& target, double& distance_to_travel) {

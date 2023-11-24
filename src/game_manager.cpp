@@ -30,7 +30,7 @@ void GameManager::spawnWave() {
     unsigned int wave = game_state->getWave();
     auto& field = game_state->getField();
     auto& starting_point = field.getStart();
-    auto pos = field.getTile(starting_point).getCenter();
+    auto pos = field.getTile(starting_point).center();
     pos.x_ -= 20; // TODO: If enemy spawns *on* the first tile, he's not part of list of entities on said tile, leading to an attempt to remove it from an empty list during pathfinding. Possible solutions:
     // Get start coordinate from field, since it has all the knowledge necessary to yield a coordinate.
     // Simply subtract the width of a tile. (not very clean as it requires a left-hand start of the path)
@@ -108,7 +108,7 @@ void GameManager::handleEnemiesReachingTarget() {
 
     state->purgeEnemies(
         [&state] (Enemy& e){
-            bool target_reached = e.getCenter().x_ > FIELD_WIDTH + 20; // Magic grace number
+            bool target_reached = e.center().x_ > FIELD_WIDTH + 20; // Magic grace number
             if (target_reached) {
                 state->takeLives(e.getHP());
             }
