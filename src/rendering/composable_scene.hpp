@@ -1,5 +1,5 @@
 #pragma once
-#include "../primitives/ownership.hpp"
+#include "../util/ownership.hpp"
 #include "abstract_scene.hpp"
 #include "renderer_object.hpp"
 #include <SDL/SDL_video.h>

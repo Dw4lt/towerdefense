@@ -1,6 +1,6 @@
 #include "game_state.hpp"
 #include "rendering/composable_scene.hpp"
-#include "primitives/util.hpp"
+#include "util/macros.hpp"
 
 #include <algorithm>
 

@@ -1,5 +1,5 @@
 #include "game_manager.hpp"
-#include "primitives/input.hpp"
+#include "input.hpp"
 #include "structures/archer.hpp"
 #include "enemies/enemy_factory.hpp"
 #include <SDL/SDL_video.h>

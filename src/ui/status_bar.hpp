@@ -1,6 +1,6 @@
 #pragma once
 #include "../rendering/abstract_scene.hpp"
-#include "../primitives/ownership.hpp"
+#include "../util/ownership.hpp"
 
 
 class Screen;

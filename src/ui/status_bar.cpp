@@ -1,6 +1,5 @@
 #include "status_bar.hpp"
 #include "../rendering/screen.hpp"
-#include "../primitives/color_conversion.hpp"
 #include "../game_state.hpp"
 #include "../textures/status_bar_background.hpp"
 #include "../textures/dollars.hpp"

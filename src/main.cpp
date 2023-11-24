@@ -5,7 +5,7 @@
 #include <SDL/SDL.h>
 
 #include "game_manager.hpp"
-#include "primitives/util.hpp"
+#include "util/macros.hpp"
 
 int main() {
     srand(time(NULL));

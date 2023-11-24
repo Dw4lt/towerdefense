@@ -1,7 +1,7 @@
 #pragma once
 #include "../rendering/renderer_object.hpp"
-#include "../primitives/essentials.hpp"
-#include "../primitives/ownership.hpp"
+#include "../primitives/rect.hpp"
+#include "../util/ownership.hpp"
 #include "tile.hpp"
 #include <SDL/SDL_video.h>
 

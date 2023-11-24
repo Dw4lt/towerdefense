@@ -1,6 +1,5 @@
 #include "input.hpp"
 #include "SDL/SDL_timer.h"
-#include "essentials.hpp"
 
 namespace Input {
     int actionRepetitionOnLongPress(Uint32& previous_timestamp, int& previous_button_state, int current_button_state, Uint32 repetition_timer_ms) {

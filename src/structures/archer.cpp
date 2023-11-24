@@ -1,6 +1,7 @@
 #include "archer.hpp"
 #include "../rendering/composable_scene.hpp"
-#include "../primitives/color.hpp"
+#include "../util/constants.hpp"
+#include "../util/color.hpp"
 
 Archer::Archer(int cooldown, int tower_range, double damage, unsigned int index_x, unsigned int index_y)
     : Tower(cooldown, tower_range, damage, index_x, index_y)

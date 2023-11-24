@@ -2,7 +2,6 @@
 #include "enemy.hpp"
 #include "basic_baloon.hpp"
 #include "regrow_baloon.hpp"
-#include "../primitives/color_conversion.hpp"
 
 namespace EnemyFactory {
     // TODO: Better name

@@ -1,7 +1,5 @@
 #pragma once
 #include "../enemies/enemy.hpp"
-#include "../primitives/damage.hpp"
-#include "../primitives/ownership.hpp"
 #include "tower.hpp"
 
 class Archer : public Tower {

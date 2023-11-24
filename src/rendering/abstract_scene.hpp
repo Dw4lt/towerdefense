@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL/SDL_video.h>
-#include "../primitives/ownership.hpp"
+#include "../util/ownership.hpp"
 
 class Screen;
 

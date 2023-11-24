@@ -1,5 +1,5 @@
 #include "tile.hpp"
-#include "../primitives/color.hpp"
+#include "../util/color.hpp"
 #include "../rendering/composable_scene.hpp"
 #include <stdio.h>
 

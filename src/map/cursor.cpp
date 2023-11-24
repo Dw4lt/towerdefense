@@ -1,9 +1,8 @@
 #include "cursor.hpp"
 #include "../game_manager.hpp"
-#include "../primitives/color.hpp"
-#include "../primitives/input.hpp"
+#include "../util/color.hpp"
+#include "../input.hpp"
 #include "../primitives/rect.hpp"
-#include "../primitives/essentials.hpp"
 #include "../structures/tower.hpp"
 #include <SDL/SDL_timer.h>
 #include <os.h>

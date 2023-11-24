@@ -1,5 +1,5 @@
 #include "regrow_baloon.hpp"
-#include "../primitives/color.hpp"
+#include "../util/color.hpp"
 #include "../game_state.hpp"
 
 const unsigned int RegrowBaloon::DELAY_BETWEEN_HEALS{TICKS_PER_SECOND * 3};

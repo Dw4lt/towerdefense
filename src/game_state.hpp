@@ -6,9 +6,8 @@
 
 #include "enemies/enemy.hpp"
 #include "structures/structure.hpp"
-#include "primitives/essentials.hpp"
 #include "map/field.hpp"
-#include "primitives/ownership.hpp"
+#include "util/ownership.hpp"
 
 using EnemyReadList = std::vector<RReader<Enemy>>;
 using StructuresContainer = std::map<unsigned int, ROwner<Structure>>;

@@ -1,7 +1,6 @@
 #pragma once
-#include "../primitives/damage.hpp"
+#include "../util/constants.hpp"
 #include "../rendering/renderer_object.hpp"
-#include "../primitives/essentials.hpp"
 #include "../map/field.hpp"
 #include <SDL/SDL_video.h>
 

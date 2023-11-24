@@ -1,5 +1,5 @@
 #include "basic_baloon.hpp"
-#include "../primitives/color.hpp"
+#include "../util/color.hpp"
 #include "../game_state.hpp"
 
 BasicBaloon::BasicBaloon(Point pos, int width, int height, unsigned int target_tile_index, EnemyType color)

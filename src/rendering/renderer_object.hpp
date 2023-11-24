@@ -1,6 +1,7 @@
 #pragma once
-#include "../primitives/essentials.hpp"
-#include "../primitives/ownership.hpp"
+#include "../util/constants.hpp"
+#include "../primitives/rect.hpp"
+#include "../util/ownership.hpp"
 #include <SDL/SDL_video.h>
 #include <vector>
 #include <memory>
