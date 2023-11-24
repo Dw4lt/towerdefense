@@ -6,9 +6,7 @@ const unsigned int RegrowBaloon::DELAY_BETWEEN_HEALS{TICKS_PER_SECOND * 3};
 
 RegrowBaloon::RegrowBaloon(Point pos, int width, int height, unsigned int target_tile_index, EnemyType type)
     : Enemy(pos, width, height, target_tile_index, getHP(type), getSpeed(type), getColor(type))
-    , max_health {hp_}
-    , lowest_hp_so_far{hp_}
-    , next_heal_countdown{0}
+    , heal_component_(hp_, hp_, DELAY_BETWEEN_HEALS)
 {
 }
 
@@ -28,34 +26,23 @@ void RegrowBaloon::damage(int damage, DAMAGE_TYPE) {
     hp_ -= damage;
 
     // Give popping reward, without heal-farming exploit
-    auto layers_popped_first_time = lowest_hp_so_far - hp_;
-    lowest_hp_so_far = std::min(lowest_hp_so_far, hp_);
-    if (layers_popped_first_time > 0) GameState::getState()->addMoney(layers_popped_first_time);
+    int newly_popped_layers = heal_component_.on_damage(this);
+    GameState::getState()->addMoney(newly_popped_layers);
 
-    if (hp_ > 0) {
+    if (hp_ > 0) { // Update type based on HP
         auto type = static_cast<EnemyType>(hp_ + (int)EnemyType::REGROW_RED - 1);
         color_ = getColor(type);
         speed_ = getSpeed(type);
-        if (next_heal_countdown == 0) next_heal_countdown = DELAY_BETWEEN_HEALS;
     }
 }
 
-void RegrowBaloon::tick(const Field& field) { // TODO: Strategy pattern or similar. This behaviour will appear multiple times.
-    // Regen health if necessary
-    if (hp_ < max_health) {
-        if (next_heal_countdown > 0) {
-            next_heal_countdown--;
-        } else {
-            heal();
-            if (hp_ < max_health) next_heal_countdown = DELAY_BETWEEN_HEALS;
-        }
-    }
-
+void RegrowBaloon::tick(const Field& field) {
+    heal_component_.tick(this);
     pathfind(field);
 }
 
-void RegrowBaloon::heal() {
-    hp_ = std::min(hp_ + 1, max_health);
+void RegrowBaloon::heal(int heal) {
+    hp_ = hp_ + heal;
     auto type = static_cast<EnemyType>(hp_ + (int)EnemyType::REGROW_RED - 1);
     color_ = getColor(type);
     speed_ = getSpeed(type);

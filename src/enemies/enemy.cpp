@@ -26,6 +26,10 @@ int Enemy::getHP() const {
     return hp_;
 }
 
+void Enemy::heal(int) {
+    throw "Not implemented."; // Should not be called on types which do not override this anyway
+}
+
 Rect Enemy::boundingBox() const {
     return rect_;
 }

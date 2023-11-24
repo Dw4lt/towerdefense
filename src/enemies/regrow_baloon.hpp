@@ -1,5 +1,6 @@
 #pragma once
 #include "enemy.hpp"
+#include "components/heal.hpp"
 
 
 class RegrowBaloon : public Enemy {
@@ -12,7 +13,7 @@ public:
 
     virtual void tick(const Field& field) override;
 
-    virtual void heal();
+    virtual void heal(int heal) override;
 
     virtual void damage(int damage, DAMAGE_TYPE type) override;
 
@@ -24,14 +25,8 @@ protected:
 
     static int getHP(EnemyType type);
 
-    /// @brief Max hp the baloon can heal back to
-    const int max_health;
-
-    /// @brief Lowest hp the baloon was ever at.
-    /// @brief Needed to prevent handing out money when repeatedly popping the same layer.
-    int lowest_hp_so_far;
-
-    unsigned int next_heal_countdown;
+    /// @brief Component to handle regen effect
+    HealComponent heal_component_;
 
     static const unsigned int DELAY_BETWEEN_HEALS;
 };

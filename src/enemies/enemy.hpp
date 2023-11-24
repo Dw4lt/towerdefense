@@ -29,6 +29,8 @@ public:
     virtual bool isImmune(DAMAGE_TYPE type);
     virtual void damage(int damage, DAMAGE_TYPE type) = 0;
 
+    virtual void heal(int heal);
+
     virtual int getHP() const;
     virtual SCREEN_LAYER getDepth() const override { return SCREEN_LAYER::ENEMY; };
 
