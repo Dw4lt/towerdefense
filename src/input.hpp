@@ -14,6 +14,7 @@ namespace Input
         DOWN = 32,
         CONFIRM = 64,
         PAUSE = 128,
+        SHOP = 256,
     };
 
     /// @brief Get bitwise-OR-ed actions

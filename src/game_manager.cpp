@@ -23,6 +23,9 @@ GameManager::GameManager()
 
     // Status bar
     status_bar_scene_ = StatusBar::create(screen_.get(), SDL_Rect{x: 0, y: FIELD_HEIGHT, w: FIELD_WIDTH, h: SCREEN_HEIGHT - FIELD_HEIGHT}, true);
+
+    // Shop
+    shop_scene_ = Shop::create(screen_.get(), SDL_Rect{x: 0, y: 0, w: FIELD_WIDTH, h: FIELD_HEIGHT}, false);
 }
 
 void GameManager::spawnWave() {
@@ -99,6 +102,7 @@ void GameManager::gameLoop() {
     // Rendering
     if (field_scene_->visible_) field_scene_->render(screen_);
     if (status_bar_scene_->visible_) status_bar_scene_->render(screen_);
+    if (shop_scene_->visible_) shop_scene_->render(screen_); // TODO: shop and field are mutually exclusive.
 
     screen_->flip();
 }
@@ -137,6 +141,9 @@ void GameManager::processUserInput() {
         field_cursor_->applyUserActions(raw_actions); // TODO: Only if currently on field screen
     }
     if (single_trigger_actions != Input::NONE) {
+        if (single_trigger_actions & Input::SHOP) {
+            shop_scene_->visible_ = !shop_scene_->visible_; // TODO: wave pausing is getting complicated. Use proper state machine.
+        }
         if (wave_state == WaveState::BETWEEN_WAVES){
             if (single_trigger_actions & Input::SPAWN_NEXT_WAVE) {
                 spawnWave();

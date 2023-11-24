@@ -37,6 +37,7 @@ namespace Input {
             if (isKeyPressed(KEY_NSPIRE_DOWN) || isKeyPressed(KEY_NSPIRE_2)) button_state |= Actions::DOWN;
             if (isKeyPressed(KEY_NSPIRE_ENTER) || isKeyPressed(KEY_NSPIRE_SPACE) || isKeyPressed(KEY_NSPIRE_5)) button_state |= Actions::CONFIRM;
             if (isKeyPressed(KEY_NSPIRE_P)) button_state |= Actions::PAUSE;
+            if (isKeyPressed(KEY_NSPIRE_S)) button_state |= Actions::SHOP;
         }
         return button_state;
     }

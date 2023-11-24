@@ -4,6 +4,7 @@
 #include "rendering/composable_scene.hpp"
 #include "rendering/screen.hpp"
 #include "ui/status_bar.hpp"
+#include "ui/shop.hpp"
 #include <vector>
 #include "game_state.hpp"
 
@@ -36,4 +37,6 @@ private:
     RReader<ComposableScene> field_scene_;
 
     RReader<StatusBar> status_bar_scene_;
+
+    RReader<Shop> shop_scene_;
 };
