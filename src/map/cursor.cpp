@@ -36,23 +36,23 @@ void FieldCursor::applyUserActions(int unfiltered_actions) {
     // Filter long-press actions to repeat upon delay
     static Uint32 previous_timestamp{0};
     static int previous_button_state{0};
-    int actions = Input::actionRepetitionOnLongPress(previous_timestamp, previous_button_state, unfiltered_actions, 3 * STANDARD_TICK_DURATION);
+    int actions_with_repetition = Input::actionRepetitionOnLongPress(previous_timestamp, SDL_GetTicks(), previous_button_state, unfiltered_actions, 3 * STANDARD_TICK_DURATION);
 
-    if ((actions & Input::LEFT) && cursor_x_ > 0) {
+    if ((actions_with_repetition & Input::LEFT) && cursor_x_ > 0) {
         cursor_x_--;
         has_moved = true;
-    } else if ((actions & Input::RIGHT) && cursor_x_ < max_x_) {
+    } else if ((actions_with_repetition & Input::RIGHT) && cursor_x_ < max_x_) {
         cursor_x_++;
         has_moved = true;
     }
-    if ((actions & Input::UP) && cursor_y_ > 0) {
+    if ((actions_with_repetition & Input::UP) && cursor_y_ > 0) {
         cursor_y_--;
         has_moved = true;
-    } else if ((actions & Input::DOWN) && cursor_y_ < max_y_) {
+    } else if ((actions_with_repetition & Input::DOWN) && cursor_y_ < max_y_) {
         cursor_y_++;
         has_moved = true;
     }
-    if (actions & Input::CONFIRM) {
+    if (actions_with_repetition & Input::CONFIRM) {
         game_manager_->onMapCursorClickOn(cursor_x_, cursor_y_);
         updateAnimationState();
     }

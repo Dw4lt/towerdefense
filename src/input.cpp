@@ -1,12 +1,10 @@
 #include "input.hpp"
-#include "SDL/SDL_timer.h"
 
 namespace Input {
-    int actionRepetitionOnLongPress(Uint32& previous_timestamp, int& previous_button_state, int current_button_state, Uint32 repetition_timer_ms) {
+    int actionRepetitionOnLongPress(Uint32& previous_timestamp, Uint32 current_time_stamp, int& previous_button_state, int current_button_state, Uint32 repetition_timer_ms) {
         if (current_button_state != Actions::NONE) {
-            auto time = SDL_GetTicks();
-            if (time - previous_timestamp > repetition_timer_ms) { // Long press timer elapsed
-                previous_timestamp = time;
+            if (current_time_stamp - previous_timestamp > repetition_timer_ms) { // Long press timer elapsed
+                previous_timestamp = current_time_stamp;
                 previous_button_state = current_button_state; // Consume button press
             } else {
                 auto b = current_button_state;
@@ -15,7 +13,7 @@ namespace Input {
             }
         } else {
             previous_button_state = Actions::NONE;
-            previous_timestamp = SDL_GetTicks();
+            previous_timestamp = current_time_stamp;
         }
         return current_button_state;
     }
