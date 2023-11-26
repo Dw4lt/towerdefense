@@ -52,6 +52,10 @@ public:
         return (bool) resource;
     }
 
+    bool operator==(const ROwner& other) const noexcept {
+        return resource.get() == other.resource.get();
+    }
+
     /// @brief Create a reader instance from this owner. Reader can alter but not delete the resource.
     RReader<T> makeReader() const {
         if (!isValid()) {
@@ -100,16 +104,36 @@ public:
 
     RReader() : resource(std::weak_ptr<T>()) {}
 
+    // From owner
     RReader(const ROwner<T>& owner) : resource(std::weak_ptr(owner.resource)) {}
 
-    // Moving allowed
-    explicit RReader(RReader&& other) noexcept = default;
-    RReader& operator=(RReader&& other) noexcept = default;
-
-    // Down-casting based on stored type allowed
+    // Implicit static casting to base
     template<typename U,
-        typename = std::enable_if_t<std::is_base_of<T, U>::value>>
-    RReader<T>(const RReader<U>& other) : resource(other.resource){}
+        typename = std::enable_if_t<
+            std::conjunction_v<
+                std::is_base_of<T, U>,
+                std::negation<std::is_same<U, T>>
+            >
+        >,
+        char = 0
+    >
+    RReader(const RReader<U>& other) : resource(std::static_pointer_cast<T>(other.resource.lock())) {};
+
+    // Explicit dynamic casting to derived
+    template<typename U,
+        typename = std::enable_if_t<
+            std::conjunction_v<
+                std::is_base_of<U, T>,
+                std::negation<std::is_same<U, T>>
+            >
+        >,
+        int = 0
+    >
+    explicit RReader(const RReader<U>& other) : resource(std::dynamic_pointer_cast<T>(other.resource.lock())) {};
+
+    // Moving allowed
+    explicit RReader(RReader&&) noexcept = default;
+    RReader& operator=(RReader&& other) noexcept = default;
 
     // Copy Constructor and Assignment Operator are default
     RReader(const RReader&) = default;
