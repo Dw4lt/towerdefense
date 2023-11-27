@@ -24,7 +24,7 @@ public:
 
     // Moving required in lieu of copying
     template <typename U>
-    explicit ROwner(ROwner<U>&& other) noexcept {
+    ROwner(ROwner<U>&& other) noexcept {
         static_assert(std::is_base_of_v<T, U> || std::is_convertible_v<U*, T*>,
                     "Cannot convert ROwner<U> to ROwner<T>");
         resource = std::static_pointer_cast<T>(other.resource);
