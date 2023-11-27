@@ -12,12 +12,6 @@
 using EnemyReadList = std::vector<RReader<Enemy>>;
 using StructuresContainer = std::map<unsigned int, ROwner<Structure>>;
 
-enum class WaveState {
-    BETWEEN_WAVES,
-    ACTIVE_WAVE,
-    ACTIVE_WAVE_PAUSED,
-};
-
 
 /// @brief Shared game state singleton class
 class GameState {
@@ -91,9 +85,6 @@ public:
     /// @brief Get Nr. of currently active wave or recently completed wave
     unsigned int getWave() { return wave_count_; };
 
-    /// @brief Get the current state of the wave
-    WaveState getWaveState();
-
     /// @brief Increment Nr. of wave, declare wave as started
     /// @return Nr. of new wave
     unsigned int startNextWave();
@@ -155,6 +146,4 @@ private:
     int money_;
 
     static ROwner<GameState> singleton_;
-
-    WaveState wave_state_;
 };

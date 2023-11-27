@@ -14,7 +14,6 @@ GameState::GameState()
     , wave_count_{0}
     , lives_{100}
     , money_{650}
-    , wave_state_{WaveState::BETWEEN_WAVES}
 {}
 
 auto GameState::getField() -> Field& {
@@ -52,17 +51,11 @@ auto GameState::addEnemy(std::shared_ptr<Enemy> enemy) -> RReader<Enemy> {
     return enemy_list_.back().makeReader();
 }
 
-auto GameState::getWaveState() -> WaveState {
-    return wave_state_;
-}
-
 auto GameState::startNextWave() -> unsigned int {
-    wave_state_ = WaveState::ACTIVE_WAVE;
     return ++wave_count_;
 }
 
 void GameState::endWave() {
-    wave_state_ = WaveState::BETWEEN_WAVES;
     money_ += 99 + wave_count_;
 }
 
@@ -71,14 +64,6 @@ auto GameState::tryTakeMoney(int amount) -> bool {
     if (enough_money) money_ -= amount;
     return enough_money;
 }
-
-void GameState::togglePause() {
-    if (WaveState::ACTIVE_WAVE == wave_state_) {
-        wave_state_ = WaveState::ACTIVE_WAVE_PAUSED;
-    } else if (WaveState::ACTIVE_WAVE_PAUSED == wave_state_) {
-        wave_state_ = WaveState::ACTIVE_WAVE;
-    }
-};
 
 void GameState::purgeEnemies(std::function<bool(Enemy&)> func) {
     for(auto e = enemy_list_.begin(); e != enemy_list_.end(); ) {
