@@ -3,6 +3,10 @@
     "clang-tidy.fixOnSave": true,
     "clang-tidy.lintOnSave": true,
     "cmake.configureOnOpen": false,
+    "plantuml.diagramsRoot": "doc/diagrams",
+    "plantuml.exportOutDir": "doc/diagrams",
+    "plantuml.exportIncludeFolderHeirarchy": false,
+    "plantuml.exportSubFolder": false,
     "files.exclude": {
         "**/*.o": true
     }
