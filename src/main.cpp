@@ -6,6 +6,7 @@
 
 #include "game_manager.hpp"
 #include "util/macros.hpp"
+#include "state_machines/main_sm.hpp"
 
 int main() {
     srand(time(NULL));
@@ -13,8 +14,15 @@ int main() {
     SDL_Init( SDL_INIT_VIDEO );
 
     try {
-        GameManager manager;
-        manager.start();
+        auto manager = ROwner<GameManager>(new GameManager());
+
+        auto main_sm = MainSM(manager.makeReader());
+
+        main_sm.start();
+        while (!main_sm.stopped()){
+            main_sm.tick();
+        }
+
     } catch (std::exception& e) {
         LOG("%s\n", e.what());
     } catch (char const* e) {

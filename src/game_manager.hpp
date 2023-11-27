@@ -5,26 +5,33 @@
 #include "rendering/screen.hpp"
 #include "ui/status_bar.hpp"
 #include "ui/shop.hpp"
+#include "util/event.hpp"
 #include <vector>
-#include "game_state.hpp"
 
+class UserInputEvent;
 
 class GameManager {
 public:
     GameManager();
     ~GameManager() = default;
-    void start();
+
     void onMapCursorClickOn(int x, int y);
 
     void spawnWave();
+    void endWave();
+
+    void mainGameLoop();
+    void mainRenderLoop();
+
+    void shopRenderLoop();
+
+    void setShopVisibility(bool visible) { shop_scene_->visible_ = visible; };
+    void setFieldVisibility(bool visible) { field_scene_->visible_ = visible; };
+
+    /// @brief Wrapper to pass on input to internal field cursor
+    void applyUserInputToFieldCursor(UserInputEvent& event);
 
 private:
-    void gameLoop();
-    void shopLoop();
-
-    /// @brief Poll and process user's button presses
-    void processUserInput();
-
     void removeDeadEnemies();
 
     /// @brief Kill enemies that reach the end of the path. Subtract the remaining HP from the lives.
