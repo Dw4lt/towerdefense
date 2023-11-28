@@ -43,8 +43,8 @@ void GameManager::spawnWave() {
     // Get start coordinate from field, since it has all the knowledge necessary to yield a coordinate.
     // Simply subtract the width of a tile. (not very clean as it requires a left-hand start of the path)
 
-    if (wave < EnemyFactory::waves.size()) {
-        auto& w = EnemyFactory::waves.at(wave);
+    if (wave - 1 < EnemyFactory::waves.size()) {
+        auto& w = EnemyFactory::waves.at(wave - 1); // Wave 1, as displayed, is entry 0
         for (auto& count : w) {
             for (unsigned int i = 0; i < count.count; i++) {
                 auto enemy = game_state->addEnemy(EnemyFactory::makeEnemy(count.type, pos, 0));
