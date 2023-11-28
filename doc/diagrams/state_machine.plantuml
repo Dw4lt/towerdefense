@@ -43,18 +43,23 @@ state main_sm ispartiallydone {
             ongoing_wave_paused: - Field cursor enabled
             ongoing_wave_paused: - Game logic paused
         }
-        state lost {
+        state lost ispartiallydone {
             lost: - Field cursor disabled
             lost: - Game logic paused
+            lost: - "Game lost" menu?
         }
 
         [*] -[isdone]-> between_waves
         between_waves -[isdone]-> ongoing_wave: "N"
-        ongoing_wave --> between_waves: Wave survived
-        ongoing_wave --> lost: 0 lives remaining
-        lost --> between_waves: start over
+        ongoing_wave -[isdone]-> between_waves: Wave survived
+        ongoing_wave -[isdone]-> lost: 0 lives remaining
+        lost -[isdone]-> between_waves: start over
         ongoing_wave_paused -[isdone]-> ongoing_wave: "P"
         ongoing_wave -[isdone]-> ongoing_wave_paused: "P"
+    }
+
+    state in_game_menu {
+
     }
 
 
@@ -62,12 +67,19 @@ state main_sm ispartiallydone {
     [*] --> main_menu
 
     ' Cross-state machine transitions
-    store_sm -[isdone]> wave_sm: "S"
+    store_sm -[isdone]> wave_sm: "S|Esc"
     wave_sm -[isdone]> store_sm: "S"
-    wave_sm -> main_menu
-    main_menu -> wave_sm
+    wave_sm -> in_game_menu: "Esc"
+    in_game_menu -> wave_sm: "Esc"
+    in_game_menu -> main_menu : Exit to\n main menu
+    main_menu -> wave_sm : Start game
 
+
+    wave_sm -[istemporary]-> [*]: "Esc"
+    in_game_menu --> [*] : Exit Game
+    main_menu --> [*] : Exit Game
 }
+
 
 legend bottom right
     |Color| Meaning |
