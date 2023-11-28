@@ -1,0 +1,92 @@
+@startuml
+!define isdone #55AA55
+!define ispartiallydone #ff8c00
+!define isplanned #CC3333
+!define istemporary #cc00ff
+
+skinparam StateEndColor isplanned
+skinparam StateStartColor isplanned
+skinparam StateBackgroundColor isplanned
+skinparam ArrowColor isplanned
+
+state main_sm ispartiallydone {
+    state main_menu {
+        state home
+
+        state new_game
+
+        state load_game
+
+        [*] --> home
+        home --> new_game
+        home --> load_game
+    }
+
+    state store_sm ispartiallydone {
+        state tower_selection ispartiallydone {
+            tower_selection: - Shop cursor enabled
+        }
+
+        [*] -[isdone]-> tower_selection
+    }
+
+    state wave_sm ispartiallydone {
+        state between_waves isdone {
+            between_waves: - Field cursor enabled
+            between_waves: - Game logic paused
+        }
+        state ongoing_wave isdone {
+            ongoing_wave: - Field cursor enabled
+            ongoing_wave: - Game logic running
+        }
+        state ongoing_wave_paused isdone {
+            ongoing_wave_paused: - Field cursor enabled
+            ongoing_wave_paused: - Game logic paused
+        }
+        state lost ispartiallydone {
+            lost: - Field cursor disabled
+            lost: - Game logic paused
+            lost: - "Game lost" menu?
+        }
+
+        [*] -[isdone]-> between_waves
+        between_waves -[isdone]-> ongoing_wave: "N"
+        ongoing_wave -[isdone]-> between_waves: Wave survived
+        ongoing_wave -[isdone]-> lost: 0 lives remaining
+        lost -[isdone]-> between_waves: start over
+        ongoing_wave_paused -[isdone]-> ongoing_wave: "P"
+        ongoing_wave -[isdone]-> ongoing_wave_paused: "P"
+    }
+
+    state in_game_menu {
+
+    }
+
+
+    [*] -[istemporary]-> wave_sm
+    [*] --> main_menu
+
+    ' Cross-state machine transitions
+    store_sm -[isdone]> wave_sm: "S|Esc"
+    wave_sm -[isdone]> store_sm: "S"
+    wave_sm -> in_game_menu: "Esc"
+    in_game_menu -> wave_sm: "Esc"
+    in_game_menu -> main_menu : Exit to\n main menu
+    main_menu -> wave_sm : Start game
+
+
+    wave_sm -[istemporary]-> [*]: "Esc"
+    in_game_menu --> [*] : Exit Game
+    main_menu --> [*] : Exit Game
+}
+
+
+legend bottom right
+    |Color| Meaning |
+    |<isplanned>| Planned |
+    |<ispartiallydone>| Partially done |
+    |<istemporary>| Current stop-gap |
+    |<isdone>| Implemented |
+endlegend
+
+@enduml

@@ -21,6 +21,7 @@ enum Colors {
     BALOON_PINK = RGB_888_TO_565(0xFF'14'93),
 
     // Primitive colors
+    WHITE_ = RGB_888_TO_565(0xE0E0E0), // TODO: Issue - libndls includes a macro named "WHITE" :(
     RED = RGB_888_TO_565(0xFF0000),
     BROWN = RGB_888_TO_565(0x8B4513),
     DARK_ORANGE = RGB_888_TO_565(0xff5900),
@@ -38,4 +39,5 @@ enum Colors {
     UNKNOWN = INTENSE_ORANGE,
     ARCHER_IDLE = LIGHT_BLUE,
     ARCHER_FIRING = LIGHTER_BLUE,
+    SHOP_BACKGROUND = WHITE_,
 };

@@ -1,11 +1,10 @@
 #include "wood.hpp"
-#include <assert.h>
 
 bool Wood::initialized_{false};
 Wood Wood::instance_{};
 
 Wood& Wood::instance() {
-    assert("Instance must be initualized before use!" && initialized_);
+    if (!initialized_) throw "Instance must be initualized before use!";
     return Wood::instance_;
 }
 

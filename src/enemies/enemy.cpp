@@ -1,8 +1,6 @@
 #include "enemy.hpp"
 #include "../rendering/composable_scene.hpp"
 #include "../util/macros.hpp"
-#include <assert.h>
-#include <stdio.h>
 
 Enemy::Enemy(Point pos, int width, int height, unsigned int target_tile_index, long int hp, double speed, Uint16 color)
     : RendererObject(Rect::centeredOn(pos, width, height), SCREEN_LAYER::ENEMY)

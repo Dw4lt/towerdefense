@@ -19,3 +19,6 @@ Most of the time since it has either spent on the backburner or being rewritten 
 
 ## Concept
 Think a simplified Bloons Tower Defense 5, but with more resource management (wood, stone, etc.). And it runs on a calculator.
+
+## Internal state machine
+<img src="doc/diagrams/state_machine.png" width="70%"/>

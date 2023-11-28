@@ -1,6 +1,5 @@
 #pragma once
 #include <memory>
-#include <stdexcept>
 #include <vector>
 #include <map>
 #include <functional>
@@ -24,7 +23,7 @@ public:
 
     // Moving required in lieu of copying
     template <typename U>
-    explicit ROwner(ROwner<U>&& other) noexcept {
+    ROwner(ROwner<U>&& other) noexcept {
         static_assert(std::is_base_of_v<T, U> || std::is_convertible_v<U*, T*>,
                     "Cannot convert ROwner<U> to ROwner<T>");
         resource = std::static_pointer_cast<T>(other.resource);
@@ -52,10 +51,14 @@ public:
         return (bool) resource;
     }
 
+    bool operator==(const ROwner& other) const noexcept {
+        return resource.get() == other.resource.get();
+    }
+
     /// @brief Create a reader instance from this owner. Reader can alter but not delete the resource.
     RReader<T> makeReader() const {
         if (!isValid()) {
-            throw std::runtime_error("Cannot Create a reader of an invalid owner.");
+            throw "Cannot Create a reader of an invalid owner.";
         }
         return RReader<T>(*this);
     }
@@ -100,16 +103,36 @@ public:
 
     RReader() : resource(std::weak_ptr<T>()) {}
 
+    // From owner
     RReader(const ROwner<T>& owner) : resource(std::weak_ptr(owner.resource)) {}
 
-    // Moving allowed
-    explicit RReader(RReader&& other) noexcept = default;
-    RReader& operator=(RReader&& other) noexcept = default;
-
-    // Down-casting based on stored type allowed
+    // Implicit static casting to base
     template<typename U,
-        typename = std::enable_if_t<std::is_base_of<T, U>::value>>
-    RReader<T>(const RReader<U>& other) : resource(other.resource){}
+        typename = std::enable_if_t<
+            std::conjunction_v<
+                std::is_base_of<T, U>,
+                std::negation<std::is_same<U, T>>
+            >
+        >,
+        char = 0
+    >
+    RReader(const RReader<U>& other) : resource(std::static_pointer_cast<T>(other.resource.lock())) {};
+
+    // Explicit dynamic casting to derived
+    template<typename U,
+        typename = std::enable_if_t<
+            std::conjunction_v<
+                std::is_base_of<U, T>,
+                std::negation<std::is_same<U, T>>
+            >
+        >,
+        int = 0
+    >
+    explicit RReader(const RReader<U>& other) : resource(std::dynamic_pointer_cast<T>(other.resource.lock())) {};
+
+    // Moving allowed
+    explicit RReader(RReader&&) noexcept = default;
+    RReader& operator=(RReader&& other) noexcept = default;
 
     // Copy Constructor and Assignment Operator are default
     RReader(const RReader&) = default;
@@ -131,7 +154,7 @@ public:
     T& operator*() const {
         auto shared_resource = resource.lock().get();
         if (!shared_resource) {
-            throw std::runtime_error("Attempted to access an invalid resource.");
+            throw "Attempted to access an invalid resource.";
         }
         return *shared_resource;
     }
@@ -147,7 +170,7 @@ public:
     T* operator->() const {
         auto ret = resource.lock().get();
         if (ret == nullptr) {
-            throw std::runtime_error("Attempted to dereference an invalid resource.");
+            throw "Attempted to dereference an invalid resource.";
         }
         return ret;
     }
@@ -220,14 +243,9 @@ public:
     using value_type = typename std::invoke_result_t<Callable, input_type>;
     using returned_iterator = IIterator<value_type>;
     using iterator_category = typename std::iterator_traits<ContainerIterator>::iterator_category;
-    //using value_type = typename std::invoke_result_t<Callable, decltype(*std::declval<BaseIterator>())>;
 
-    //using Callable = std::function<value_type(typename ContainerIterator::value_type)>;
-
-    // using difference_type = typename std::iterator_traits<ContainerIterator>::difference_type;
     using reference = value_type&;
     using pointer = value_type*;
-
 
     explicit MethodApplyingIterator(ContainerIterator it, Callable callable)
         : it_(std::move(it)), callable_(std::move(callable)) {}

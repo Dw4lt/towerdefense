@@ -1,17 +1,19 @@
 #include "game_manager.hpp"
-#include "input.hpp"
+#include "game_state.hpp"
+#include "util/event.hpp"
 #include "structures/archer.hpp"
 #include "enemies/enemy_factory.hpp"
 #include <SDL/SDL_video.h>
 #include <SDL/SDL_timer.h>
-// #include <ctime>
-#include <os.h>
-#include <stdio.h>
-#include <string>
+
 
 GameManager::GameManager()
     : screen_(new Screen(320, 240))
 {
+    init();
+}
+
+void GameManager::init() {
     auto game_state = GameState::getState();
 
     field_cursor_ = ROwner(new FieldCursor(this));
@@ -23,11 +25,14 @@ GameManager::GameManager()
 
     // Status bar
     status_bar_scene_ = StatusBar::create(screen_.get(), SDL_Rect{x: 0, y: FIELD_HEIGHT, w: FIELD_WIDTH, h: SCREEN_HEIGHT - FIELD_HEIGHT}, true);
+
+    // Shop
+    shop_scene_ = Shop::create(screen_.get(), SDL_Rect{x: 0, y: 0, w: FIELD_WIDTH, h: FIELD_HEIGHT}, false);
 }
 
 void GameManager::spawnWave() {
     auto game_state = GameState::getState();
-    unsigned int wave = game_state->getWave();
+    unsigned int wave = game_state->startNextWave();
     auto& field = game_state->getField();
     auto& starting_point = field.getStart();
     auto pos = field.getTile(starting_point).center();
@@ -35,8 +40,8 @@ void GameManager::spawnWave() {
     // Get start coordinate from field, since it has all the knowledge necessary to yield a coordinate.
     // Simply subtract the width of a tile. (not very clean as it requires a left-hand start of the path)
 
-    if (wave < EnemyFactory::waves.size()) {
-        auto& w = EnemyFactory::waves.at(wave);
+    if (wave - 1 < EnemyFactory::waves.size()) {
+        auto& w = EnemyFactory::waves.at(wave - 1); // Wave 1, as displayed, is entry 0
         for (auto& count : w) {
             for (unsigned int i = 0; i < count.count; i++) {
                 auto enemy = game_state->addEnemy(EnemyFactory::makeEnemy(count.type, pos, 0));
@@ -47,60 +52,64 @@ void GameManager::spawnWave() {
     }
 }
 
-void GameManager::start() {
-    while (!isKeyPressed(KEY_NSPIRE_ESC)) {
-        Uint32 start = SDL_GetTicks();
-
-        gameLoop();
-
-        if (isKeyPressed(KEY_NSPIRE_F)) { // TODO: Not the right place
-            gameLoop();
-            gameLoop();
-            gameLoop();
-        }
-
-        Uint32 stop = SDL_GetTicks();
-        Uint32 frame_time = stop - start;
-        if (frame_time < STANDARD_TICK_DURATION) {
-            SDL_Delay(STANDARD_TICK_DURATION - frame_time);
-        }
-    }
-}
-
-void GameManager::gameLoop() {
-    // User input
-    processUserInput();
+void GameManager::mainGameLoop() {
     auto game_state = GameState::getState();
 
-    // Active wave game loop
-    if (game_state->getWaveState() ==  WaveState::ACTIVE_WAVE) {
-        IIterable<RReader<Enemy>> enemies = game_state->getEnemies();
-        Field& field = game_state->getField();
-        for (auto& enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
-            int path_index = enemy->getCurrentPathTileIndex();
-            enemy->tick(field);
-            int new_path_index = enemy->getCurrentPathTileIndex();
-            if (path_index != new_path_index) {
-                game_state->updateEnemyTile(*enemy, path_index, new_path_index);
-            }
+    // Update enemies
+    IIterable<RReader<Enemy>> enemies = game_state->getEnemies();
+    Field& field = game_state->getField();
+    for (auto& enemy = enemies.begin(); enemy != enemies.end(); ++enemy) {
+        int path_index = enemy->getCurrentPathTileIndex();
+        enemy->tick(field);
+        int new_path_index = enemy->getCurrentPathTileIndex();
+        if (path_index != new_path_index) {
+            game_state->updateEnemyTile(*enemy, path_index, new_path_index);
         }
-
-        IIterable<RReader<Structure>> structures = game_state->getStructures();
-        for (auto& structure = structures.begin(); structure != structures.end(); ++structure) {
-            structure->tick();
-        }
-
-        handleEnemiesReachingTarget();
-        removeDeadEnemies();
-
-        if (!game_state->anyEnemiesPresent()) game_state->endWave();
     }
 
-    // Rendering
-    if (field_scene_->visible_) field_scene_->render(screen_);
-    if (status_bar_scene_->visible_) status_bar_scene_->render(screen_);
+    // Tick towers
+    IIterable<RReader<Structure>> structures = game_state->getStructures();
+    for (auto& structure = structures.begin(); structure != structures.end(); ++structure) {
+        structure->tick();
+    }
 
+    // Purge enemies
+    handleEnemiesReachingTarget();
+    removeDeadEnemies();
+}
+
+void GameManager::endWave() {
+    GameState::getState()->endWave();
+}
+
+void GameManager::mainRenderLoop() {
+    field_scene_->render(screen_);
+    status_bar_scene_->render(screen_);
     screen_->flip();
+}
+
+
+void GameManager::lostGameLoop() {
+    // TODO: "Lost" menu screen here.
+}
+
+void GameManager::lostRenderLoop() {
+    field_scene_->render(screen_);
+    status_bar_scene_->render(screen_);
+    // TODO: render "you lost" screen
+    screen_->flip();
+}
+
+
+void GameManager::shopRenderLoop() {
+    shop_scene_->render(screen_);
+    status_bar_scene_->render(screen_);
+    screen_->flip();
+}
+
+void GameManager::reset() {
+    GameState::resetState();
+    init();
 }
 
 void GameManager::handleEnemiesReachingTarget() {
@@ -123,29 +132,8 @@ void GameManager::removeDeadEnemies() {
     );
 }
 
-void GameManager::shopLoop() {
-}
-
-void GameManager::processUserInput() {
-    auto game_sate = GameState::getState();
-    int raw_actions = Input::getActions();
-    WaveState wave_state = game_sate->getWaveState();
-
-    static int previous_state{0};
-    int single_trigger_actions = Input::singleTriggerActions(previous_state, raw_actions);
-    if (raw_actions != Input::NONE) {
-        field_cursor_->applyUserActions(raw_actions); // TODO: Only if currently on field screen
-    }
-    if (single_trigger_actions != Input::NONE) {
-        if (wave_state == WaveState::BETWEEN_WAVES){
-            if (single_trigger_actions & Input::SPAWN_NEXT_WAVE) {
-                spawnWave();
-                game_sate->startNextWave();
-            }
-        } else {
-            if (single_trigger_actions & Input::PAUSE) game_sate->togglePause();
-        }
-    }
+void GameManager::applyUserInputToFieldCursor(UserInputEvent& event) {
+    field_cursor_->applyUserActions(event.getAutorepeat());
 }
 
 void GameManager::onMapCursorClickOn(int x, int y) {

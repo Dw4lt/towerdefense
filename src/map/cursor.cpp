@@ -4,8 +4,6 @@
 #include "../input.hpp"
 #include "../primitives/rect.hpp"
 #include "../structures/tower.hpp"
-#include <SDL/SDL_timer.h>
-#include <os.h>
 
 FieldCursor::FieldCursor(GameManager* manager)
     : RendererObject(SCREEN_LAYER::CURSOR)
@@ -30,33 +28,28 @@ FieldCursor::FieldCursor(GameManager* manager)
 FieldCursor::~FieldCursor() {
 }
 
-void FieldCursor::applyUserActions(int unfiltered_actions) {
+void FieldCursor::applyUserActions(int input) {
     bool has_moved = false;
 
-    // Filter long-press actions to repeat upon delay
-    static Uint32 previous_timestamp{0};
-    static int previous_button_state{0};
-    int actions = Input::actionRepetitionOnLongPress(previous_timestamp, previous_button_state, unfiltered_actions, 3 * STANDARD_TICK_DURATION);
-
-    if ((actions & Input::LEFT) && cursor_x_ > 0) {
-        cursor_x_--;
-        has_moved = true;
-    } else if ((actions & Input::RIGHT) && cursor_x_ < max_x_) {
-        cursor_x_++;
-        has_moved = true;
-    }
-    if ((actions & Input::UP) && cursor_y_ > 0) {
-        cursor_y_--;
-        has_moved = true;
-    } else if ((actions & Input::DOWN) && cursor_y_ < max_y_) {
-        cursor_y_++;
-        has_moved = true;
-    }
-    if (actions & Input::CONFIRM) {
+    if (input & Input::CONFIRM) {
         game_manager_->onMapCursorClickOn(cursor_x_, cursor_y_);
         updateAnimationState();
     }
 
+    if ((input & Input::LEFT) && cursor_x_ > 0) {
+        cursor_x_--;
+        has_moved = true;
+    } else if ((input & Input::RIGHT) && cursor_x_ < max_x_) {
+        cursor_x_++;
+        has_moved = true;
+    }
+    if ((input & Input::UP) && cursor_y_ > 0) {
+        cursor_y_--;
+        has_moved = true;
+    } else if ((input & Input::DOWN) && cursor_y_ < max_y_) {
+        cursor_y_++;
+        has_moved = true;
+    }
     if (has_moved) {
         updatePosition();
         updateAnimationState();
