@@ -9,8 +9,6 @@ class ShopSM;
 struct MainSM : public StateMachine {
     MainSM(RReader<GameManager> manager);
 
-    virtual const Transition* parseEvent(Event& event) override;
-
     void tick();
 
     virtual void start() override;

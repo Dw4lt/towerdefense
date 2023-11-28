@@ -7,7 +7,7 @@ Event::Event(Type type)
 
 }
 
-Event::Type Event::getType() {
+Event::Type Event::getType() const noexcept {
     return type_;
 }
 

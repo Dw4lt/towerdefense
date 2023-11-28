@@ -6,26 +6,23 @@
 #include "../game_manager.hpp"
 #include "../util/macros.hpp"
 
-bool on_shop_input(Event& e){
-    if (e.getType() == Event::USER_INPUT) {
-        auto& uie = static_cast<UserInputEvent&>(e);
-        bool ret = (bool)(uie.getPositiveEdge(Input::Actions::SHOP));
-        if (ret) uie.accept();
-        return ret;
-    }
-    return false;
-};
 
 MainSM::MainSM(RReader<GameManager> manager)
     : StateMachine{}
     , manager_{manager}
     , input_handler_{3 * STANDARD_TICK_DURATION}
  {
-    wave_sm_ = static_cast<RReader<WaveSM>>(addState(ROwner<State>(new WaveSM(manager))));
-    shop_sm_ = static_cast<RReader<ShopSM>>(addState(ROwner<State>(new ShopSM(manager))));
+    wave_sm_ = addState<WaveSM>(manager);
+    shop_sm_ = addState<ShopSM>(manager);
 
-    addTransition(shop_sm_, wave_sm_, on_shop_input);
-    addTransition(wave_sm_, shop_sm_, on_shop_input);
+    auto onExitGame = makeOnSingleFireActionCondition(Input::ESC);
+    auto onShopEnter = makeOnSingleFireActionCondition(Input::SHOP);
+    auto onShopExit = makeOnSingleFireActionCondition(Input::SHOP | Input::ESC); // TODO: a menu would be nice.
+
+    addTransition(wave_sm_, shop_sm_, onShopEnter);
+    addTransition(shop_sm_, wave_sm_, onShopExit);
+
+    addTransition(wave_sm_, addState<EndState>(), onExitGame);
 
     setInitialState(wave_sm_);
 }
@@ -36,28 +33,12 @@ void MainSM::start() {
     shop_sm_->start();
 }
 
-
-const Transition* MainSM::parseEvent(Event& event) {
-    LOG("Parsing\n");
-    if (event.getType() == Event::Type::USER_INPUT) {
-        auto& uie = static_cast<UserInputEvent&>(event);
-        if (uie.getRaw(Input::Actions::ESC)) {
-            event.accept();
-            stop();
-            return nullptr;
-        }
-    }
-
-    return StateMachine::parseEvent(event);
-}
-
-
 void MainSM::tick() {
     Uint32 start = SDL_GetTicks();
     input_handler_.tick();
     if (input_handler_.hasEvent()) {
         auto event = input_handler_.getEvent();
-        parseEvent(event);
+        processEvent(event);
     }
     current_state_->tick();
 

@@ -18,7 +18,7 @@ ShopSM::ShopSM(RReader<GameManager> manager)
     : StateMachine{}
     , manager_{manager}
 {
-    auto tower_selection_state = addState(ROwner<State>(new TowerSelectionShopS(manager)));
+    auto tower_selection_state = addState<TowerSelectionShopS>(manager);
     setInitialState(tower_selection_state);
 }
 

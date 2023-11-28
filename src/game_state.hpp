@@ -116,6 +116,9 @@ public:
     /// @brief Toggle pause state on active wave
     void togglePause();
 
+    /// @brief Reset game state singleton
+    static void resetState();
+
 private:
 
     /// @brief Singleton constructor

@@ -3,15 +3,16 @@
 struct Event {
 
     enum Type {
-        USER_INPUT,
         NONE,
+        USER_INPUT,
+        GAME_UPDATE,
     };
 
     Event(Type type = NONE);
 
     virtual ~Event() = default;
 
-    Type getType();
+    Type getType() const noexcept;
 
     /// @brief Accept event, marking it as handled.
     void accept() { is_accepted_ = true; };
@@ -56,4 +57,17 @@ protected:
     int input_;
     int autorepeat_inputs_;
     int positive_edge_inputs_;
+};
+
+struct GameUpdateEvent : public Event {
+    enum class UpdateType {
+        WAVE_ENDED,
+        GAME_LOST,
+    };
+    GameUpdateEvent(UpdateType type) : Event{Event::Type::GAME_UPDATE}, update_type_{type} {};
+
+    UpdateType getUpdateType() { return update_type_; };
+
+private:
+    UpdateType update_type_;
 };

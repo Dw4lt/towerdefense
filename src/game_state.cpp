@@ -16,6 +16,11 @@ GameState::GameState()
     , money_{650}
 {}
 
+void GameState::resetState() {
+    ROwner<GameState>temp(new GameState());
+    std::swap(singleton_, temp);
+}
+
 auto GameState::getField() -> Field& {
     return *field_ptr_;
 }

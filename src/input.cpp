@@ -68,6 +68,7 @@ int Input::getActions() {
         if (isKeyPressed(KEY_NSPIRE_ENTER) || isKeyPressed(KEY_NSPIRE_SPACE) || isKeyPressed(KEY_NSPIRE_5)) button_state |= Actions::CONFIRM;
         if (isKeyPressed(KEY_NSPIRE_P)) button_state |= Actions::PAUSE;
         if (isKeyPressed(KEY_NSPIRE_S)) button_state |= Actions::SHOP;
+        if (isKeyPressed(KEY_NSPIRE_R)) button_state |= Actions::RESTART;
     }
     return button_state;
 }

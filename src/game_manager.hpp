@@ -23,6 +23,12 @@ public:
     void mainGameLoop();
     void mainRenderLoop();
 
+    void lostGameLoop();
+    void lostRenderLoop();
+
+    /// @brief Reset/Restart game
+    void reset();
+
     void shopRenderLoop();
 
     void setShopVisibility(bool visible) { shop_scene_->visible_ = visible; };
@@ -36,6 +42,9 @@ private:
 
     /// @brief Kill enemies that reach the end of the path. Subtract the remaining HP from the lives.
     void handleEnemiesReachingTarget();
+
+    /// @brief Initialize internal. Running it again safely overwrites internals to default.
+    void init();
 
     ROwner<Screen> screen_;
 

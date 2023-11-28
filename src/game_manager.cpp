@@ -13,6 +13,10 @@
 GameManager::GameManager()
     : screen_(new Screen(320, 240))
 {
+    init();
+}
+
+void GameManager::init() {
     auto game_state = GameState::getState();
 
     field_cursor_ = ROwner(new FieldCursor(this));
@@ -31,7 +35,7 @@ GameManager::GameManager()
 
 void GameManager::spawnWave() {
     auto game_state = GameState::getState();
-    unsigned int wave = game_state->getWave();
+    unsigned int wave = game_state->startNextWave();
     auto& field = game_state->getField();
     auto& starting_point = field.getStart();
     auto pos = field.getTile(starting_point).center();
@@ -91,10 +95,28 @@ void GameManager::mainRenderLoop() {
     screen_->flip();
 }
 
+
+void GameManager::lostGameLoop() {
+    // TODO: "Lost" menu screen here.
+}
+
+void GameManager::lostRenderLoop() {
+    field_scene_->render(screen_);
+    status_bar_scene_->render(screen_);
+    // TODO: render "you lost" screen
+    screen_->flip();
+}
+
+
 void GameManager::shopRenderLoop() {
     shop_scene_->render(screen_);
     status_bar_scene_->render(screen_);
     screen_->flip();
+}
+
+void GameManager::reset() {
+    GameState::resetState();
+    init();
 }
 
 void GameManager::handleEnemiesReachingTarget() {

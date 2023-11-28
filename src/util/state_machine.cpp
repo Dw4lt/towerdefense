@@ -2,7 +2,7 @@
 #include "macros.hpp"
 
 
-const Transition* State::parseEvent(Event& event) {
+const Transition* State::processEvent(Event& event) {
     for (const auto& t : transitions_) {
         if (t.condition(event)) {
             event.accept();
@@ -10,6 +10,10 @@ const Transition* State::parseEvent(Event& event) {
         }
     }
     return nullptr;
+}
+
+void State::bubbleUpEvent(ROwner<Event>&& event) {
+    if (parent_) parent_->receiveChildEvent(std::move(event));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,11 +35,11 @@ void StateMachine::onEnter() {}
 
 void StateMachine::onExit() {}
 
-bool StateMachine::stopped() {
+bool StateMachine::stopped() const noexcept {
     return stopped_;
 }
 
-void StateMachine::stop() {
+void StateMachine::stop() noexcept {
     stopped_ = true;
 }
 
@@ -72,13 +76,13 @@ const Transition* StateMachine::handleTransition(Event& event, const Transition*
     }
 }
 
-const Transition* StateMachine::parseEvent(Event& event) {
-    const Transition* transition = State::parseEvent(event);
+const Transition* StateMachine::processEvent(Event& event) {
+    const Transition* transition = State::processEvent(event);
     if (transition) { // Hit when this state machine is used as a state as well (eg. as a sub-state machine)
         return handleTransition(event, transition);
     }
 
-    transition = current_state_->parseEvent(event);
+    transition = current_state_->processEvent(event);
     if (transition) { // Event triggered a transition in a sub-state
         return handleTransition(event, transition);
     }
@@ -86,26 +90,31 @@ const Transition* StateMachine::parseEvent(Event& event) {
     return nullptr; // No state change occurred.
 }
 
-RReader<State> StateMachine::addState(ROwner<State>&& state) {
-    #ifdef DEBUG
-    if (std::find(states_.begin(), states_.end(), state) != states_.end()) {
-        throw "State already in state machine.";
-    }
-    #endif
-
-    auto ret = state.makeReader();
-    states_.push_back(std::move(state));
-    return ret;
-}
-
-void StateMachine::addTransition(RReader<State> from, RReader<State> to, Condition&& condition, bool skip_exit, bool skip_entry) {
+void StateMachine::addTransition(RReader<State> from, RReader<State> to, Condition condition, bool skip_exit, bool skip_entry) {
     if (from == to) {
         throw "Attempted to add circular state transition.";
     }
-    from->addTransition(Transition{from: from, to: to, condition: std::move(condition), skip_exit: skip_exit, skip_entry: skip_entry});
+    static_cast<RReader<State>>(from)->addTransition(Transition{from: from, to: to, condition: std::move(condition), skip_exit: skip_exit, skip_entry: skip_entry});
 }
 
-void StateMachine::addTransition(Transition&& transition) {
-    transition.from->addTransition(std::move(transition));
-}
+Condition StateMachine::makeOnSingleFireActionCondition(int actions) {
+    return makeEventChecker<UserInputEvent, Event::Type::USER_INPUT> (
+        [actions](UserInputEvent& event){
+            return event.getPositiveEdge(actions);
+        }
+    );
+};
 
+Condition StateMachine::makeGameEventCondition(GameUpdateEvent::UpdateType type) {
+    return makeEventChecker<GameUpdateEvent, Event::Type::GAME_UPDATE> (
+        [type](GameUpdateEvent& event){
+            return type == event.getUpdateType();
+        }
+    );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+void EndState::onEnter() {
+    parent_->stop();
+};

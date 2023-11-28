@@ -20,7 +20,7 @@ struct Input
         CONFIRM = 64,
         PAUSE = 128,
         SHOP = 256,
-        RUN_TICK = 512,
+        RESTART = 512,
     };
 
     /// @brief Cosntructor
