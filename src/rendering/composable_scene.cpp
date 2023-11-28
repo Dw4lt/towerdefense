@@ -1,6 +1,5 @@
 #include "composable_scene.hpp"
 #include "screen.hpp"
-#include <stdio.h>
 
 SceneLayer::SceneLayer()
     : std::vector<RReader<Renderable>>()
@@ -20,7 +19,7 @@ RReader<ComposableScene> ComposableScene::create(Screen* screen, SDL_Rect rect, 
 
 void ComposableScene::addToScene(RReader<Renderable> object) {
     if (object->getScene()) {
-        throw std::runtime_error("RendererObject is already part of a scene.");
+        throw "RendererObject is already part of a scene.";
     }
     auto layer = object->getLayer();
     if (render_objects_.count(layer) == 0) {

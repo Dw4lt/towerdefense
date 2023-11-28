@@ -1,13 +1,10 @@
 #include "game_manager.hpp"
 #include "game_state.hpp"
-#include "input.hpp"
+#include "util/event.hpp"
 #include "structures/archer.hpp"
 #include "enemies/enemy_factory.hpp"
 #include <SDL/SDL_video.h>
 #include <SDL/SDL_timer.h>
-#include <os.h>
-#include <stdio.h>
-#include <string>
 
 
 GameManager::GameManager()

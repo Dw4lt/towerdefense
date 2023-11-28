@@ -4,7 +4,6 @@
 #include "../input.hpp"
 #include "../primitives/rect.hpp"
 #include "../structures/tower.hpp"
-#include <os.h>
 
 FieldCursor::FieldCursor(GameManager* manager)
     : RendererObject(SCREEN_LAYER::CURSOR)

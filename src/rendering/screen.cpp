@@ -11,7 +11,7 @@ Screen::Screen(int width, int height)
     , surface_(SDL_SetVideoMode(width, height, has_colors ? 16 : 8, SDL_SWSURFACE))
 {
     if (surface_ == NULL) {
-        throw std::runtime_error("Screen could not allocate surface.");
+        throw "Screen could not allocate surface.";
     }
 }
 
@@ -23,7 +23,7 @@ Screen::~Screen() {
 auto Screen::createSurface(Uint16 width, Uint16 height) const -> SDL_Surface* {
     auto surface = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 16, properties_.R_mask, properties_.G_mask, properties_.B_mask, 0);
     if (surface == NULL) {
-        throw std::runtime_error("Screen could not allocate surface.");
+        throw "Screen could not allocate surface.";
     }
     return surface;
 }

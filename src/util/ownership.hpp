@@ -1,6 +1,5 @@
 #pragma once
 #include <memory>
-#include <stdexcept>
 #include <vector>
 #include <map>
 #include <functional>
@@ -59,7 +58,7 @@ public:
     /// @brief Create a reader instance from this owner. Reader can alter but not delete the resource.
     RReader<T> makeReader() const {
         if (!isValid()) {
-            throw std::runtime_error("Cannot Create a reader of an invalid owner.");
+            throw "Cannot Create a reader of an invalid owner.";
         }
         return RReader<T>(*this);
     }
@@ -155,7 +154,7 @@ public:
     T& operator*() const {
         auto shared_resource = resource.lock().get();
         if (!shared_resource) {
-            throw std::runtime_error("Attempted to access an invalid resource.");
+            throw "Attempted to access an invalid resource.";
         }
         return *shared_resource;
     }
@@ -171,7 +170,7 @@ public:
     T* operator->() const {
         auto ret = resource.lock().get();
         if (ret == nullptr) {
-            throw std::runtime_error("Attempted to dereference an invalid resource.");
+            throw "Attempted to dereference an invalid resource.";
         }
         return ret;
     }
@@ -244,14 +243,9 @@ public:
     using value_type = typename std::invoke_result_t<Callable, input_type>;
     using returned_iterator = IIterator<value_type>;
     using iterator_category = typename std::iterator_traits<ContainerIterator>::iterator_category;
-    //using value_type = typename std::invoke_result_t<Callable, decltype(*std::declval<BaseIterator>())>;
 
-    //using Callable = std::function<value_type(typename ContainerIterator::value_type)>;
-
-    // using difference_type = typename std::iterator_traits<ContainerIterator>::difference_type;
     using reference = value_type&;
     using pointer = value_type*;
-
 
     explicit MethodApplyingIterator(ContainerIterator it, Callable callable)
         : it_(std::move(it)), callable_(std::move(callable)) {}

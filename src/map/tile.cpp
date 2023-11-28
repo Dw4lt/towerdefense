@@ -1,7 +1,6 @@
 #include "tile.hpp"
 #include "../util/color.hpp"
 #include "../rendering/composable_scene.hpp"
-#include <stdio.h>
 
 Tile::Tile(int x, int y, int width, int height, int index_x, int index_y)
     : RendererObject(x, y, width, height, SCREEN_LAYER::BACKGROUND)

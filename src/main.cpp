@@ -1,7 +1,5 @@
 #include "enemies/enemy.hpp"
-#include <stdio.h>
-#include <string>
-#include <time.h>
+#include <ctime>
 #include <SDL/SDL.h>
 
 #include "game_manager.hpp"
@@ -22,9 +20,6 @@ int main() {
         while (!main_sm.stopped()){
             main_sm.tick();
         }
-
-    } catch (std::exception& e) {
-        LOG("%s\n", e.what());
     } catch (char const* e) {
         LOG("%s\n", e);
     }

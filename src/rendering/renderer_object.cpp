@@ -1,6 +1,5 @@
 #include "renderer_object.hpp"
 
-#include "assert.h"
 #include "composable_scene.hpp"
 
 
