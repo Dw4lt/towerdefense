@@ -79,10 +79,6 @@ void GameManager::mainGameLoop() {
     // Purge enemies
     handleEnemiesReachingTarget();
     removeDeadEnemies();
-
-    /*if (!game_state->anyEnemiesPresent()) {
-        // TODO: Emit end of wave event
-    }*/
 }
 
 void GameManager::endWave() {

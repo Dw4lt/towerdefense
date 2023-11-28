@@ -24,7 +24,7 @@ void OngoingWaveS::onEnter() {
 }
 
 void OngoingWaveS::onExit() {
-    manager_->endWave(); // TODO: only if survived and all enemies are dead
+    manager_->endWave();
 }
 
 void OngoingWaveS::tick() {
