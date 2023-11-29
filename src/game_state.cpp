@@ -36,23 +36,21 @@ auto GameState::getState() -> GameStatePtr {
     return GameState::singleton_;
 }
 
-auto GameState::addStructure(std::shared_ptr<Structure> structure, Tile& tile) -> RReader<Structure> {
-    auto r = ROwner<Structure>(structure);
-
-    tile.addChild(r.makeReader());
+auto GameState::addStructure(ROwner<Structure>&& structure, Tile& tile) -> RReader<Structure> {
+    tile.addChild(structure.makeReader());
     tile.updateType(TileType::STRUCTURE);
-    auto reader = r.makeReader();
-    structures_[tile.getIndexY() * FIELD_TILE_COUNT_X + tile.getIndexX()] = std::move(r);
+    auto ret = structure.makeReader();
+    structures_[tile.getIndexY() * FIELD_TILE_COUNT_X + tile.getIndexX()] = std::move(structure);
     LOG("Structure added at %i:%i\n", tile.getIndexX(), tile.getIndexY());
-    return reader;
+    return ret;
 }
 
 auto GameState::getStructure(int index_x, int index_y) -> RReader<Structure> {
     return structures_[index_y * FIELD_TILE_COUNT_X + index_x].makeReader();
 }
 
-auto GameState::addEnemy(std::shared_ptr<Enemy> enemy) -> RReader<Enemy> {
-    enemy_list_.emplace_back(enemy);
+auto GameState::addEnemy(ROwner<Enemy>&& enemy) -> RReader<Enemy> {
+    enemy_list_.push_back(std::move(enemy));
     return enemy_list_.back().makeReader();
 }
 

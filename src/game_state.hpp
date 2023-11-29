@@ -54,7 +54,7 @@ public:
     /// @brief Add an enemy to the game state
     /// @param enemy Enemy to take ownership of
     /// @return Reference to managed enemy. Add this to the scene.
-    RReader<Enemy> addEnemy(std::shared_ptr<Enemy> enemy);
+    RReader<Enemy> addEnemy(ROwner<Enemy>&& enemy);
 
     /// @brief Check if enemies are present
     bool anyEnemiesPresent() { return enemy_list_.size() > 0; };
@@ -76,7 +76,7 @@ public:
     /// @param structure Structure to take ownership of
     /// @param tile Tile the structure should be assigned to
     /// @return Reference to managed structure. Add this to the scene.
-    RReader<Structure> addStructure(std::shared_ptr<Structure> structure, Tile& tile);
+    RReader<Structure> addStructure(ROwner<Structure>&& structure, Tile& tile);
 
     /// @brief Destroy enemy instances according to condition
     /// @param func Condition
