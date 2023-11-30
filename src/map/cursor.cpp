@@ -83,12 +83,19 @@ void FieldCursor::render(SDL_Surface* surface) {
         {
             // Show tower range on hover
             auto structure = GameState::getState()->getStructure(cursor_x_, cursor_y_).get();
-            if (auto v = dynamic_cast<Tower*>(structure)) {
-                int range = (v)->getRange();
-                if (range > 0) {
-                    Point center = RendererObject::center();
-                    DrawUtils::drawPixelatedCircleOutline(surface, center.x_, center.y_, range, FIELD_TILE_WIDTH, FIELD_TILE_HEIGHT, Colors::RED, 1);
+            switch (structure->getStructureType()) {
+                case StructureType::TOWER:
+                {
+                    Tower* tower = static_cast<Tower*>(structure);
+                    int range = tower->getRange();
+                    if (range > 0) {
+                        Point center = RendererObject::center();
+                        DrawUtils::drawPixelatedCircleOutline(surface, center.x_, center.y_, range, FIELD_TILE_WIDTH, FIELD_TILE_HEIGHT, Colors::RED, 1);
+                    }
+                    break;
                 }
+                default:
+                    break;
             }
         }
         break;

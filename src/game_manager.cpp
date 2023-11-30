@@ -79,7 +79,14 @@ void GameManager::mainGameLoop() {
 }
 
 void GameManager::endWave() {
-    GameState::getState()->endWave();
+    auto state = GameState::getState();
+    state->endWave();
+
+    // Let structures reset
+    auto structures = state->getStructures();
+    for (auto& s = structures.begin(); s != structures.end(); ++s) {
+        s->onEndOfWave();
+    }
 }
 
 void GameManager::mainRenderLoop() {

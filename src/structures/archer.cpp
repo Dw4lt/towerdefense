@@ -13,7 +13,6 @@ Archer::~Archer() {}
 void Archer::render(SDL_Surface* surface) {
     if (just_fired_){
         DrawUtils::fillColor(surface, boundingBox(), Colors::ARCHER_FIRING);
-        just_fired_ = false;
     } else {
         DrawUtils::fillColor(surface, boundingBox(), Colors::ARCHER_IDLE);
     }

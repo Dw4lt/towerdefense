@@ -5,6 +5,11 @@
 
 #include <vector>
 
+enum class TowerType {
+    ARCHER,
+    SNIPER,
+};
+
 class Tower : public Structure {
 public:
     Tower(int cooldown, int tower_range, double damage, unsigned int index_x, unsigned int index_y);
@@ -33,7 +38,11 @@ public:
     void setRange(int range);
 
     /// @brief Reset tower's cooldown, making it ready to fire instantly
-    void resetCooldown();
+    virtual void onEndOfWave() override;
+
+    virtual StructureType getStructureType() const noexcept override { return StructureType::TOWER; };
+
+    virtual TowerType getTowerType() const noexcept = 0;
 
 private:
     static double global_range_multiplier_;

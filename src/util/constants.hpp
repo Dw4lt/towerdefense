@@ -7,8 +7,6 @@ enum SCREEN_LAYER {
     STRUCTURE,
     ENEMY,
     CURSOR,
-
-    SHOP,
 };
 
 typedef enum {
