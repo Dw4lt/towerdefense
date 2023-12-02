@@ -4,7 +4,7 @@
 
 class Archer : public Tower {
 public:
-    Archer(int cooldown, int tower_range, double damage, unsigned int index_x, unsigned int index_y);
+    Archer(unsigned int index_x, unsigned int index_y);
     virtual ~Archer();
 
     virtual void render(SDL_Surface* surface) override;

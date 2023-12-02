@@ -1,7 +1,7 @@
 #include "game_manager.hpp"
 #include "game_state.hpp"
 #include "util/event.hpp"
-#include "structures/archer.hpp"
+#include "structures/structure_factory.hpp"
 #include "enemies/enemy_factory.hpp"
 #include <SDL/SDL_video.h>
 #include <SDL/SDL_timer.h>
@@ -149,7 +149,7 @@ void GameManager::onMapCursorClickOn(int x, int y) {
     TileType type = tile.getType();
     if (TileType::LAND == type) {
         if (game_state->tryTakeMoney(170)) { // TODO: price determined based on tower
-            auto structure = game_state->addStructure(std::make_shared<Archer>(24, 4, 1, x, y), tile); // TODO: pick class based on store selection
+            auto structure = game_state->addStructure(StructureFactory::makeTower(TowerType::ARCHER, x, y), tile); // TODO: pick class based on store selection
             field_scene_->addToScene(structure);
         }
     } else if (TileType::PATH == type) {

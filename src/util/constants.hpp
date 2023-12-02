@@ -31,3 +31,8 @@ static const float PIXEL_DISTANCE_RATIO_X = (float) FIELD_TILE_WIDTH / 2;
 static const float PIXEL_DISTANCE_RATIO_Y = (float) FIELD_TILE_HEIGHT / 2;
 
 static const float BASE_BALOON_SPEED = 1.5;
+
+// Tower propperties
+static const int ARCHER_BASE_DAMAGE = 1;
+static const int ARCHER_BASE_RANGE = 4;
+static const int ARCHER_BASE_RELOAD = 0.9 * TICKS_PER_SECOND;
