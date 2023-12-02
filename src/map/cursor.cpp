@@ -91,6 +91,8 @@ void FieldCursor::render(SDL_Surface* surface) {
                     if (range > 0) {
                         Point center = RendererObject::center();
                         DrawUtils::drawPixelatedCircleOutline(surface, center.x_, center.y_, range, FIELD_TILE_WIDTH, FIELD_TILE_HEIGHT, Colors::RED, 1);
+                    } else if (range == -1) {
+                        DrawUtils::drawRect(surface, Rect(0, 0, surface->clip_rect.w, surface->clip_rect.h), Colors::RED);
                     }
                     break;
                 }

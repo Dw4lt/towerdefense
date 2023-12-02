@@ -4,7 +4,7 @@
 #include "rendering/composable_scene.hpp"
 #include "rendering/screen.hpp"
 #include "ui/status_bar.hpp"
-#include "ui/shop.hpp"
+#include "shop/shop.hpp"
 #include "util/event.hpp"
 #include <vector>
 
@@ -36,6 +36,9 @@ public:
 
     /// @brief Wrapper to pass on input to internal field cursor
     void applyUserInputToFieldCursor(UserInputEvent& event);
+
+    /// @brief Wrapper to pass on input to shop
+    void applyUserInputToShopCursor(UserInputEvent& event);
 
 private:
     void removeDeadEnemies();

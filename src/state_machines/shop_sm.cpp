@@ -12,6 +12,14 @@ void TowerSelectionShopS::tick() {
     // TODO: shop logic
 };
 
+const Transition* TowerSelectionShopS::processEvent(Event& event) {
+    if (event.getType() == Event::Type::USER_INPUT) {
+        auto& uie = static_cast<UserInputEvent&>(event);
+        manager_->applyUserInputToShopCursor(uie);
+    }
+    return State::processEvent(event); // Check and apply potential transition event
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 ShopSM::ShopSM(RReader<GameManager> manager)

@@ -36,3 +36,7 @@ static const float BASE_BALOON_SPEED = 1.5;
 static const int ARCHER_BASE_DAMAGE = 1;
 static const int ARCHER_BASE_RANGE = 4;
 static const int ARCHER_BASE_RELOAD = 0.9 * TICKS_PER_SECOND;
+
+static const int SNIPER_BASE_DAMAGE = 2;
+static const int SNIPER_BASE_RANGE = -1;
+static const int SNIPER_BASE_RELOAD = 2.2 * TICKS_PER_SECOND;

@@ -1,5 +1,6 @@
 #include "tower.hpp"
 #include "../rendering/composable_scene.hpp"
+#include <numeric>
 
 double Tower::global_range_multiplier_(1);
 double Tower::global_cooldown_multiplier_(1);
@@ -24,7 +25,14 @@ Tower::~Tower() {
 
 void Tower::setRange(int range) {
     range_ = range;
-    sorted_path_tile_indexes_in_range_ = GameState::getState()->getField().getSortedPathTilesWithinRange(index_x_, index_y_, (int)(range_ * getGlobalRangeMultiplier()));
+    auto& field = GameState::getState()->getField();
+    if (range < 0) { // Global range
+        auto length = field.getPathLength();
+        sorted_path_tile_indexes_in_range_ = std::vector<int>(length);
+        std::iota(sorted_path_tile_indexes_in_range_.rbegin(), sorted_path_tile_indexes_in_range_.rend(), 0);
+    } else { // Limited range
+        sorted_path_tile_indexes_in_range_ = GameState::getState()->getField().getSortedPathTilesWithinRange(index_x_, index_y_, (int)(range_ * getGlobalRangeMultiplier()));
+    }
 }
 
 double Tower::getGlobalRangeMultiplier() {

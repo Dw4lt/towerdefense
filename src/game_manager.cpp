@@ -28,6 +28,8 @@ void GameManager::init() {
 
     // Shop
     shop_scene_ = Shop::create(screen_.get(), SDL_Rect{x: 0, y: 0, w: FIELD_WIDTH, h: FIELD_HEIGHT}, false);
+    shop_scene_->addStructureEntry(ROwner<StructureEntry>(new TowerEntry(200, ROwner<RendererObject>(StructureFactory::makeTower(TowerType::ARCHER, 0, 0)), "Archer", "Archer description", TowerType::ARCHER)));
+    shop_scene_->addStructureEntry(ROwner<StructureEntry>(new TowerEntry(350, ROwner<RendererObject>(StructureFactory::makeTower(TowerType::SNIPER, 0, 0)), "Sniper", "Sniper description", TowerType::SNIPER)));
 }
 
 void GameManager::spawnWave() {
@@ -143,14 +145,28 @@ void GameManager::applyUserInputToFieldCursor(UserInputEvent& event) {
     field_cursor_->applyUserActions(event.getAutorepeat());
 }
 
+void GameManager::applyUserInputToShopCursor(UserInputEvent& event) {
+    shop_scene_->applyUserActions(event.getAutorepeat());
+}
+
 void GameManager::onMapCursorClickOn(int x, int y) {
     auto game_state = GameState::getState();
     auto& tile = game_state->getField().getTile(x, y);
     TileType type = tile.getType();
     if (TileType::LAND == type) {
-        if (game_state->tryTakeMoney(170)) { // TODO: price determined based on tower
-            auto structure = game_state->addStructure(StructureFactory::makeTower(TowerType::ARCHER, x, y), tile); // TODO: pick class based on store selection
-            field_scene_->addToScene(structure);
+        auto tower_shop_entry = shop_scene_->getSelectedStructure();
+        if (game_state->tryTakeMoney(tower_shop_entry->cost)) {
+            switch (tower_shop_entry->structure_type) {
+                case StructureType::TOWER:
+                    {
+                        auto purchase = static_cast<TowerEntry*>(tower_shop_entry.get());
+                        auto structure = game_state->addStructure(StructureFactory::makeTower(purchase->tower_type, x, y), tile);
+                        field_scene_->addToScene(structure);
+                    }
+                    break;
+                default:
+                    throw "Not implemented";
+            };
         }
     } else if (TileType::PATH == type) {
     }

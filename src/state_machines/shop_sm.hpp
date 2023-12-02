@@ -8,6 +8,8 @@ struct TowerSelectionShopS : public State {
 
     virtual void tick();
 
+    virtual const Transition* processEvent(Event& event) override;
+
 private:
     RReader<GameManager> manager_;
 };
